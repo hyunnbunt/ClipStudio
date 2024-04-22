@@ -1,0 +1,32 @@
+version: 'v2.24.6'
+
+services:
+#container1-db
+  mariadb:
+    image: 'mariadb:latest'
+#    Environment variables that are used inside the container of this service
+    environment:
+      - 'MARIADB_DATABASE=clipstudio'
+      - 'MARIADB_PASSWORD=1234'
+      - 'MARIADB_ROOT_PASSWORD=1234'
+      - 'MARIADB_USER=root'
+    ports:
+      - '8000:3306'
+#container2-app
+  clipstudio-app:
+#    The specified container will be made first.
+    depends_on:
+      - 'mariadb'
+    image: 'clipstudio-app:latest'
+#    Can access to another service using its service name.
+    links:
+      - 'mariadb'
+#    Decide a port to open this container.
+    environment:
+      - 'DATABASE_HOST=mariadb'
+    ports:
+      - '3000:8080'
+
+
+
+
