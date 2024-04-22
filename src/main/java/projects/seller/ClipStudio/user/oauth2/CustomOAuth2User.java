@@ -26,6 +26,7 @@ public class CustomOAuth2User extends DefaultOAuth2User {
                             String email, Role role) {
         super(authorities, attributes, nameAttributeKey);
         this.role = role;
+        this.email = email;
         // super()로 부모 객체인 DefaultOAuth2User를 생성
         //role 파라미터를 추가로 받아서, 주입하여 CustomOAuth2User를 생성
     }

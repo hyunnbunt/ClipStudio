@@ -1,13 +1,16 @@
 package projects.seller.ClipStudio.user;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Builder
+@Table(name = "USERS")
+@AllArgsConstructor
 public class User {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,6 +22,7 @@ public class User {
     private String provider;
     private String provideId;
     private LocalDateTime createDate;
+    @Enumerated(EnumType.STRING)
     private SocialType socialType; // GOOGLE, ...
     private String socialId;
     private String refreshToken;
@@ -29,17 +33,5 @@ public class User {
     }
     public void updateRefreshToken(String updateRefreshToken) {
         this.refreshToken = updateRefreshToken;
-    }
-    @Builder
-    public User(String username, String password, String email, Role role, String provider, String provideId, LocalDateTime createDate, SocialType socialType, String socialId) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.role = role;
-        this.provider = provider;
-        this.provideId = provideId;
-        this.createDate = createDate;
-        this.socialId = socialId;
-        this.socialType = socialType;
     }
 }
