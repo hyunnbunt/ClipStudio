@@ -21,8 +21,6 @@ spring:
     hibernate:
       ddl-auto: create
     open-in-view: true
-
-#            scope:
-#              - email
-#              - profile
-#            redirect-uri: http://localhost:8080/login/oauth2/code/google #코드를 받을 주소 (토큰 받기 전) => 클라이언트 정보와 코드로 토큰을 발급받아야 함.
+  mvc:
+    view:
+      prefix: /templates/

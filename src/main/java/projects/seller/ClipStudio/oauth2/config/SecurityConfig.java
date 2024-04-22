@@ -8,24 +8,24 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import projects.seller.ClipStudio.oauth2.handler.OAuth2LoginFailureHandler;
-import projects.seller.ClipStudio.oauth2.handler.OAuth2LoginSuccessHandler;
-import projects.seller.ClipStudio.oauth2.User.service.CustomOAuth2UserService;
-import projects.seller.ClipStudio.oauth2.jwt.service.JwtService;
+//import projects.seller.ClipStudio.oauth2.handler.OAuth2LoginFailureHandler;
+//import projects.seller.ClipStudio.oauth2.handler.OAuth2LoginSuccessHandler;
+//import projects.seller.ClipStudio.oauth2.User.service.CustomOAuth2UserService;
+//import projects.seller.ClipStudio.oauth2.jwt.service.JwtService;
 import projects.seller.ClipStudio.oauth2.User.userRepository.UserRepository;
-import projects.seller.ClipStudio.oauth2.filter.JwtAuthenticationProcessingFilter;
+//import projects.seller.ClipStudio.oauth2.filter.JwtAuthenticationProcessingFilter;
 
 
 @EnableWebSecurity
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final JwtService jwtService;
+//    private final JwtService jwtService;
     private final UserRepository userRepository;
     private final ObjectMapper objectMapper;
-    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
-    private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
-    private final CustomOAuth2UserService customOAuth2UserService;
+//    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+//    private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
+//    private final CustomOAuth2UserService customOAuth2UserService;
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 //        http.csrf(AbstractHttpConfigurer::disable);
@@ -35,23 +35,22 @@ public class SecurityConfig {
         http.authorizeHttpRequests((authorize) -> authorize
                 .requestMatchers(new AntPathRequestMatcher("/videos/**")).hasAnyAuthority("ROLE_USER", "ROLE_SELLER")
                 .requestMatchers(new AntPathRequestMatcher("/seller/**")).hasAuthority("ROLE_SELLER")
+                .requestMatchers(new AntPathRequestMatcher("/hello")).permitAll()
                 .anyRequest().authenticated());
 
 //        http.oauth2Login(Customizer.withDefaults()); // OAuth2 기본 설정 : "/login" 으로 접속하면 google 로그인으로 연결되고, 성공시 "/"으로 리다이렉트, "resources/static/index.html"가 있다면 보여준다. 나는 apicontroller로 응답해주기로 함.
 
             http.oauth2Login(oAuth2LoginConfigurer -> oAuth2LoginConfigurer
-                        .redirectionEndpoint(redirectionEndpointConfig -> oAuth2LoginConfigurer
-                                        .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
-                                                .userService(customOAuth2UserService))
-                        .successHandler(oAuth2LoginSuccessHandler)
-                        .failureHandler(oAuth2LoginFailureHandler)));
+                    .defaultSuccessUrl("/hello", true));
+//                        .successHandler(oAuth2LoginSuccessHandler)
+//                        .failureHandler(oAuth2LoginFailureHandler)));
 
         return http.build();
     }
-    @Bean
-    public JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter() {
-        return new JwtAuthenticationProcessingFilter(jwtService, userRepository);
-    }
+//    @Bean
+//    public JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter() {
+//        return new JwtAuthenticationProcessingFilter(jwtService, userRepository);
+//    }
 
 }
 //    @Autowired
