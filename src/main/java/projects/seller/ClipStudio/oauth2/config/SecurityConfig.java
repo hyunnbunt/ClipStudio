@@ -7,9 +7,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 //import projects.seller.ClipStudio.oauth2.handler.OAuth2LoginFailureHandler;
-//import projects.seller.ClipStudio.oauth2.handler.OAuth2LoginSuccessHandler;
+import projects.seller.ClipStudio.oauth2.handler.OAuth2LoginSuccessHandler;
 //import projects.seller.ClipStudio.oauth2.User.service.CustomOAuth2UserService;
 //import projects.seller.ClipStudio.oauth2.jwt.service.JwtService;
 import projects.seller.ClipStudio.oauth2.User.userRepository.UserRepository;
@@ -23,7 +24,7 @@ public class SecurityConfig {
 //    private final JwtService jwtService;
     private final UserRepository userRepository;
     private final ObjectMapper objectMapper;
-//    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
 //    private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
 //    private final CustomOAuth2UserService customOAuth2UserService;
     @Bean
@@ -42,7 +43,7 @@ public class SecurityConfig {
 
             http.oauth2Login(oAuth2LoginConfigurer -> oAuth2LoginConfigurer
                     .defaultSuccessUrl("/hello", true));
-//                        .successHandler(oAuth2LoginSuccessHandler)
+//                        .successHandler(new SimpleUrlAuthenticationSuccessHandler("/hello")));
 //                        .failureHandler(oAuth2LoginFailureHandler)));
 
         return http.build();
