@@ -7,14 +7,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import projects.seller.ClipStudio.oauth2.User.oauth2.CustomOAuth2User;
+import org.springframework.ui.Model;
 
 @Controller
 @Slf4j
 public class userController {
     @GetMapping("/hello")
-    public String hello(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
+    public String hello(@AuthenticationPrincipal CustomOAuth2User customOAuth2User, Model model) {
         log.info("inside hello()");
-        log.info(customOAuth2User.toString());
+        log.info(customOAuth2User.getAttributes().toString());
+        model.addAttribute("attributes", customOAuth2User.getAttributes());
         return "index";
     }
 }
