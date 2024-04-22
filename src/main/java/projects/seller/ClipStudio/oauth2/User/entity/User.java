@@ -1,7 +1,9 @@
-package projects.seller.ClipStudio.user;
+package projects.seller.ClipStudio.oauth2.User.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import projects.seller.ClipStudio.oauth2.User.entity.enums.Role;
+import projects.seller.ClipStudio.oauth2.User.entity.enums.SocialType;
 
 import java.time.LocalDateTime;
 

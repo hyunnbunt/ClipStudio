@@ -1,4 +1,4 @@
-package projects.seller.ClipStudio.user.oauth2.handler;
+package projects.seller.ClipStudio.oauth2.handler;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,10 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-import projects.seller.ClipStudio.user.Role;
-import projects.seller.ClipStudio.user.UserRepository;
-import projects.seller.ClipStudio.user.oauth2.CustomOAuth2User;
-import projects.seller.ClipStudio.user.oauth2.service.JwtService;
+import projects.seller.ClipStudio.oauth2.User.userRepository.UserRepository;
+import projects.seller.ClipStudio.oauth2.User.oauth2.CustomOAuth2User;
+import projects.seller.ClipStudio.oauth2.jwt.service.JwtService;
 
 import java.io.IOException;
 

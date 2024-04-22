@@ -1,4 +1,4 @@
-package projects.seller.ClipStudio.user.oauth2.userinfo;
+package projects.seller.ClipStudio.oauth2.User.userinfo;
 
 import java.util.Map;
 

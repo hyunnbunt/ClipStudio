@@ -1,9 +1,9 @@
-package projects.seller.ClipStudio.user.oauth2;
+package projects.seller.ClipStudio.oauth2.User.oauth2;
 
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
-import projects.seller.ClipStudio.user.Role;
+import projects.seller.ClipStudio.oauth2.User.entity.enums.Role;
 
 import java.util.Collection;
 import java.util.Map;

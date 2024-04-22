@@ -1,19 +1,19 @@
-package projects.seller.ClipStudio.user.oauth2;
+package projects.seller.ClipStudio.oauth2.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import projects.seller.ClipStudio.user.UserRepository;
-import projects.seller.ClipStudio.user.oauth2.handler.OAuth2LoginFailureHandler;
-import projects.seller.ClipStudio.user.oauth2.handler.OAuth2LoginSuccessHandler;
-import projects.seller.ClipStudio.user.oauth2.service.CustomOAuth2UserService;
-import projects.seller.ClipStudio.user.oauth2.service.JwtService;
+import projects.seller.ClipStudio.oauth2.handler.OAuth2LoginFailureHandler;
+import projects.seller.ClipStudio.oauth2.handler.OAuth2LoginSuccessHandler;
+import projects.seller.ClipStudio.oauth2.User.service.CustomOAuth2UserService;
+import projects.seller.ClipStudio.oauth2.jwt.service.JwtService;
+import projects.seller.ClipStudio.oauth2.User.userRepository.UserRepository;
+import projects.seller.ClipStudio.oauth2.filter.JwtAuthenticationProcessingFilter;
 
 
 @EnableWebSecurity
@@ -47,6 +47,10 @@ public class SecurityConfig {
                         .failureHandler(oAuth2LoginFailureHandler)));
 
         return http.build();
+    }
+    @Bean
+    public JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter() {
+        return new JwtAuthenticationProcessingFilter(jwtService, userRepository);
     }
 
 }

@@ -1,16 +1,15 @@
-package projects.seller.ClipStudio.user.oauth2;
+package projects.seller.ClipStudio.oauth2.User.oauth2;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import projects.seller.ClipStudio.user.Role;
-import projects.seller.ClipStudio.user.SocialType;
-import projects.seller.ClipStudio.user.User;
-import projects.seller.ClipStudio.user.oauth2.userinfo.GoogleOAuth2UserInfo;
-import projects.seller.ClipStudio.user.oauth2.userinfo.OAuth2UserInfo;
+import projects.seller.ClipStudio.oauth2.User.entity.enums.Role;
+import projects.seller.ClipStudio.oauth2.User.entity.enums.SocialType;
+import projects.seller.ClipStudio.oauth2.User.entity.User;
+import projects.seller.ClipStudio.oauth2.User.userinfo.GoogleOAuth2UserInfo;
+import projects.seller.ClipStudio.oauth2.User.userinfo.OAuth2UserInfo;
 
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * 각 소셜에서 받아오는 데이터가 다르므로

@@ -1,4 +1,4 @@
-package projects.seller.ClipStudio.user.oauth2;
+package projects.seller.ClipStudio.oauth2.filter;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,9 +14,10 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import projects.seller.ClipStudio.user.User;
-import projects.seller.ClipStudio.user.UserRepository;
-import projects.seller.ClipStudio.user.oauth2.service.JwtService;
+import projects.seller.ClipStudio.oauth2.jwt.service.JwtService;
+import projects.seller.ClipStudio.oauth2.util.PasswordUtil;
+import projects.seller.ClipStudio.oauth2.User.entity.User;
+import projects.seller.ClipStudio.oauth2.User.userRepository.UserRepository;
 
 import java.io.IOException;
 

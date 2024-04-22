@@ -1,4 +1,4 @@
-package projects.seller.ClipStudio.user.oauth2;
+package projects.seller.ClipStudio.oauth2.util;
 
 import java.util.Random;
 

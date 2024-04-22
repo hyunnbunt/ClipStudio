@@ -1,6 +1,8 @@
-package projects.seller.ClipStudio.user;
+package projects.seller.ClipStudio.oauth2.User.userRepository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import projects.seller.ClipStudio.oauth2.User.entity.enums.SocialType;
+import projects.seller.ClipStudio.oauth2.User.entity.User;
 
 import java.util.Optional;
 
