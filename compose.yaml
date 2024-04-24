@@ -22,8 +22,8 @@ services:
     links:
       - 'mariadb'
 #    Decide a port to open this container.
-    environment:
-      - 'DATABASE_HOST=mariadb'
+#    environment:
+#      - 'DATABASE_HOST=mariadb'
     ports:
       - '3000:8080'
 
