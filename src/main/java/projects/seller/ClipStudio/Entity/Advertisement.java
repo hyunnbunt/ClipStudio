@@ -10,7 +10,7 @@ public class Advertisement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-    @ManyToMany
+    @ManyToMany @JoinTable(name="AD_IN")
     List<Video> videos;
     String title;
 }
