@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -16,7 +17,6 @@ import projects.seller.ClipStudio.oauth2.handler.OAuth2LoginSuccessHandler;
 //import projects.seller.ClipStudio.oauth2.jwt.service.JwtService;
 import projects.seller.ClipStudio.oauth2.User.userRepository.UserRepository;
 //import projects.seller.ClipStudio.oauth2.filter.JwtAuthenticationProcessingFilter;
-
 
 @EnableWebSecurity
 @Configuration
@@ -30,15 +30,16 @@ public class SecurityConfig {
 //    private final CustomOAuth2UserService customOAuth2UserService;
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http.csrf(AbstractHttpConfigurer::disable);
-//        http.cors(AbstractHttpConfigurer::disable);
-
-
+        http.cors(AbstractHttpConfigurer::disable);
+        http.csrf(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests((authorize) -> authorize
-                .requestMatchers(new AntPathRequestMatcher("/videos/**")).hasAnyAuthority("ROLE_USER", "ROLE_SELLER")
-                .requestMatchers(new AntPathRequestMatcher("/seller/**")).hasAuthority("ROLE_SELLER")
-                .requestMatchers(new AntPathRequestMatcher("/hello")).permitAll()
+                .requestMatchers("/api/**").permitAll()
                 .anyRequest().authenticated());
+//                .requestMatchers(new AntPathRequestMatcher("/videos/**")).hasAnyAuthority("ROLE_USER", "ROLE_SELLER")
+//                .requestMatchers(new AntPathRequestMatcher("/seller/**")).hasAuthority("ROLE_SELLER")
+//                .requestMatchers(new AntPathRequestMatcher("/hello")).permitAll()
+//                .requestMatchers(new AntPathRequestMatcher("/videos/test/new")).permitAll()
+//                .anyRequest().authenticated());
 
 //        http.oauth2Login(Customizer.withDefaults()); // OAuth2 기본 설정 : "/login" 으로 접속하면 google 로그인으로 연결되고, 성공시 "/"으로 리다이렉트, "resources/static/index.html"가 있다면 보여준다. 나는 apicontroller로 응답해주기로 함.
 

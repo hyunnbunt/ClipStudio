@@ -1,6 +1,7 @@
 package projects.seller.ClipStudio.Entity;
 
 import jakarta.persistence.*;
+import projects.seller.ClipStudio.Entity.Video;
 import projects.seller.ClipStudio.oauth2.User.entity.User;
 
 import java.sql.Time;

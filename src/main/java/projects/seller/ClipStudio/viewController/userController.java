@@ -1,4 +1,4 @@
-package projects.seller.ClipStudio.api;
+package projects.seller.ClipStudio.viewController;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
