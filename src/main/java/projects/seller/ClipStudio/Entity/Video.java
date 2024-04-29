@@ -4,11 +4,10 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
-import projects.seller.ClipStudio.VideoDto;
+import projects.seller.ClipStudio.dto.VideoDto;
 import projects.seller.ClipStudio.oauth2.User.entity.User;
 
 import java.sql.Timestamp;
-import java.util.List;
 
 @Entity
 @Builder
@@ -28,7 +27,7 @@ public class Video {
     @Column
     public Timestamp createdDate;
     @Column
-    public Long views;
+    public long views;
 
     public static Video fromDto(VideoDto videoDto) {
         return builder()

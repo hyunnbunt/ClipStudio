@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import projects.seller.ClipStudio.Entity.Video;
-import projects.seller.ClipStudio.VideoDto;
+import projects.seller.ClipStudio.dto.VideoDto;
 import projects.seller.ClipStudio.repository.VideoRepository;
 
 @Service
@@ -13,7 +13,7 @@ import projects.seller.ClipStudio.repository.VideoRepository;
 public class VideoService {
     private final VideoRepository videoRepository;
     public VideoService(VideoRepository videoRepository) {
-        // di 객체가 하나일 때는 @Autowired 생략 가능
+        // constructor가 하나일 때는 @Autowired 생략 가능
         this.videoRepository = videoRepository;
     }
     public VideoDto increaseViews(@PathVariable Long videoId) {

@@ -5,17 +5,24 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.CorsConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 //import projects.seller.ClipStudio.oauth2.handler.OAuth2LoginFailureHandler;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import projects.seller.ClipStudio.oauth2.handler.OAuth2LoginSuccessHandler;
 //import projects.seller.ClipStudio.oauth2.User.service.CustomOAuth2UserService;
 //import projects.seller.ClipStudio.oauth2.jwt.service.JwtService;
 import projects.seller.ClipStudio.oauth2.User.userRepository.UserRepository;
+
+import java.util.Arrays;
 //import projects.seller.ClipStudio.oauth2.filter.JwtAuthenticationProcessingFilter;
 
 @EnableWebSecurity
@@ -26,8 +33,11 @@ public class SecurityConfig {
     private final UserRepository userRepository;
     private final ObjectMapper objectMapper;
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+//    private final CorsConfig corsConfig;
 //    private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
 //    private final CustomOAuth2UserService customOAuth2UserService;
+
+
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.cors(AbstractHttpConfigurer::disable);
@@ -44,7 +54,7 @@ public class SecurityConfig {
 //        http.oauth2Login(Customizer.withDefaults()); // OAuth2 기본 설정 : "/login" 으로 접속하면 google 로그인으로 연결되고, 성공시 "/"으로 리다이렉트, "resources/static/index.html"가 있다면 보여준다. 나는 apicontroller로 응답해주기로 함.
 
             http.oauth2Login(oAuth2LoginConfigurer -> oAuth2LoginConfigurer
-                    .defaultSuccessUrl("/hello", true));
+                    .defaultSuccessUrl("http://localhost:5173", true));
 //                        .successHandler(new SimpleUrlAuthenticationSuccessHandler("/hello")));
 //                        .failureHandler(oAuth2LoginFailureHandler)));
 

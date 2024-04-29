@@ -1,4 +1,4 @@
-package projects.seller.ClipStudio;
+package projects.seller.ClipStudio.dto;
 
 import lombok.*;
 import projects.seller.ClipStudio.Entity.Video;
