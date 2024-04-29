@@ -3,7 +3,6 @@ package projects.seller.ClipStudio;
 import lombok.*;
 import projects.seller.ClipStudio.Entity.Video;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 
 @Builder
@@ -19,11 +18,11 @@ public class VideoDto {
     public Integer priceIdx;
     public static VideoDto fromEntity(Video videoEntity) {
         return builder()
-                .id(videoEntity.id)
+                .id(videoEntity.number)
                 .duration(videoEntity.duration)
                 .createdDate(videoEntity.createdDate)
                 .title(videoEntity.title)
                 .views(videoEntity.views)
-                .priceIdx(videoEntity.priceSectionIdx).build();
+                .build();
     }
 }

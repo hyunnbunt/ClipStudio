@@ -14,9 +14,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class User {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long number;
     private String username;
     private String password;
+    @Column(nullable = false)
     private String email;
     @Enumerated(EnumType.STRING)
     private Role role; // USER, SELLER
