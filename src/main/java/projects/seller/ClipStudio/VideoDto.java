@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 @Data // A shortcut for @ToString, @EqualsAndHashCode, @Getter on all fields, @Setter on all non-final fields, and @RequiredArgsConstructor
 public class VideoDto {
     public Long id;
-    public Time duration;
+    public int duration;
     public Timestamp createdDate;
     public String title;
     public Long views;
