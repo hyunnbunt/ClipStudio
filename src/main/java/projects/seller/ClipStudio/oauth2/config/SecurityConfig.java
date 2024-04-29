@@ -54,7 +54,7 @@ public class SecurityConfig {
 //        http.oauth2Login(Customizer.withDefaults()); // OAuth2 기본 설정 : "/login" 으로 접속하면 google 로그인으로 연결되고, 성공시 "/"으로 리다이렉트, "resources/static/index.html"가 있다면 보여준다. 나는 apicontroller로 응답해주기로 함.
 
             http.oauth2Login(oAuth2LoginConfigurer -> oAuth2LoginConfigurer
-                    .defaultSuccessUrl("http://localhost:5173", true));
+                    .defaultSuccessUrl("/hello", true));
 //                        .successHandler(new SimpleUrlAuthenticationSuccessHandler("/hello")));
 //                        .failureHandler(oAuth2LoginFailureHandler)));
 

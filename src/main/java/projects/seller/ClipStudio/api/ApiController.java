@@ -13,16 +13,11 @@ import projects.seller.ClipStudio.oauth2.User.oauth2.CustomOAuth2User;
 @Slf4j
 @RequestMapping("/")
 public class ApiController {
-//    private final WatchHistoryService watchHistoryService;
-//    public ApiController(WatchHistoryService watchHistoryService) {
-//        this.watchHistoryService = watchHistoryService;
-//    }
 
     // 어떤 유저가 비디오를 재생했을 때, 이미 히스토리가 있으면 있는 걸 보내주고, 없으면 새로 만들어서 보내줄 것.
-    @GetMapping("api/videos/{video_number}")
+    @GetMapping("/api/videos/{videoNumber}")
     public WatchHistoryDto playVideo(@PathVariable long videoNumber) {
         log.info(String.valueOf(videoNumber));
-//        log.info(customOAuth2User.getEmail());
         return new WatchHistoryDto();
     }
 
