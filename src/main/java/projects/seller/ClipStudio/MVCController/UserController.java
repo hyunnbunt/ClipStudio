@@ -11,10 +11,9 @@ import org.springframework.ui.Model;
 @Slf4j
 public class UserController {
     @GetMapping("/hello")
-    public String hello(@AuthenticationPrincipal CustomOAuth2User customOAuth2User, Model model) {
+    public String hello(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
         log.info("inside hello()");
-        log.info(customOAuth2User.getAttributes().toString());
-        model.addAttribute("attributes", customOAuth2User.getAttributes());
-        return "index";
+        log.info(customOAuth2User.getEmail());
+        return "hello.html";
     }
 }

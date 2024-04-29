@@ -43,7 +43,7 @@ public class SecurityConfig {
         http.cors(AbstractHttpConfigurer::disable);
         http.csrf(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests((authorize) -> authorize
-                .requestMatchers("/api/**").permitAll()
+//                .requestMatchers("/api/**").permitAll()
                 .anyRequest().authenticated());
 //                .requestMatchers(new AntPathRequestMatcher("/videos/**")).hasAnyAuthority("ROLE_USER", "ROLE_SELLER")
 //                .requestMatchers(new AntPathRequestMatcher("/seller/**")).hasAuthority("ROLE_SELLER")
