@@ -5,14 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import projects.seller.ClipStudio.Entity.AdIn;
+import projects.seller.ClipStudio.Entity.Advertisement;
 import projects.seller.ClipStudio.Entity.Video;
 import projects.seller.ClipStudio.Entity.WatchHistory;
 import projects.seller.ClipStudio.dto.VideoStoppedTimeDto;
 import projects.seller.ClipStudio.dto.WatchHistoryDto;
 import projects.seller.ClipStudio.oauth2.User.entity.User;
 import projects.seller.ClipStudio.oauth2.User.userRepository.UserRepository;
-import projects.seller.ClipStudio.repository.AdInRepository;
+import projects.seller.ClipStudio.repository.AdvertisementRepository;
 import projects.seller.ClipStudio.repository.VideoRepository;
 import projects.seller.ClipStudio.repository.WatchHistoryRepository;
 
@@ -23,17 +23,9 @@ public class WatchHistoryService {
     private final VideoRepository videoRepository;
     private final UserRepository userRepository;
     private final WatchHistoryRepository watchHistoryRepository;
-    private final AdInRepository adInRepository;
+    private final AdvertisementRepository advertisementRepository;
     private final VideoService videoService;
 
-    public WatchHistory createWatchHistory(User user, Video video, int videoStoppedTime) {
-        log.info("no watch history, generating new one...");
-        video = increaseVideoViewsAndSave(video);
-        log.info("updated views : " + video.getViews());
-        WatchHistory created = new WatchHistory(user, video, videoStoppedTime);
-        log.info(created.toString());
-        return watchHistoryRepository.save(created);
-    }
     public Video increaseVideoViewsAndSave(Video video) {
         video.setViews(video.getViews()+1);
         return videoRepository.save(video);
@@ -48,9 +40,9 @@ public class WatchHistoryService {
         int tempOrder = (lastVideoStoppedTime - 3) / 300 + 1;
         while (tempOrder <= (videoStoppedTime-3) / 300) {
             log.info(String.valueOf(tempOrder));
-            AdIn adIn = adInRepository.findByVideoNumberAndOrderInVideo(videoNumber, tempOrder).orElseThrow();
+            Advertisement adIn = advertisementRepository.findByVideoNumberAndOrderInVideo(videoNumber, tempOrder).orElseThrow();
             adIn.setViews(adIn.getViews()+1);
-            AdIn updated = adInRepository.save(adIn);
+            Advertisement updated = advertisementRepository.save(adIn);
             log.info(tempOrder + "th adin view now: " + updated.getViews());
             tempOrder += 1;
         }
@@ -78,7 +70,6 @@ public class WatchHistoryService {
         }
         log.info("watch history exists, updating previous watch history");
         int prevVideoStoppedTime = prevWatchHistory.getVideoStoppedTime();
-        log.info(String.valueOf(prevVideoStoppedTime));
         updateAdInVideoViews(prevVideoStoppedTime, videoNumber, videoStoppedTime);
         prevWatchHistory.setVideoStoppedTime(videoStoppedTime);
         return WatchHistoryDto.fromEntity(watchHistoryRepository.save(prevWatchHistory));

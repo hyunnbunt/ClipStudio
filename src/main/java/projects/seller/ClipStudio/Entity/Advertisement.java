@@ -11,8 +11,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @Setter
 @Getter
-@Table(name="Ad_ins")
-public class AdIn {
+@Table(name="advertisements")
+public class Advertisement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long number;
