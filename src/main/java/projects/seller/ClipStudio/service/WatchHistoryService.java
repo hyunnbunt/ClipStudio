@@ -41,9 +41,9 @@ public class WatchHistoryService {
         while (tempOrder <= (videoStoppedTime-3) / 300) {
             log.info(String.valueOf(tempOrder));
             Advertisement adIn = advertisementRepository.findByVideoNumberAndOrderInVideo(videoNumber, tempOrder).orElseThrow();
-            adIn.setViews(adIn.getViews()+1);
+            adIn.setTotalViews(adIn.getTotalViews()+1);
             Advertisement updated = advertisementRepository.save(adIn);
-            log.info(tempOrder + "th adin view now: " + updated.getViews());
+            log.info(tempOrder + "th adin view now: " + updated.getTotalViews());
             tempOrder += 1;
         }
     }
