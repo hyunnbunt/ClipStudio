@@ -8,29 +8,10 @@
 </head>
 <body>
     testing page
-    <button id="video-button" type="button">play video #1</button>
-    <script>
-        document.getElementById('video-button')
-        .addEventListener('click', function() {
-        fetch('/api/videos/1', {
-            method: "POST",
-            mode: "cors",
-            cache: "no-cache",
-            credentials: "same-origin",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                videoNumber : 1,
-                videoStoppedTime : 100,
-            })
-        }).then(res => {
-            console.log(res);
-        })
-        .catch(error => {
-        console.error('API 요청 오류:', error);
-        });
-        });
-    </script>
+    <form id="video-play-form">
+        <input id="videoStoppedTime" type="text" onChange="setVideoStoppedTime()">
+        <button id="video-button" type="submit">play video #1</button>
+    </form>
+     <script type="text/javascript" src="script.js"></script>
 </body>
 </html>

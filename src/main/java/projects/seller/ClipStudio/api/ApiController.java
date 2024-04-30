@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import projects.seller.ClipStudio.dto.VideoDto;
+import projects.seller.ClipStudio.dto.VideoStoppedTimeDto;
 import projects.seller.ClipStudio.dto.WatchHistoryDto;
 import projects.seller.ClipStudio.oauth2.User.oauth2.CustomOAuth2User;
 import projects.seller.ClipStudio.service.WatchHistoryService;
@@ -20,25 +21,24 @@ public class ApiController {
 
     private final WatchHistoryService watchHistoryService;
 
-    // 어떤 유저가 비디오를 재생했을 때, 이미 히스토리가 있으면 있는 걸 보내주고, 없으면 새로 만들어서 보내줄 것.
-    @GetMapping("/api/videos/{videoNumber}")
-    public WatchHistoryDto playVideo(@PathVariable long videoNumber) {
-        log.info(String.valueOf(videoNumber));
-        return new WatchHistoryDto();
-    }
-
+    // play video - update watch history, or make a new one.
     @PostMapping("/api/videos/{videoNumber}")
-    public ResponseEntity<WatchHistoryDto> updateWatchHistory(@PathVariable long videoNumber,
-                                                              @RequestBody WatchHistoryDto watchHistoryDto,
+    public ResponseEntity<WatchHistoryDto> updateWatchHistory(@PathVariable Long videoNumber,
+                                                              @RequestBody VideoStoppedTimeDto videoStoppedTimeDto,
                                                               @AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
-        log.info("post mapping");
-        log.info(String.valueOf(videoNumber));
-        log.info(customOAuth2User.getEmail());
-        log.info(String.valueOf(watchHistoryDto.toString()));
-        WatchHistoryDto updatedWatchHistory = watchHistoryService.updateWatchHistory(videoNumber, watchHistoryDto, customOAuth2User.getEmail());
-        return ResponseEntity.status(HttpStatus.OK).body(watchHistoryDto);
-
+        WatchHistoryDto watchHistoryDto = watchHistoryService.updateWatchHistory(videoNumber, videoStoppedTimeDto, customOAuth2User.getEmail());
+        log.info(watchHistoryDto.toString());
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    // 어떤 유저가 비디오를 재생했을 때, 이미 히스토리가 있으면 있는 걸 보내주고, 없으면 새로 만들어서 보내줄 것.
+//    @GetMapping("/api/videos/{videoNumber}")
+//    public WatchHistoryDto playVideo(@PathVariable long videoNumber) {
+//        log.info(String.valueOf(videoNumber));
+//        return new WatchHistoryDto();
+//    }
+
+
 
 //    @PatchMapping("api/videos/{video_id}")
 //    public ResponseEntity<VideoDto> updateWatchHistory(@PathVariable Long videoId, @RequestBody WatchHistoryDto watchHistoryDto) {

@@ -1,9 +1,7 @@
 package projects.seller.ClipStudio.Entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import projects.seller.ClipStudio.dto.VideoDto;
 import projects.seller.ClipStudio.oauth2.User.entity.User;
 
@@ -13,21 +11,24 @@ import java.sql.Timestamp;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
+@Table(name="Videos")
 public class Video {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public long number;
-    @Column
+    public Long number;
+    @Column(nullable = false)
     public String title;
-    @Column
-    public int duration; // seconds, java.sql.Time <-> java.sql.jdbcType 비교할 것. db에는 time 이 있다 (mm:ssssss)
+    @Column(nullable = false)
+    public Integer duration; // seconds, java.sql.Time <-> java.sql.jdbcType 비교할 것. db에는 time 이 있다 (mm:ssssss)
     @ManyToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn(nullable = false, name = "uploader_number")
     public User uploader;
-    @Column
+    @Column(nullable = false)
     public Timestamp createdDate;
-    @Column
-    public long views;
+    @Column(nullable = false)
+    public Long views;
 
     public static Video fromDto(VideoDto videoDto) {
         return builder()

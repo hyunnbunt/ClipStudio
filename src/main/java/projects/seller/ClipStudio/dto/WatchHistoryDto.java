@@ -1,10 +1,22 @@
 package projects.seller.ClipStudio.dto;
 
-import lombok.Data;
+import lombok.*;
+import projects.seller.ClipStudio.Entity.WatchHistory;
 
-@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@Builder
+@ToString
 public class WatchHistoryDto {
-    long userNumber;
-    long videoNumber;
+    String userEmail;
+    Long videoNumber;
     int videoStoppedTime;
+    public static WatchHistoryDto fromEntity(WatchHistory watchHistory) {
+        return builder()
+                .userEmail(watchHistory.getUser().getEmail())
+                .videoNumber(watchHistory.getVideo().getNumber())
+                .videoStoppedTime(watchHistory.getVideoStoppedTime()).build();
+    }
 }

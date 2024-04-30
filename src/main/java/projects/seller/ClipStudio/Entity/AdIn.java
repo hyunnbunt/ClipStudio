@@ -2,20 +2,25 @@ package projects.seller.ClipStudio.Entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Setter
+@Getter
+@Table(name="Ad_ins")
 public class AdIn {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public long number;
+    public Long number;
     @ManyToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn(nullable = false, name="video_number")
     public Video video;
-    @Column
-    public int orderInVideo; // order in video.
-    @Column
-    public long views;
+    @Column(nullable = false)
+    public Integer orderInVideo; // order in video.
+    @Column(nullable = false)
+    public Long views;
 }

@@ -16,9 +16,9 @@ public class VideoService {
         // constructor가 하나일 때는 @Autowired 생략 가능
         this.videoRepository = videoRepository;
     }
-    public VideoDto increaseViews(@PathVariable Long videoId) {
-        Video target = videoRepository.getReferenceById(videoId); //getId() is deprecated
-        target.increaseViews();
+    public VideoDto increaseViews(@PathVariable Long videoNumber) {
+        Video target = videoRepository.getReferenceById(videoNumber); //getId() is deprecated
+        target.setViews(target.getViews()+1);
         Video updated = videoRepository.save(target);
         return VideoDto.fromEntity(updated);
     }
