@@ -12,11 +12,12 @@ import projects.seller.ClipStudio.Entity.WatchHistory;
 public class WatchHistoryDto {
     String userEmail;
     Long videoNumber;
-    int videoStoppedTime;
+    Integer videoStoppedTime;
     public static WatchHistoryDto fromEntity(WatchHistory watchHistory) {
         return builder()
                 .userEmail(watchHistory.getUser().getEmail())
                 .videoNumber(watchHistory.getVideo().getNumber())
-                .videoStoppedTime(watchHistory.getVideoStoppedTime()).build();
+                .videoStoppedTime(watchHistory.getVideoStoppedTime())
+                .build();
     }
 }

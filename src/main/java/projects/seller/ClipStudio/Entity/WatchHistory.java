@@ -25,8 +25,8 @@ public class WatchHistory {
     @Column
     int videoStoppedTime; // 최근 시청 기록 -> 업데이트될 때마다 Video 엔티티의 광고 시청 조회수 리스트 업데이트 여부 확인 후 필요시 업데이트
     public WatchHistory(User user, Video video, int videoStoppedTime) {
-        this.user = user;
-        this.video = video;
-        this.videoStoppedTime = videoStoppedTime;
+        this.setUser(user);
+        this.setVideo(video);
+        this.setVideoStoppedTime(videoStoppedTime);
     }
 }

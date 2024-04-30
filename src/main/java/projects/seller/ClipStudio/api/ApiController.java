@@ -26,8 +26,8 @@ public class ApiController {
     public ResponseEntity<WatchHistoryDto> updateWatchHistory(@PathVariable Long videoNumber,
                                                               @RequestBody VideoStoppedTimeDto videoStoppedTimeDto,
                                                               @AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
-        WatchHistoryDto watchHistoryDto = watchHistoryService.updateWatchHistory(videoNumber, videoStoppedTimeDto, customOAuth2User.getEmail());
-        log.info(watchHistoryDto.toString());
+        WatchHistoryDto updatedDto = watchHistoryService.updateWatchHistory(videoNumber, videoStoppedTimeDto, customOAuth2User.getEmail());
+        log.info(updatedDto.toString());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
