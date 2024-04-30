@@ -26,25 +26,34 @@ public class WatchHistoryService {
     private final AdInRepository adInRepository;
     private final VideoService videoService;
 
-    
+    public WatchHistory createWatchHistory(User user, Video video, int videoStoppedTime) {
+        log.info("no watch history, generating new one...");
+        video.setViews(video.getViews()+1);
+        videoRepository.save(video);
+        log.info("updated views : " + video.getViews());
+        WatchHistory created = new WatchHistory(user, video, videoStoppedTime);
+        log.info(created.toString());
+        return watchHistoryRepository.save(created);
+    }
     public WatchHistoryDto updateWatchHistory(@PathVariable Long videoNumber,
                                    @RequestBody VideoStoppedTimeDto videoStoppedTimeDto,
                                    String userEmail) {
         log.info("inside watch history service");
-        // email로 user, videoNumber로 video 찾아오기
         User user = userRepository.findByEmail(userEmail).orElseThrow();
         Video video = videoRepository.findByNumber(videoNumber).orElseThrow();
+        int videoStoppedTime = videoStoppedTimeDto.getVideoStoppedTime();
         WatchHistory prevWatchHistory = watchHistoryRepository
                 .findByUserEmailAndVideoNumber(user.getEmail(), videoNumber)
                 .orElse(null);
         if (prevWatchHistory == null) {
-            log.info("no watch history, generating new one...");
-            video.setViews(video.getViews()+1);
-            videoRepository.save(video);
-            log.info(String.valueOf(video.getViews()));
-            WatchHistory created = new WatchHistory(user, video, videoStoppedTimeDto.getVideoStoppedTime());
-            log.info(created.toString());
-            return WatchHistoryDto.fromEntity(watchHistoryRepository.save(created));
+            WatchHistory created = createWatchHistory(user, video, videoStoppedTime);
+//            log.info("no watch history, generating new one...");
+//            video.setViews(video.getViews()+1);
+//            videoRepository.save(video);
+//            log.info(String.valueOf(video.getViews()));
+//            WatchHistory created = new WatchHistory(user, video, videoStoppedTimeDto.getVideoStoppedTime());
+//            log.info(created.toString());
+            return WatchHistoryDto.fromEntity(created);
         } else {
             log.info("watch history exists, updating previous watch history");
             int prevVideoStoppedTime = prevWatchHistory.getVideoStoppedTime();
