@@ -22,7 +22,7 @@ public class VideoDto {
                 .duration(videoEntity.duration)
                 .createdDate(videoEntity.createdDate)
                 .title(videoEntity.title)
-                .views(videoEntity.views)
+                .views(videoEntity.totalViews)
                 .build();
     }
 }

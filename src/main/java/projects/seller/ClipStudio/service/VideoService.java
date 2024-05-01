@@ -18,7 +18,7 @@ public class VideoService {
     }
     public VideoDto increaseViews(@PathVariable Long videoNumber) {
         Video target = videoRepository.getReferenceById(videoNumber); //getId() is deprecated
-        target.setViews(target.getViews()+1);
+        target.setTotalViews(target.getTotalViews()+1);
         Video updated = videoRepository.save(target);
         return VideoDto.fromEntity(updated);
     }

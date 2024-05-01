@@ -1,5 +1,6 @@
 package projects.seller.ClipStudio.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -8,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import projects.seller.ClipStudio.Entity.Advertisement;
 import projects.seller.ClipStudio.Entity.Video;
 import projects.seller.ClipStudio.Entity.WatchHistory;
-import projects.seller.ClipStudio.dto.VideoStoppedTimeDto;
+import projects.seller.ClipStudio.dto.PlayVideoDto;
 import projects.seller.ClipStudio.dto.WatchHistoryDto;
 import projects.seller.ClipStudio.oauth2.User.entity.User;
 import projects.seller.ClipStudio.oauth2.User.userRepository.UserRepository;
@@ -27,7 +28,7 @@ public class WatchHistoryService {
     private final VideoService videoService;
 
     public Video increaseVideoViewsAndSave(Video video) {
-        video.setViews(video.getViews()+1);
+        video.setDailyViews(video.getDailyViews()+1);
         return videoRepository.save(video);
     }
 
@@ -35,26 +36,26 @@ public class WatchHistoryService {
         return video.getDuration() >= videoStoppedTime;
     }
 
-    public void updateAdInVideoViews(int lastVideoStoppedTime, long videoNumber, int videoStoppedTime) {
+    public void updateAdvertisementViews(int lastVideoStoppedTime, long videoNumber, int videoStoppedTime) {
         // 먼저 해야 함.
         int tempOrder = (lastVideoStoppedTime - 3) / 300 + 1;
         while (tempOrder <= (videoStoppedTime-3) / 300) {
             log.info(String.valueOf(tempOrder));
-            Advertisement adIn = advertisementRepository.findByVideoNumberAndOrderInVideo(videoNumber, tempOrder).orElseThrow();
-            adIn.setTotalViews(adIn.getTotalViews()+1);
-            Advertisement updated = advertisementRepository.save(adIn);
-            log.info(tempOrder + "th adin view now: " + updated.getTotalViews());
+            Advertisement advertisement = advertisementRepository.findByVideoNumberAndOrderInVideo(videoNumber, tempOrder).orElseThrow();
+            advertisement.setDailyViews(advertisement.getDailyViews()+1);
+            advertisementRepository.save(advertisement);
             tempOrder += 1;
         }
     }
 
-    public WatchHistoryDto updateWatchHistory(@PathVariable Long videoNumber,
-                                   @RequestBody VideoStoppedTimeDto videoStoppedTimeDto,
-                                   String userEmail) {
+    @Transactional
+    public WatchHistoryDto playVideo(@PathVariable Long videoNumber,
+                                     @RequestBody PlayVideoDto playVideoDto,
+                                     String userEmail) {
         log.info("inside watch history service");
         User user = userRepository.findByEmail(userEmail).orElseThrow();
         Video video = videoRepository.findByNumber(videoNumber).orElseThrow();
-        int videoStoppedTime = videoStoppedTimeDto.getVideoStoppedTime();
+        int videoStoppedTime = playVideoDto.getVideoStopped();
         if (!validateVideoStoppedTime(video, videoStoppedTime)) {
             throw new IllegalArgumentException();
         };
@@ -64,13 +65,13 @@ public class WatchHistoryService {
         if (prevWatchHistory == null) {
             log.info("No watch history, generating a new one...");
             increaseVideoViewsAndSave(video);
-            updateAdInVideoViews(0, videoNumber, videoStoppedTime);
+            updateAdvertisementViews(0, videoNumber, videoStoppedTime);
             WatchHistory created = new WatchHistory(user, video, videoStoppedTime);
             return WatchHistoryDto.fromEntity(watchHistoryRepository.save(created));
         }
         log.info("watch history exists, updating previous watch history");
         int prevVideoStoppedTime = prevWatchHistory.getVideoStoppedTime();
-        updateAdInVideoViews(prevVideoStoppedTime, videoNumber, videoStoppedTime);
+        updateAdvertisementViews(prevVideoStoppedTime, videoNumber, videoStoppedTime);
         prevWatchHistory.setVideoStoppedTime(videoStoppedTime);
         return WatchHistoryDto.fromEntity(watchHistoryRepository.save(prevWatchHistory));
     }

@@ -6,8 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import projects.seller.ClipStudio.dto.VideoDto;
-import projects.seller.ClipStudio.dto.VideoStoppedTimeDto;
+import projects.seller.ClipStudio.dto.PlayVideoDto;
 import projects.seller.ClipStudio.dto.WatchHistoryDto;
 import projects.seller.ClipStudio.oauth2.User.oauth2.CustomOAuth2User;
 import projects.seller.ClipStudio.service.WatchHistoryService;
@@ -23,10 +22,10 @@ public class ApiController {
 
     // play video - update watch history, or make a new one.
     @PostMapping("/api/videos/{videoNumber}")
-    public ResponseEntity<WatchHistoryDto> updateWatchHistory(@PathVariable Long videoNumber,
-                                                              @RequestBody VideoStoppedTimeDto videoStoppedTimeDto,
-                                                              @AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
-        WatchHistoryDto updatedDto = watchHistoryService.updateWatchHistory(videoNumber, videoStoppedTimeDto, customOAuth2User.getEmail());
+    public ResponseEntity<WatchHistoryDto> playVideo(@PathVariable Long videoNumber,
+                                                     @RequestBody PlayVideoDto playVideoDto,
+                                                     @AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
+        WatchHistoryDto updatedDto = watchHistoryService.playVideo(videoNumber, playVideoDto, customOAuth2User.getEmail());
         log.info(updatedDto.toString());
         return ResponseEntity.status(HttpStatus.OK).build();
     }

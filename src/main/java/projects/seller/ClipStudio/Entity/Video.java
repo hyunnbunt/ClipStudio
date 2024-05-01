@@ -28,12 +28,13 @@ public class Video {
     @Column(nullable = false)
     public Timestamp createdDate;
     @Column(nullable = false)
-    public Long views;
-
+    public Long totalViews;
+    @Column(nullable = false)
+    public Long dailyViews;
     public static Video fromDto(VideoDto videoDto) {
         return builder()
                 .title(videoDto.title)
-                .views(videoDto.views).build();
+                .totalViews(videoDto.views).build();
     }
 
 //    public void updatePriceIdx(List<Integer> division) {
@@ -47,6 +48,6 @@ public class Video {
 //        }
 //    }
     public void increaseViews() {
-        this.views ++;
+        this.totalViews++;
     }
 }
