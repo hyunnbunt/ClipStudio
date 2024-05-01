@@ -29,6 +29,7 @@ public class WatchHistoryService {
 
     public Video increaseVideoViewsAndSave(Video video) {
         video.setDailyViews(video.getDailyViews()+1);
+        log.info("daily views of video: " + video.getDailyViews());
         return videoRepository.save(video);
     }
 
@@ -40,10 +41,10 @@ public class WatchHistoryService {
         // 먼저 해야 함.
         int tempOrder = (lastVideoStoppedTime - 3) / 300 + 1;
         while (tempOrder <= (videoStoppedTime-3) / 300) {
-            log.info(String.valueOf(tempOrder));
             Advertisement advertisement = advertisementRepository.findByVideoNumberAndOrderInVideo(videoNumber, tempOrder).orElseThrow();
             advertisement.setDailyViews(advertisement.getDailyViews()+1);
-            advertisementRepository.save(advertisement);
+            Advertisement updated = advertisementRepository.save(advertisement);
+            log.info(tempOrder + "th advertisement of video number " + videoNumber + ", daily views: " + updated.getDailyViews());
             tempOrder += 1;
         }
     }
@@ -55,7 +56,7 @@ public class WatchHistoryService {
         log.info("inside watch history service");
         User user = userRepository.findByEmail(userEmail).orElseThrow();
         Video video = videoRepository.findByNumber(videoNumber).orElseThrow();
-        int videoStoppedTime = playVideoDto.getVideoStopped();
+        int videoStoppedTime = playVideoDto.getVideoStoppedTime();
         if (!validateVideoStoppedTime(video, videoStoppedTime)) {
             throw new IllegalArgumentException();
         };

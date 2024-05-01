@@ -13,5 +13,5 @@ public class DailyProfitOfVideo {
     @Column(nullable = false)
     Long dailyProfit;
     @Column(nullable = false)
-    Date date;
+    Date calculatedDate;
 }

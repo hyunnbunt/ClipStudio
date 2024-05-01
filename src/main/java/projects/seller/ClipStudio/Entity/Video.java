@@ -36,17 +36,6 @@ public class Video {
                 .title(videoDto.title)
                 .totalViews(videoDto.views).build();
     }
-
-//    public void updatePriceIdx(List<Integer> division) {
-//        for (int i = 0; i < division.size()-1; i ++) {
-//            int start = division.get(i);
-//            int end = division.get(i+1);
-//            if (this.views>=start&&this.views<end) {
-//                priceSectionIdx = i;
-//                // 0, 10, 50, 100 => 25 => 1 (두 번째 구간)
-//            }
-//        }
-//    }
     public void increaseViews() {
         this.totalViews++;
     }

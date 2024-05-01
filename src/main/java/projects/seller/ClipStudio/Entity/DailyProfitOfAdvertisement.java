@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.Data;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 @Entity
@@ -15,5 +16,5 @@ public class DailyProfitOfAdvertisement {
     @Column(nullable = false)
     Long dailyProfit;
     @Column(nullable = false)
-    Date date;
+    Date calculatedDate;
 }

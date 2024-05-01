@@ -10,6 +10,6 @@ import java.time.ZonedDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PlayVideoDto {
-    int videoStopped;
+    Integer videoStoppedTime;
     ZonedDateTime requestTime;
 }

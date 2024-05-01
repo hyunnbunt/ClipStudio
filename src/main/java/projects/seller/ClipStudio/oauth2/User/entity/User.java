@@ -5,6 +5,7 @@ import lombok.*;
 import projects.seller.ClipStudio.oauth2.User.entity.enums.Role;
 import projects.seller.ClipStudio.oauth2.User.entity.enums.SocialType;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Getter
@@ -16,12 +17,14 @@ import java.time.LocalDateTime;
 public class User {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long number;
+    @Column(nullable = false)
     private String username;
     @Column(nullable = false)
     private String email;
     @Enumerated(EnumType.STRING)
     private Role role; // USER, SELLER
-    private LocalDateTime createDate;
+    @Column // social login 수정하고 나서 => nullable = true 로 수정
+    private Timestamp createDate;
     @Enumerated(EnumType.STRING)
     private SocialType socialType; // GOOGLE, ...
     private String socialId;
