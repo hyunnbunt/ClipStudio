@@ -1,4 +1,4 @@
-package projects.seller.ClipStudio.batch;
+package clipstudio.config;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
