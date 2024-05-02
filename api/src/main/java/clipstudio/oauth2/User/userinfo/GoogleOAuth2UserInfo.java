@@ -1,5 +1,4 @@
-package projects.seller.ClipStudio.oauth2.User.userinfo;
-
+package clipstudio.oauth2.User.userinfo;
 import java.util.Map;
 
 public class GoogleOAuth2UserInfo extends OAuth2UserInfo {

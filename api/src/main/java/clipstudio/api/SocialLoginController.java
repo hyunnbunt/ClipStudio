@@ -1,4 +1,4 @@
-//package projects.seller.ClipStudio.user.auth;
+//package clipstudio.user.auth;
 //
 //import org.springframework.boot.autoconfigure.SpringBootApplication;
 //import org.springframework.security.core.annotation.AuthenticationPrincipal;

@@ -1,4 +1,4 @@
-//package projects.seller.ClipStudio.oauth2.handler;
+//package clipstudio.oauth2.handler;
 //
 //import jakarta.servlet.http.HttpServletRequest;
 //import jakarta.servlet.ServletException;

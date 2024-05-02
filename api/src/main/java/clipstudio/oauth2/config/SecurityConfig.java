@@ -1,36 +1,21 @@
-package projects.seller.ClipStudio.oauth2.config;
+package clipstudio.oauth2.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.CorsConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-//import projects.seller.ClipStudio.oauth2.handler.OAuth2LoginFailureHandler;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import projects.seller.ClipStudio.oauth2.handler.OAuth2LoginSuccessHandler;
-//import projects.seller.ClipStudio.oauth2.User.service.CustomOAuth2UserService;
-//import projects.seller.ClipStudio.oauth2.jwt.service.JwtService;
-import projects.seller.ClipStudio.oauth2.User.userRepository.UserRepository;
-
-import java.util.Arrays;
-//import projects.seller.ClipStudio.oauth2.filter.JwtAuthenticationProcessingFilter;
+import clipstudio.oauth2.handler.OAuth2LoginSuccessHandler;
 
 @EnableWebSecurity
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
 //    private final JwtService jwtService;
-    private final UserRepository userRepository;
+    private final clipstudio.oauth2.User.userRepository.UserRepository userRepository;
     private final ObjectMapper objectMapper;
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
 //    private final CorsConfig corsConfig;

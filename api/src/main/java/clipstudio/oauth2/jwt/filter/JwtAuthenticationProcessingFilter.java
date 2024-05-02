@@ -1,4 +1,4 @@
-//package projects.seller.ClipStudio.oauth2.jwt.filter;
+//package clipstudio.oauth2.jwt.filter;
 //
 //import lombok.RequiredArgsConstructor;
 //import lombok.extern.slf4j.Slf4j;
@@ -14,10 +14,10 @@
 //import jakarta.servlet.ServletException;
 //import jakarta.servlet.http.HttpServletRequest;
 //import jakarta.servlet.http.HttpServletResponse;
-//import projects.seller.ClipStudio.oauth2.jwt.service.JwtService;
-//import projects.seller.ClipStudio.oauth2.util.PasswordUtil;
-//import projects.seller.ClipStudio.oauth2.User.entity.User;
-//import projects.seller.ClipStudio.oauth2.User.userRepository.UserRepository;
+//import clipstudio.oauth2.jwt.service.JwtService;
+//import clipstudio.oauth2.util.PasswordUtil;
+//import clipstudio.oauth2.User.entity.User;
+//import clipstudio.oauth2.User.userRepository.UserRepository;
 //
 //import java.io.IOException;
 //

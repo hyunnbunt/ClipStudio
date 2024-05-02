@@ -1,4 +1,4 @@
-package projects.seller.ClipStudio.service;
+package clipstudio.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -6,16 +6,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import projects.seller.ClipStudio.Entity.Advertisement;
-import projects.seller.ClipStudio.Entity.Video;
-import projects.seller.ClipStudio.Entity.WatchHistory;
-import projects.seller.ClipStudio.dto.PlayVideoDto;
-import projects.seller.ClipStudio.dto.WatchHistoryDto;
-import projects.seller.ClipStudio.oauth2.User.entity.User;
-import projects.seller.ClipStudio.oauth2.User.userRepository.UserRepository;
-import projects.seller.ClipStudio.repository.AdvertisementRepository;
-import projects.seller.ClipStudio.repository.VideoRepository;
-import projects.seller.ClipStudio.repository.WatchHistoryRepository;
+import clipstudio.Entity.Advertisement;
+import clipstudio.Entity.Video;
+import clipstudio.Entity.WatchHistory;
+import clipstudio.dto.PlayVideoDto;
+import clipstudio.dto.WatchHistoryDto;
+import clipstudio.oauth2.User.entity.User;
+import clipstudio.oauth2.User.userRepository.UserRepository;
+import clipstudio.repository.AdvertisementRepository;
+import clipstudio.repository.VideoRepository;
+import clipstudio.repository.WatchHistoryRepository;
 
 @Service
 @RequiredArgsConstructor

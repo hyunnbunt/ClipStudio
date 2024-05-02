@@ -1,9 +1,9 @@
-package projects.seller.ClipStudio.Entity;
+package clipstudio.Entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import projects.seller.ClipStudio.dto.WatchHistoryDto;
-import projects.seller.ClipStudio.oauth2.User.entity.User;
+import clipstudio.dto.WatchHistoryDto;
+import clipstudio.oauth2.User.entity.User;
 
 @Entity
 @Builder

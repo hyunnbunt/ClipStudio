@@ -1,7 +1,7 @@
-package projects.seller.ClipStudio.dto;
+package clipstudio.dto;
 
 import lombok.*;
-import projects.seller.ClipStudio.Entity.Video;
+import clipstudio.Entity.Video;
 
 import java.sql.Timestamp;
 

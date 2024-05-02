@@ -1,13 +1,13 @@
-package projects.seller.ClipStudio.oauth2.User.oauth2;
+package clipstudio.oauth2.User.oauth2;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import projects.seller.ClipStudio.oauth2.User.entity.enums.Role;
-import projects.seller.ClipStudio.oauth2.User.entity.enums.SocialType;
-import projects.seller.ClipStudio.oauth2.User.entity.User;
-import projects.seller.ClipStudio.oauth2.User.userinfo.GoogleOAuth2UserInfo;
-import projects.seller.ClipStudio.oauth2.User.userinfo.OAuth2UserInfo;
+import clipstudio.oauth2.User.entity.enums.Role;
+import clipstudio.oauth2.User.entity.enums.SocialType;
+import clipstudio.oauth2.User.entity.User;
+import clipstudio.oauth2.User.userinfo.GoogleOAuth2UserInfo;
+import clipstudio.oauth2.User.userinfo.OAuth2UserInfo;
 
 import java.util.Map;
 

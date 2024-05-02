@@ -1,12 +1,12 @@
-//package projects.seller.ClipStudio.user.auth;
+//package clipstudio.user.auth;
 //
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 //import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 //import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 //import org.springframework.security.oauth2.core.user.OAuth2User;
-//import projects.seller.ClipStudio.user.User;
-//import projects.seller.ClipStudio.user.UserRepository;
+//import clipstudio.user.User;
+//import clipstudio.user.UserRepository;
 //
 //public class PrincipalOauthUserService extends DefaultOAuth2UserService {
 //    @Autowired

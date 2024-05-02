@@ -1,7 +1,7 @@
-package projects.seller.ClipStudio.repository;
+package clipstudio.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import projects.seller.ClipStudio.Entity.WatchHistory;
+import clipstudio.Entity.WatchHistory;
 
 import java.util.Optional;
 

@@ -1,4 +1,4 @@
-package projects.seller.ClipStudio.dto;
+package clipstudio.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

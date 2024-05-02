@@ -17,8 +17,8 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.jdbc.support.JdbcTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
-import projects.seller.ClipStudio.Entity.DailyProfitOfVideo;
-import projects.seller.ClipStudio.Entity.Video;
+import clipstudio.Entity.DailyProfitOfVideo;
+import clipstudio.Entity.Video;
 
 import javax.sql.DataSource;
 

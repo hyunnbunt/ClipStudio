@@ -1,4 +1,4 @@
-package projects.seller.ClipStudio.api;
+package clipstudio.api;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -6,11 +6,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import projects.seller.ClipStudio.dto.PlayVideoDto;
-import projects.seller.ClipStudio.dto.WatchHistoryDto;
-import projects.seller.ClipStudio.oauth2.User.oauth2.CustomOAuth2User;
-import projects.seller.ClipStudio.service.WatchHistoryService;
-//import projects.seller.ClipStudio.service.WatchHistoryService;
+import clipstudio.dto.PlayVideoDto;
+import clipstudio.dto.WatchHistoryDto;
+import clipstudio.oauth2.User.oauth2.CustomOAuth2User;
+import clipstudio.service.WatchHistoryService;
+//import clipstudio.service.WatchHistoryService;
 
 @RestController
 @Slf4j

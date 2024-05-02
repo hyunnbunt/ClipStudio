@@ -1,10 +1,10 @@
-//package projects.seller.ClipStudio.user.auth;
+//package clipstudio.user.auth;
 //
 //import lombok.Data;
 //import lombok.extern.slf4j.Slf4j;
 //import org.springframework.security.core.GrantedAuthority;
 //import org.springframework.security.core.userdetails.UserDetails;
-//import projects.seller.ClipStudio.user.User;
+//import clipstudio.user.User;
 //
 //import java.util.ArrayList;
 //import java.util.Collection;

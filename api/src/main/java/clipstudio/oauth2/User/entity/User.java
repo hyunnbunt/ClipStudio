@@ -1,9 +1,9 @@
-package projects.seller.ClipStudio.oauth2.User.entity;
+package clipstudio.oauth2.User.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import projects.seller.ClipStudio.oauth2.User.entity.enums.Role;
-import projects.seller.ClipStudio.oauth2.User.entity.enums.SocialType;
+import clipstudio.oauth2.User.entity.enums.Role;
+import clipstudio.oauth2.User.entity.enums.SocialType;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 public class User {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long number;
-    @Column(nullable = false)
+    @Column
     private String username;
     @Column(nullable = false)
     private String email;

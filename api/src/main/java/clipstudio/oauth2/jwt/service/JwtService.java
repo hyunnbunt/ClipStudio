@@ -1,4 +1,4 @@
-//package projects.seller.ClipStudio.oauth2.jwt.service;
+//package clipstudio.oauth2.jwt.service;
 //import com.auth0.jwt.JWT;
 //import com.auth0.jwt.algorithms.Algorithm;
 //import lombok.Getter;
@@ -9,7 +9,7 @@
 //
 //import jakarta.servlet.http.HttpServletRequest;
 //import jakarta.servlet.http.HttpServletResponse;
-//import projects.seller.ClipStudio.oauth2.User.userRepository.UserRepository;
+//import clipstudio.oauth2.User.userRepository.UserRepository;
 //
 //import java.util.Date;
 //import java.util.Optional;

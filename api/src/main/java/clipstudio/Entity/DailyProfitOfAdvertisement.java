@@ -1,4 +1,4 @@
-package projects.seller.ClipStudio.Entity;
+package clipstudio.Entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -1,4 +1,4 @@
-package projects.seller.ClipStudio.Entity;
+package clipstudio.Entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

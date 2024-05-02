@@ -1,7 +1,7 @@
-package projects.seller.ClipStudio.repository;
+package clipstudio.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import projects.seller.ClipStudio.Entity.Video;
+import clipstudio.Entity.Video;
 
 import java.util.Optional;
 

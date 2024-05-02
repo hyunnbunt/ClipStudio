@@ -1,4 +1,4 @@
-package projects.seller.ClipStudio.oauth2.config;
+package clipstudio.oauth2.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

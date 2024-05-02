@@ -1,4 +1,4 @@
-package projects.seller.ClipStudio.oauth2.User.service;
+package clipstudio.oauth2.User.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,11 +9,11 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import projects.seller.ClipStudio.oauth2.User.entity.enums.SocialType;
-import projects.seller.ClipStudio.oauth2.User.entity.User;
-import projects.seller.ClipStudio.oauth2.User.userRepository.UserRepository;
-import projects.seller.ClipStudio.oauth2.User.oauth2.CustomOAuth2User;
-import projects.seller.ClipStudio.oauth2.User.oauth2.OAuth2Attributes;
+import clipstudio.oauth2.User.entity.enums.SocialType;
+import clipstudio.oauth2.User.entity.User;
+import clipstudio.oauth2.User.userRepository.UserRepository;
+import clipstudio.oauth2.User.oauth2.CustomOAuth2User;
+import clipstudio.oauth2.User.oauth2.OAuth2Attributes;
 
 import java.util.Collections;
 import java.util.Map;
