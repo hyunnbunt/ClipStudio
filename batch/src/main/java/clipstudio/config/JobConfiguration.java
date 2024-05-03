@@ -1,12 +1,16 @@
 package clipstudio.config;
 
 import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobKeyGenerator;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.launch.support.TaskExecutorJobLauncher;
 import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.repository.dao.JdbcJobExecutionDao;
+import org.springframework.batch.core.repository.dao.JdbcJobInstanceDao;
+import org.springframework.batch.core.repository.dao.JobInstanceDao;
 import org.springframework.batch.core.repository.support.JobRepositoryFactoryBean;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.ItemWriter;
@@ -39,6 +43,13 @@ public class JobConfiguration {
     public JobLauncher jobLauncher;
     @Autowired DataSource batchDataSource;
     @Autowired PlatformTransactionManager transactionManager;
+
+    @Bean
+    public JdbcJobInstanceDao jobInstanceDao(JobKeyGenerator<String> jobKeyGenerator) {
+        JdbcJobInstanceDao dao = new JdbcJobInstanceDao();
+        dao.setJobKeyGenerator(jobKeyGenerator);
+        return dao;
+    }
 
     @Bean
     private DataSource batchDataSource() {
@@ -75,7 +86,7 @@ public class JobConfiguration {
         return new JdbcCursorItemReaderBuilder<Video>()
                 .name("videoReader")
                 .dataSource(batchDataSource)
-                .sql("SELECT * FROM videos WHERE number=1")
+                .sql("SELECT * FROM videos WHERE number=1") // rowMapper()는 db에서 받아온 결과를 Java 객체로 매핑하는 구현체. 지정 가능.
                 .build();
     }
     @Bean
