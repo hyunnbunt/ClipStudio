@@ -1,12 +1,13 @@
 package clipstudio.Entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.util.Date;
 
-@Entity
-@Data
+@Setter
+@Getter
+@Builder
 public class DailyProfitOfVideo {
     @Id
     Long videoNumber; // video number 와 일치
