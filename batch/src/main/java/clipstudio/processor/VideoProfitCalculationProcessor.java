@@ -1,10 +1,7 @@
 package clipstudio.processor;
 
-import clipstudio.Entity.DailyProfitOfVideo;
-import clipstudio.Entity.Video;
+import clipstudio.dto.DailyProfitOfVideo;
 import clipstudio.dto.DailyViews;
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;

@@ -18,7 +18,7 @@ import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuild
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.support.JdbcTransactionManager;
-import clipstudio.Entity.DailyProfitOfVideo;
+import clipstudio.dto.DailyProfitOfVideo;
 @EnableBatchProcessing
 @RequiredArgsConstructor
 @Configuration
