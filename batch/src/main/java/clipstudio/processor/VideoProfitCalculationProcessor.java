@@ -14,8 +14,10 @@ import java.util.Date;
 @Component
 @Slf4j
 public class VideoProfitCalculationProcessor implements ItemProcessor<DailyViews, DailyProfitOfVideo> {
+
     @Override
     public DailyProfitOfVideo process(DailyViews dailyViews) throws Exception {
+        log.info(String.valueOf(dailyViews));
         final Long total = dailyViews.getTotalViews();
         final Long daily = dailyViews.getDailyViews();
         log.info("video total views: " + total);

@@ -1,8 +1,7 @@
 package clipstudio.config;
 
 import clipstudio.dto.DailyViews;
-import clipstudio.mapper.DailyViewsRowMapper;
-import com.zaxxer.hikari.HikariDataSource;
+import clipstudio.mapper.VideoMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -16,38 +15,30 @@ import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.database.JdbcCursorItemReader;
 import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
 import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuilder;
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.support.JdbcTransactionManager;
 import clipstudio.Entity.DailyProfitOfVideo;
 @EnableBatchProcessing
 @RequiredArgsConstructor
+@Configuration
 @Slf4j
-public class JobConfiguration {
+public class JobConfig {
     /**
      * Note the JobRepository is typically autowired in and not needed to be explicitly
      * configured
      */
 
     private final ItemProcessor<DailyViews, DailyProfitOfVideo> videoProfitCalculationProcessor;
-    @Bean
-    public HikariDataSource dataSource() {
-            return DataSourceBuilder.create()
-                    .url("jdbc:mariadb://127.0.0.1:3308/clipstudio")
-                    .username("clipst")
-                    .password("1234")
-                    .driverClassName("org.mariadb.jdbc.Driver")
-                    .type(HikariDataSource.class)
-                    .build();
-    }
+    private final DatabaseConfig databaseConfig;
+    private final VideoMapper videoMapper;
 
     @Bean
     public JdbcTransactionManager transactionManager() {
-        return new JdbcTransactionManager(dataSource());
+        return new JdbcTransactionManager(databaseConfig.getDataSource());
     }
-
     @Bean
-    public Job dailyProfitCalculationJob(JobRepository jobRepository, Step step) {
+    public Job dailyProfitCalculationJob(JobRepository jobRepository) {
         return new JobBuilder("dailyProfitCalculationJob", jobRepository)
                 .preventRestart() // why?
                 .start(dailyProfitCalculationStep(jobRepository))
@@ -57,37 +48,41 @@ public class JobConfiguration {
     @Bean
     public Step dailyProfitCalculationStep(JobRepository jobRepository) {
         return new StepBuilder("dailyProfitCalculationStep", jobRepository)
-                .<DailyViews, DailyProfitOfVideo>chunk(20, transactionManager())
+                .<DailyViews, DailyProfitOfVideo>chunk(1, transactionManager())
                 //	transactionManager: Spring’s PlatformTransactionManager that begins
                 //	and commits transactions during processing.
-                .reader(getDailyViewsReader())
+                .reader(videoReader())
                 .processor(videoProfitCalculationProcessor)
-                .writer(getDailyProfitOfVideoWriter())
+                .writer(videoProfitWriter())
                 .build();
     }
 
     @Bean
-    public JdbcCursorItemReader<DailyViews> getDailyViewsReader() {
-        return new JdbcCursorItemReaderBuilder<DailyViews>()
-                .name("dailyViewsReader")
-                .rowMapper(new DailyViewsRowMapper())
+    public JdbcCursorItemReader<DailyViews> videoReader() {
+        JdbcCursorItemReader<DailyViews> reader = new JdbcCursorItemReaderBuilder<DailyViews>()
+                .name("videoReader")
+                .dataSource(databaseConfig.getDataSource())
+                .rowMapper(videoMapper)
                 .sql("SELECT * FROM videos")
                 .build();
+        return reader;
     }
 
 
     @Bean
-    public JdbcBatchItemWriter<DailyProfitOfVideo> getDailyProfitOfVideoWriter() {
+    public JdbcBatchItemWriter<DailyProfitOfVideo> videoProfitWriter() {
         /**
          * The JdbcBatchItemWriter is an ItemWriter that uses the batching features
          * from NamedParameterJdbcTemplate to execute a batch of statements
          * for all items provided. Spring Batch provides a JdbcBatchItemWriterBuilder
          * to construct an instance of the JdbcBatchItemWriter.
         */
+
         return new JdbcBatchItemWriterBuilder<DailyProfitOfVideo>()
                 .sql("INSERT INTO daily_profit_of_video(calculated_date, daily_profit) VALUES(current_date(), :dailyProfit)")
+                .dataSource(databaseConfig.getDataSource())
                 .beanMapped() // ?? https://jojoldu.tistory.com/339
                 .build();
-    } // JpaItemWriter
+    } // JpaItemWriter?
 }
 
