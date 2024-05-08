@@ -19,6 +19,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.support.JdbcTransactionManager;
 import clipstudio.dto.DailyProfitOfVideo;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionManager;
+
+import javax.sql.DataSource;
 
 @RequiredArgsConstructor
 @Configuration
@@ -30,25 +34,24 @@ public class JobConfig {
      */
 
     private final ItemProcessor<DailyViews, DailyProfitOfVideo> videoProfitCalculationProcessor;
-    private final DatabaseConfig databaseConfig;
+    private final DataSource dataSource;
     private final VideoMapper videoMapper;
 
     @Bean
     public JdbcTransactionManager transactionManager() {
-        return new JdbcTransactionManager(databaseConfig.getDataSource());
+        return new JdbcTransactionManager(dataSource);
     }
     @Bean
-    public Job dailyProfitCalculationJob(JobRepository jobRepository) {
+    public Job dailyProfitCalculationJob(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
         return new JobBuilder("dailyProfitCalculationJob", jobRepository)
-                .preventRestart() // why?
-                .start(dailyProfitCalculationStep(jobRepository))
+                .start(dailyProfitCalculationStep(jobRepository, transactionManager))
                 .build();
     }
 
     @Bean
-    public Step dailyProfitCalculationStep(JobRepository jobRepository) {
+    public Step dailyProfitCalculationStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
         return new StepBuilder("dailyProfitCalculationStep", jobRepository)
-                .<DailyViews, DailyProfitOfVideo>chunk(1, transactionManager())
+                .<DailyViews, DailyProfitOfVideo>chunk(1, transactionManager)
                 //	transactionManager: Spring’s PlatformTransactionManager that begins
                 //	and commits transactions during processing.
                 .reader(videoReader())
@@ -61,9 +64,9 @@ public class JobConfig {
     public JdbcCursorItemReader<DailyViews> videoReader() {
         JdbcCursorItemReader<DailyViews> reader = new JdbcCursorItemReaderBuilder<DailyViews>()
                 .name("videoReader")
-                .dataSource(databaseConfig.getDataSource())
+                .dataSource(dataSource)
                 .rowMapper(videoMapper)
-                .sql("SELECT * FROM videos")
+                .sql("SELECT * FROM videos WHERE number=10")
                 .build();
         return reader;
     }
@@ -79,8 +82,8 @@ public class JobConfig {
         */
 
         return new JdbcBatchItemWriterBuilder<DailyProfitOfVideo>()
-                .sql("INSERT INTO daily_profit_of_video(calculated_date, daily_profit) VALUES(current_date(), :dailyProfit)")
-                .dataSource(databaseConfig.getDataSource())
+                .sql("INSERT INTO daily_profit_of_video(video_number, calculated_date, daily_profit) VALUES(:videoNumber, current_date(), :dailyProfit)")
+                .dataSource(dataSource)
                 .beanMapped() // ?? https://jojoldu.tistory.com/339
                 .build();
     } // JpaItemWriter?
