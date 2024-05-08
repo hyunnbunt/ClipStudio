@@ -3,7 +3,7 @@ package clipstudio.Entity;
 import jakarta.persistence.*;
 import lombok.*;
 import clipstudio.dto.VideoDto;
-import clipstudio.oauth2.User.entity.User;
+import clipstudio.oauth2.User.User;
 
 import java.sql.Timestamp;
 

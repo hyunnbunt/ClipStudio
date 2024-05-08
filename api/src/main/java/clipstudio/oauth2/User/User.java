@@ -1,12 +1,9 @@
-package clipstudio.oauth2.User.entity;
+package clipstudio.oauth2.User;
 
 import jakarta.persistence.*;
 import lombok.*;
-import clipstudio.oauth2.User.entity.enums.Role;
-import clipstudio.oauth2.User.entity.enums.SocialType;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

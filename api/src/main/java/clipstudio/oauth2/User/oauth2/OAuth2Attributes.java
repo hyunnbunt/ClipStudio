@@ -3,9 +3,9 @@ package clipstudio.oauth2.User.oauth2;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import clipstudio.oauth2.User.entity.enums.Role;
-import clipstudio.oauth2.User.entity.enums.SocialType;
-import clipstudio.oauth2.User.entity.User;
+import clipstudio.oauth2.User.Role;
+import clipstudio.oauth2.User.SocialType;
+import clipstudio.oauth2.User.User;
 import clipstudio.oauth2.User.userinfo.GoogleOAuth2UserInfo;
 import clipstudio.oauth2.User.userinfo.OAuth2UserInfo;
 

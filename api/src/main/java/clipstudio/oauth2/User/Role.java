@@ -1,4 +1,4 @@
-package clipstudio.oauth2.User.entity.enums;
+package clipstudio.oauth2.User;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

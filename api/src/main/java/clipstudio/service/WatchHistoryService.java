@@ -11,7 +11,7 @@ import clipstudio.Entity.Video;
 import clipstudio.Entity.WatchHistory;
 import clipstudio.dto.PlayVideoDto;
 import clipstudio.dto.WatchHistoryDto;
-import clipstudio.oauth2.User.entity.User;
+import clipstudio.oauth2.User.User;
 import clipstudio.oauth2.User.userRepository.UserRepository;
 import clipstudio.repository.AdvertisementRepository;
 import clipstudio.repository.VideoRepository;
