@@ -5,6 +5,7 @@ import lombok.*;
 import clipstudio.dto.VideoDto;
 import clipstudio.oauth2.User.User;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 
 @Entity
@@ -21,20 +22,20 @@ public class Video {
     @Column(nullable = false)
     public String title;
     @Column(nullable = false)
-    public Integer duration; // seconds, java.sql.Time <-> java.sql.jdbcType 비교할 것. db에는 time 이 있다 (mm:ssssss)
+    public Integer durationSec; // seconds, java.sql.Time <-> java.sql.jdbcType 비교할 것. db에는 time 이 있다 (mm:ssssss)
     @ManyToOne
     @JoinColumn(nullable = false, name = "uploader_number")
     public User uploader;
     @Column(nullable = false)
-    public Timestamp createdDate;
+    public Date createdDate;
     @Column(nullable = false)
     public Long totalViews;
     @Column(nullable = false)
-    public Long dailyViews;
+    public Long tempDailyViews;
     public static Video fromDto(VideoDto videoDto) {
         return builder()
                 .title(videoDto.title)
-                .totalViews(videoDto.views).build();
+                .totalViews(videoDto.getTotalViews()).build();
     }
     public void increaseViews() {
         this.totalViews++;
