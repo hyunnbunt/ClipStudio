@@ -28,13 +28,13 @@ public class WatchHistoryService {
     private final VideoService videoService;
 
     public Video increaseVideoViewsAndSave(Video video) {
-        video.setDailyViews(video.getDailyViews()+1);
-        log.info("daily views of video: " + video.getDailyViews());
+        video.setTempDailyViews(video.getTempDailyViews()+1);
+        log.info("daily views of video: " + video.getTempDailyViews());
         return videoRepository.save(video);
     }
 
     public boolean validateVideoStoppedTime(Video video, int videoStoppedTime) {
-        return video.getDuration() >= videoStoppedTime;
+        return video.getDurationSec() >= videoStoppedTime;
     }
 
     public void updateAdvertisementViews(int lastVideoStoppedTime, long videoNumber, int videoStoppedTime) {
@@ -42,9 +42,9 @@ public class WatchHistoryService {
         int tempOrder = (lastVideoStoppedTime - 3) / 300 + 1;
         while (tempOrder <= (videoStoppedTime-3) / 300) {
             Advertisement advertisement = advertisementRepository.findByVideoNumberAndOrderInVideo(videoNumber, tempOrder).orElseThrow();
-            advertisement.setDailyViews(advertisement.getDailyViews()+1);
+            advertisement.setTempDailyViews(advertisement.getTempDailyViews()+1);
             Advertisement updated = advertisementRepository.save(advertisement);
-            log.info(tempOrder + "th advertisement of video number " + videoNumber + ", daily views: " + updated.getDailyViews());
+            log.info(tempOrder + "th advertisement of video number " + videoNumber + ", daily views: " + updated.getTempDailyViews());
             tempOrder += 1;
         }
     }
