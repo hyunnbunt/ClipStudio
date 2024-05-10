@@ -7,9 +7,9 @@ public class VideoViewPrice {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer number;
     @Column
-    Integer start; // start included
+    Integer startRangeOfViews; // start included
     @Column
-    Integer end; // end not included
+    Integer endRangeOfViews; // end not included
     @Column
-    Integer price; // 원 단위
+    Float price; // 원 단위
 }

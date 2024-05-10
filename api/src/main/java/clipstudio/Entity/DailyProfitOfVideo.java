@@ -8,11 +8,12 @@ import java.util.Date;
 @Setter
 @Getter
 @Builder
+@Entity
 public class DailyProfitOfVideo {
     @Id
     Long videoNumber; // video number 와 일치
     @Column(nullable = false)
-    Long dailyProfit;
+    Double dailyProfit;
     @Column(nullable = false)
     Date calculatedDate;
 }
