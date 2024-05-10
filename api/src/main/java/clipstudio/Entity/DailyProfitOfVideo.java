@@ -9,6 +9,7 @@ import java.util.Date;
 @Getter
 @Builder
 @Entity
+@Table(name="video_daily_profits")
 public class DailyProfitOfVideo {
     @Id
     Long videoNumber; // video number 와 일치

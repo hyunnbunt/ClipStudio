@@ -17,7 +17,7 @@ public class WatchHistoryDto {
         return builder()
                 .userEmail(watchHistory.getUser().getEmail())
                 .videoNumber(watchHistory.getVideo().getNumber())
-                .videoStoppedTime(watchHistory.getVideoStoppedTime())
+                .videoStoppedTime(watchHistory.getVideoStoppedTimeSec())
                 .build();
     }
 }

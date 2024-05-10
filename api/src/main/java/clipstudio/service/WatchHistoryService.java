@@ -71,9 +71,9 @@ public class WatchHistoryService {
             return WatchHistoryDto.fromEntity(watchHistoryRepository.save(created));
         }
         log.info("watch history exists, updating previous watch history");
-        int prevVideoStoppedTime = prevWatchHistory.getVideoStoppedTime();
+        int prevVideoStoppedTime = prevWatchHistory.getVideoStoppedTimeSec();
         updateAdvertisementViews(prevVideoStoppedTime, videoNumber, videoStoppedTime);
-        prevWatchHistory.setVideoStoppedTime(videoStoppedTime);
+        prevWatchHistory.setVideoStoppedTimeSec(videoStoppedTime);
         return WatchHistoryDto.fromEntity(watchHistoryRepository.save(prevWatchHistory));
     }
 }
