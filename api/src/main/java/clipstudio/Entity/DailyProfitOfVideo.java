@@ -14,7 +14,9 @@ public class DailyProfitOfVideo {
     @Id
     Long videoNumber; // video number 와 일치
     @Column(nullable = false)
-    Double dailyProfit;
+    double dailyViews;
+    @Column(nullable = false)
+    double dailyProfit;
     @Column(nullable = false)
     Date calculatedDate;
 }
