@@ -17,6 +17,8 @@ import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.database.JdbcCursorItemReader;
 import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
 import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuilder;
+import org.springframework.batch.item.support.CompositeItemWriter;
+import org.springframework.batch.item.support.builder.CompositeItemWriterBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,7 +29,10 @@ import org.springframework.transaction.PlatformTransactionManager;
 import javax.sql.DataSource;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Configuration
@@ -60,13 +65,13 @@ public class JobConfig {
                                            @Value("#{jobParameters[batchDate]}") String batchDate) throws ParseException {
         log.info(String.valueOf(new SimpleDateFormat("yyyy-MM-dd").parse(batchDate)));
         return new StepBuilder("dailyProfitCalculationStep", jobRepository)
-                .<Video, VideoDailyHistory>chunk(1, transactionManager)
+                .<Video, VideoDailyHistory>chunk(10, transactionManager) // test if the result changes by chunk size.
                 //	transactionManager: Spring’s PlatformTransactionManager that begins
                 //	and commits transactions during processing.
                 .reader(videoReader())
 //                .allowStartIfComplete(true) // test environment, 중복 실행 허용
                 .processor(videoProfitCalculationProcessor)
-                .writer(videoProfitWriter())
+                .writer(compositeItemWriter())
                 .build();
     }
 
@@ -76,11 +81,16 @@ public class JobConfig {
                 .name("videoReader")
                 .dataSource(dataSource)
                 .rowMapper(videoMapper)
-                .sql("SELECT * FROM videos WHERE number=10")
+                .sql("SELECT * FROM videos")
                 .build();
         return reader;
     }//  batchDate=2024-05-10
 
+    @Bean
+    public CompositeItemWriter compositeItemWriter() {
+        List<JdbcBatchItemWriter<VideoDailyHistory>> writers = List.of(initializeVideoTempDailyViewsWriter(), videoProfitWriter());
+        return new CompositeItemWriterBuilder().delegates(writers).build();
+    }
 
     @Bean
     public JdbcBatchItemWriter<VideoDailyHistory> videoProfitWriter() {
@@ -92,11 +102,18 @@ public class JobConfig {
         */
 
         return new JdbcBatchItemWriterBuilder<VideoDailyHistory>()
-                .sql("UPDATE video SET temp_daily_views=0 where number=:videoNumber")
                 .sql("INSERT INTO video_daily_histories(video_number, calculated_date, daily_views, daily_profit) VALUES(:videoNumber, current_date(), :dailyViews, :dailyProfit)")
                 .dataSource(dataSource)
                 .beanMapped() // ?? https://jojoldu.tistory.com/339
                 .build();
     } // JpaItemWriter?
+    @Bean
+    public JdbcBatchItemWriter<VideoDailyHistory> initializeVideoTempDailyViewsWriter() {
+        return new JdbcBatchItemWriterBuilder<VideoDailyHistory>()
+                .sql("UPDATE videos SET temp_daily_views=0 where number=:videoNumber")
+                .dataSource(dataSource)
+                .beanMapped() // ?? https://jojoldu.tistory.com/339
+                .build();
+    }
 }
 

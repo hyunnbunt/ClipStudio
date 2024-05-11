@@ -20,8 +20,8 @@ public class VideoProfitCalculationProcessor implements ItemProcessor<Video, Vid
         log.info(String.valueOf(video));
         final Long total = video.getTotalViews();
         final Long daily = video.getTempDailyViews();
-        log.info("video total views: " + total);
-        log.info("video daily views: " + daily);
+        log.info("total views: " + total);
+        log.info("daily views: " + daily);
         // should implement daily profit calculation code here.
         List<Map<String, Object>> priceTable = DailyProfitOfVideo.priceTable;
         int startRangeIdx = -1;
