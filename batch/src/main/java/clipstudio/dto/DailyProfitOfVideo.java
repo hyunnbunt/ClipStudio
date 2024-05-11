@@ -16,7 +16,7 @@ public class DailyProfitOfVideo {
     public static final List<Map<String, Object>> priceTable = getPriceTable();
     private static List<Map<String, Object>> getPriceTable() {
         List<Map<String, Object>> list = new LinkedList<>();
-        Long[] views = new Long[]{1L, 100000L, 500000L, 1000000L, Long.MAX_VALUE};
+        Long[] views = new Long[]{0L, 100000L, 500000L, 1000000L, Long.MAX_VALUE}; // the first element should be 1, but in that case, the result is 0
         Float[] won = new Float[]{1f, 1.1f, 1.3f, 1.5f};
         for (int i = 0; i < views.length-1; i ++) {
             Map<String, Object> temp = new HashMap<>();

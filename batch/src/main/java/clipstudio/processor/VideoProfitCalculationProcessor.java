@@ -1,7 +1,8 @@
 package clipstudio.processor;
 
 import clipstudio.dto.DailyProfitOfVideo;
-import clipstudio.dto.DailyViews;
+import clipstudio.dto.Video;
+import clipstudio.dto.VideoDailyHistory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;
@@ -12,13 +13,13 @@ import java.util.Map;
 
 @Component
 @Slf4j
-public class VideoProfitCalculationProcessor implements ItemProcessor<DailyViews, DailyProfitOfVideo> {
+public class VideoProfitCalculationProcessor implements ItemProcessor<Video, VideoDailyHistory> {
 
     @Override
-    public DailyProfitOfVideo process(DailyViews dailyViews) throws Exception {
-        log.info(String.valueOf(dailyViews));
-        final Long total = dailyViews.getTotalViews();
-        final Long daily = dailyViews.getDailyViews();
+    public VideoDailyHistory process(Video video) throws Exception {
+        log.info(String.valueOf(video));
+        final Long total = video.getTotalViews();
+        final Long daily = video.getTempDailyViews();
         log.info("video total views: " + total);
         log.info("video daily views: " + daily);
         // should implement daily profit calculation code here.
@@ -49,8 +50,8 @@ public class VideoProfitCalculationProcessor implements ItemProcessor<DailyViews
                 }
             }
         }
-        return DailyProfitOfVideo.builder()
-                .videoNumber(dailyViews.getNumber())
+        return VideoDailyHistory.builder()
+                .videoNumber(video.getNumber())
                 .dailyProfit(profit) // dummy data for testing.
                 .calculatedDate(new Date()).build();
     }

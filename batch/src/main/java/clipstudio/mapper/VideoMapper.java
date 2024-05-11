@@ -1,6 +1,6 @@
 package clipstudio.mapper;
 
-import clipstudio.dto.DailyViews;
+import clipstudio.dto.Video;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
@@ -10,16 +10,16 @@ import java.sql.SQLException;
 
 @Slf4j
 @Component
-public class VideoMapper implements RowMapper<DailyViews> {
+public class VideoMapper implements RowMapper<Video> {
     @Override
-    public DailyViews mapRow(ResultSet rs, int rowNum) throws SQLException {
+    public Video mapRow(ResultSet rs, int rowNum) throws SQLException {
         log.info("inside videoMapper");
-        return DailyViews.builder()
+        return Video.builder()
                 .title(rs.getString("title"))
                 .number(rs.getLong("number"))
                 .createdDate(rs.getTimestamp("created_date"))
-                .duration(rs.getInt("duration"))
-                .dailyViews(rs.getLong("daily_views"))
+                .durationSec(rs.getInt("duration_sec"))
+                .tempDailyViews(rs.getLong("temp_daily_views"))
                 .totalViews(rs.getLong("total_views"))
                 .build();
     }

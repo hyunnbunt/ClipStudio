@@ -7,11 +7,11 @@ import java.sql.Timestamp;
 
 @Builder
 @Getter
-public class DailyViews {
+public class Video {
     public String title;
     public Long number;
     public Timestamp createdDate;
-    public Integer duration;
-    public Long dailyViews;
+    public Integer durationSec;
+    public Long tempDailyViews;
     public Long totalViews;
 }

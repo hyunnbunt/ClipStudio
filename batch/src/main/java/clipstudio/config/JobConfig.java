@@ -1,18 +1,14 @@
 package clipstudio.config;
 
-import clipstudio.dto.DailyViews;
-import clipstudio.dto.VideoViewPrice;
+import clipstudio.dto.Video;
+import clipstudio.dto.VideoDailyHistory;
 import clipstudio.mapper.VideoMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.JobParametersIncrementer;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.job.builder.JobBuilder;
-import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
@@ -27,10 +23,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.support.JdbcTransactionManager;
 import clipstudio.dto.DailyProfitOfVideo;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionManager;
 
 import javax.sql.DataSource;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -44,7 +38,7 @@ public class JobConfig {
      * configured
      */
 
-    private final ItemProcessor<DailyViews, DailyProfitOfVideo> videoProfitCalculationProcessor;
+    private final ItemProcessor<Video, VideoDailyHistory> videoProfitCalculationProcessor;
     private final DataSource dataSource;
     private final VideoMapper videoMapper;
 
@@ -64,10 +58,9 @@ public class JobConfig {
     @JobScope // 빈의 생성 시점을 지정된 Scope가 실행되는 시점으로 지연 (late binding), 동일한 컴포넌트를 병렬 처리할 때 유리
     public Step dailyProfitCalculationStep(JobRepository jobRepository, PlatformTransactionManager transactionManager,
                                            @Value("#{jobParameters[batchDate]}") String batchDate) throws ParseException {
-        log.info("when does incrementer increment id?: ");
         log.info(String.valueOf(new SimpleDateFormat("yyyy-MM-dd").parse(batchDate)));
         return new StepBuilder("dailyProfitCalculationStep", jobRepository)
-                .<DailyViews, DailyProfitOfVideo>chunk(1, transactionManager)
+                .<Video, VideoDailyHistory>chunk(1, transactionManager)
                 //	transactionManager: Spring’s PlatformTransactionManager that begins
                 //	and commits transactions during processing.
                 .reader(videoReader())
@@ -78,8 +71,8 @@ public class JobConfig {
     }
 
     @Bean
-    public JdbcCursorItemReader<DailyViews> videoReader() {
-        JdbcCursorItemReader<DailyViews> reader = new JdbcCursorItemReaderBuilder<DailyViews>()
+    public JdbcCursorItemReader<Video> videoReader() {
+        JdbcCursorItemReader<Video> reader = new JdbcCursorItemReaderBuilder<Video>()
                 .name("videoReader")
                 .dataSource(dataSource)
                 .rowMapper(videoMapper)
@@ -90,7 +83,7 @@ public class JobConfig {
 
 
     @Bean
-    public JdbcBatchItemWriter<DailyProfitOfVideo> videoProfitWriter() {
+    public JdbcBatchItemWriter<VideoDailyHistory> videoProfitWriter() {
         /**
          * The JdbcBatchItemWriter is an ItemWriter that uses the batching features
          * from NamedParameterJdbcTemplate to execute a batch of statements
@@ -98,8 +91,9 @@ public class JobConfig {
          * to construct an instance of the JdbcBatchItemWriter.
         */
 
-        return new JdbcBatchItemWriterBuilder<DailyProfitOfVideo>()
-                .sql("INSERT INTO daily_profit_of_video(video_number, calculated_date, daily_profit) VALUES(:videoNumber, current_date(), :dailyProfit)")
+        return new JdbcBatchItemWriterBuilder<VideoDailyHistory>()
+                .sql("UPDATE video SET temp_daily_views=0 where number=:videoNumber")
+                .sql("INSERT INTO video_daily_histories(video_number, calculated_date, daily_views, daily_profit) VALUES(:videoNumber, current_date(), :dailyViews, :dailyProfit)")
                 .dataSource(dataSource)
                 .beanMapped() // ?? https://jojoldu.tistory.com/339
                 .build();

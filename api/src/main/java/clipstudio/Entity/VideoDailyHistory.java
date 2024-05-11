@@ -9,12 +9,13 @@ import java.util.Date;
 @Getter
 @Builder
 @Entity
-@Table(name="video_daily_profits")
-public class DailyProfitOfVideo {
+@Table(name="video_daily_histories")
+public class VideoDailyHistory {
     @Id
-    Long videoNumber; // video number 와 일치
+    @PrimaryKeyJoinColumn // 공부할 것
+    long videoNumber; // video number 와 일치
     @Column(nullable = false)
-    double dailyViews;
+    long dailyViews;
     @Column(nullable = false)
     double dailyProfit;
     @Column(nullable = false)
