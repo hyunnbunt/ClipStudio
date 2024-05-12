@@ -14,7 +14,7 @@ public class VideoMapper implements RowMapper<Video> {
     @Override
     public Video mapRow(ResultSet rs, int rowNum) throws SQLException {
         log.info("inside videoMapper");
-        return Video.builder()
+        Video video = Video.builder()
                 .title(rs.getString("title"))
                 .number(rs.getLong("number"))
                 .createdDate(rs.getTimestamp("created_date"))
@@ -22,6 +22,8 @@ public class VideoMapper implements RowMapper<Video> {
                 .tempDailyViews(rs.getLong("temp_daily_views"))
                 .totalViews(rs.getLong("total_views"))
                 .build();
+        log.info(String.valueOf(video.getTempDailyViews()));
+        return video;
     }
 
 }

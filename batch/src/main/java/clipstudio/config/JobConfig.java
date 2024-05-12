@@ -20,6 +20,7 @@ import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuild
 import org.springframework.batch.item.support.CompositeItemWriter;
 import org.springframework.batch.item.support.builder.CompositeItemWriterBuilder;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.batch.BatchProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.support.JdbcTransactionManager;
@@ -71,6 +72,7 @@ public class JobConfig {
                 .reader(videoReader())
 //                .allowStartIfComplete(true) // test environment, 중복 실행 허용
                 .processor(videoProfitCalculationProcessor)
+//                .writer(videoProfitWriter())
                 .writer(compositeItemWriter())
                 .build();
     }
@@ -88,10 +90,18 @@ public class JobConfig {
 
     @Bean
     public CompositeItemWriter compositeItemWriter() {
-        List<JdbcBatchItemWriter<VideoDailyHistory>> writers = List.of(initializeVideoTempDailyViewsWriter(), videoProfitWriter());
-        return new CompositeItemWriterBuilder().delegates(writers).build();
+        List<JdbcBatchItemWriter> writers = List.of(initializeVideoTempDailyViewsWriter(), videoProfitWriter());
+        return new CompositeItemWriterBuilder()
+                .delegates(writers).build();
     }
-
+    @Bean
+    public JdbcBatchItemWriter<VideoDailyHistory> initializeVideoTempDailyViewsWriter() {
+        return new JdbcBatchItemWriterBuilder<VideoDailyHistory>()
+                .sql("UPDATE videos SET temp_daily_views=0 where number=:videoNumber")
+                .dataSource(dataSource)
+                .beanMapped() // ?? https://jojoldu.tistory.com/339
+                .build();
+    }
     @Bean
     public JdbcBatchItemWriter<VideoDailyHistory> videoProfitWriter() {
         /**
@@ -107,13 +117,6 @@ public class JobConfig {
                 .beanMapped() // ?? https://jojoldu.tistory.com/339
                 .build();
     } // JpaItemWriter?
-    @Bean
-    public JdbcBatchItemWriter<VideoDailyHistory> initializeVideoTempDailyViewsWriter() {
-        return new JdbcBatchItemWriterBuilder<VideoDailyHistory>()
-                .sql("UPDATE videos SET temp_daily_views=0 where number=:videoNumber")
-                .dataSource(dataSource)
-                .beanMapped() // ?? https://jojoldu.tistory.com/339
-                .build();
-    }
+
 }
 
