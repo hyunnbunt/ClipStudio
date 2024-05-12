@@ -10,7 +10,7 @@ import java.util.Map;
 
 @Getter
 @Setter
-public class PriceTable {
+public class ProfitCalculator {
     public Long start;
     public Long end;
     public Float price;

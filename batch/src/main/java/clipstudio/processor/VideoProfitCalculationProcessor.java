@@ -1,6 +1,6 @@
 package clipstudio.processor;
 
-import clipstudio.dto.PriceTable;
+import clipstudio.dto.ProfitCalculator;
 import clipstudio.dto.Video;
 import clipstudio.dto.VideoDailyHistory;
 import lombok.extern.slf4j.Slf4j;
@@ -16,10 +16,11 @@ public class VideoProfitCalculationProcessor implements ItemProcessor<Video, Vid
     public VideoDailyHistory process(Video video) throws Exception {
         final Long prevTotal = video.getTotalViews();
         final Long daily = video.getTempDailyViews();
-        double profit = PriceTable.getDailyProfit(prevTotal, daily, "video");
+        double profit = ProfitCalculator.getDailyProfit(prevTotal, daily, "video");
         return VideoDailyHistory.builder()
                 .videoNumber(video.getNumber())
-                .dailyProfit(profit) // dummy data for testing.
+                .updatedTotalViews(prevTotal+daily)
+                .dailyProfit(profit)
                 .dailyViews(daily)
                 .calculatedDate(new Date()).build();
     }

@@ -11,6 +11,7 @@ import java.util.Date;
 @Setter
 public class VideoDailyHistory {
     long videoNumber; // video number 와 일치
+    long updatedTotalViews;
     long dailyViews;
     double dailyProfit;
     Date calculatedDate;

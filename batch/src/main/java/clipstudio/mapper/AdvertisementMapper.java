@@ -1,5 +1,6 @@
 package clipstudio.mapper;
 
+import clipstudio.dto.Advertisement;
 import clipstudio.dto.Video;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.RowMapper;
@@ -7,23 +8,19 @@ import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 @Slf4j
 @Component
-public class VideoMapper implements RowMapper<Video> {
+public class AdvertisementMapper implements RowMapper<Advertisement> {
     @Override
-    public Video mapRow(ResultSet rs, int rowNum) throws SQLException {
+    public Advertisement mapRow(ResultSet rs, int rowNum) throws SQLException {
         log.info("inside videoMapper");
-        Video video = Video.builder()
-                .title(rs.getString("title"))
+        Advertisement advertisement = Advertisement.builder()
                 .number(rs.getLong("number"))
-                .createdDate(rs.getDate("created_date"))
-                .durationSec(rs.getInt("duration_sec"))
+                .orderInVideo(rs.getInt("order_in_video"))
                 .tempDailyViews(rs.getLong("temp_daily_views"))
                 .totalViews(rs.getLong("total_views"))
                 .build();
-        log.info(String.valueOf(video.getTempDailyViews()));
-        return video;
+        log.info(String.valueOf(advertisement.getTempDailyViews()));
+        return advertisement;
     }
-
 }
