@@ -3,7 +3,7 @@ package clipstudio.dto;
 import lombok.*;
 import clipstudio.Entity.Video;
 
-import java.sql.Date;
+import java.util.Date;
 import java.sql.Timestamp;
 
 @Builder
@@ -13,15 +13,16 @@ import java.sql.Timestamp;
 public class VideoDto {
     public Long id;
     public int durationSec;
+    public Long uploaderNumber;
     public Date createdDate;
     public String title;
     public Long totalViews;
     public Long tempDailyViews;
-    public Integer priceIdx;
     public static VideoDto fromEntity(Video videoEntity) {
         return builder()
                 .id(videoEntity.getNumber())
                 .durationSec(videoEntity.getDurationSec())
+                .uploaderNumber(videoEntity.getUploader().getNumber())
                 .createdDate(videoEntity.getCreatedDate())
                 .title(videoEntity.getTitle())
                 .totalViews(videoEntity.getTotalViews())

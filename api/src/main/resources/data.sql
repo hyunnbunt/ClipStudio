@@ -1,0 +1,1 @@
+INSERT INTO videos (title, duration_sec, uploader_number, total_views, temp_daily_views, created_date) VALUES("Test Video", 10000, 1, 0, 550000, "2024-05-14");

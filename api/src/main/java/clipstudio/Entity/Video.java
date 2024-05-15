@@ -1,13 +1,12 @@
 package clipstudio.Entity;
 
+import clipstudio.dto.VideoUploadDto;
 import jakarta.persistence.*;
 import lombok.*;
 import clipstudio.dto.VideoDto;
 import clipstudio.oauth2.User.User;
 
-import java.sql.Date;
-import java.sql.Timestamp;
-import java.util.List;
+import java.util.Date;
 
 @Entity
 @Builder
@@ -35,8 +34,18 @@ public class Video {
     public Long tempDailyViews;
     public static Video fromDto(VideoDto videoDto) {
         return builder()
-                .title(videoDto.title)
+                .title(videoDto.getTitle())
                 .totalViews(videoDto.getTotalViews()).build();
+    }
+    public static Video fromDto(VideoUploadDto videoUploadDto) {
+        return builder()
+                .title(videoUploadDto.getTitle())
+                .uploader(videoUploadDto.getUploader())
+                .durationSec(videoUploadDto.getDurationSec())
+                .createdDate(new Date())
+                .tempDailyViews(0L)
+                .totalViews(0L)
+                .build();
     }
     public void increaseViews() {
         this.totalViews++;
