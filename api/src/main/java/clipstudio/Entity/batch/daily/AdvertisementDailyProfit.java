@@ -1,4 +1,4 @@
-package clipstudio.Entity.daily;
+package clipstudio.Entity.batch.daily;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -8,7 +8,7 @@ import java.time.LocalDate;
 @Entity
 @Data
 @Table(name="advertisement_daily_histories")
-public class DailyProfitOfAdvertisement {
+public class AdvertisementDailyProfit {
     @Id
     @PrimaryKeyJoinColumn // 공부할 것
     long advertisementNumber;

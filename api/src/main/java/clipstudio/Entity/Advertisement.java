@@ -24,5 +24,6 @@ public class Advertisement {
     @Column(nullable = false)
     public Long totalViews;
     @Column(nullable = false)
-    public Long tempDailyViews; // 최근 하루 동안의 조회수 => 정산시 비우고 views 에 합침
+    public Long tempDailyViews; // 최근 하루 동안의 조회수 => 정산시 비우고 AdvertisementDailyProfit 생성
+
 }

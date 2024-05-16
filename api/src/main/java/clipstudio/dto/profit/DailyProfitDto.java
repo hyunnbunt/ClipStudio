@@ -1,16 +1,17 @@
 package clipstudio.dto.profit;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Builder
-@Getter
 @Setter
-public class TotalAdvertisementsProfitOfVideoDto {
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+public class DailyProfitDto {
     long videoNumber;
+    double videoProfit;
     double totalProfitOfAllAdvertisementsInVideo;
     LocalDate calculatedDate;
 }

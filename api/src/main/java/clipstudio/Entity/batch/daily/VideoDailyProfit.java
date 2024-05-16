@@ -1,4 +1,4 @@
-package clipstudio.Entity.daily;
+package clipstudio.Entity.batch.daily;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class DailyProfitOfVideo {
+public class VideoDailyProfit {
     @Id
     @PrimaryKeyJoinColumn // 공부할 것
     long videoNumber; // video number 와 일치

@@ -1,13 +1,11 @@
 package clipstudio.controller;
 
-import clipstudio.Entity.daily.DailyProfitOfVideo;
 import java.time.LocalDate;
 
-import clipstudio.dto.DailyProfitDto;
-import clipstudio.dto.profit.TotalAdvertisementsProfitOfVideoDto;
+import clipstudio.dto.profit.DailyProfitDto;
 import clipstudio.dto.video.VideoUploadDto;
 import clipstudio.dto.video.VideoDto;
-import clipstudio.service.DailyProfitOfVideoService;
+import clipstudio.service.DailyProfitService;
 import clipstudio.service.VideoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import clipstudio.dto.video.PlayVideoDto;
+import clipstudio.dto.video.VideoPlayDto;
 import clipstudio.dto.history.WatchHistoryDto;
 import clipstudio.oauth2.User.oauth2.CustomOAuth2User;
 import clipstudio.service.WatchHistoryService;
@@ -29,7 +27,7 @@ public class ApiController {
 
     // @RequiredArgsConstructor -> final field 생성자 주입
     private final WatchHistoryService watchHistoryService;
-    private final DailyProfitOfVideoService dailyProfitOfVideoService;
+    private final DailyProfitService dailyProfitService;
     private final VideoService videoService;
 
     // 동영상 업로드
@@ -42,9 +40,9 @@ public class ApiController {
     // 동영상 재생, 접속한 사용자의 동영상 시청 기록 생성 또는 업데이트
     @PostMapping("/api/videos/player/{videoNumber}")
     public ResponseEntity<WatchHistoryDto> playVideo(@PathVariable Long videoNumber,
-                                                     @RequestBody PlayVideoDto playVideoDto,
+                                                     @RequestBody VideoPlayDto videoPlayDto,
                                                      @AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
-        WatchHistoryDto updatedDto = watchHistoryService.playVideo(videoNumber, playVideoDto, customOAuth2User.getEmail());
+        WatchHistoryDto updatedDto = watchHistoryService.playVideo(videoNumber, videoPlayDto, customOAuth2User.getEmail());
         try {
             return ResponseEntity.status(HttpStatus.OK).body(updatedDto);
         } catch (Exception e) {
@@ -61,7 +59,7 @@ public class ApiController {
 //        }
         log.info(customOAuth2User.getEmail());
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(dailyProfitOfVideoService.showDailyProfit(customOAuth2User.getEmail(), date));
+            return ResponseEntity.status(HttpStatus.OK).body(dailyProfitService.showDailyProfit(customOAuth2User.getEmail(), date));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }

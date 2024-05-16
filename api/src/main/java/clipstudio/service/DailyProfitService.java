@@ -2,15 +2,14 @@ package clipstudio.service;
 
 import clipstudio.Entity.Advertisement;
 import clipstudio.Entity.Video;
-import clipstudio.Entity.daily.DailyProfitOfAdvertisement;
-import clipstudio.Entity.daily.DailyProfitOfVideo;
-import clipstudio.dto.DailyProfitDto;
-import clipstudio.dto.profit.TotalAdvertisementsProfitOfVideoDto;
+import clipstudio.Entity.batch.daily.AdvertisementDailyProfit;
+import clipstudio.Entity.batch.daily.VideoDailyProfit;
+import clipstudio.dto.profit.DailyProfitDto;
 import clipstudio.oauth2.User.User;
 import clipstudio.oauth2.User.userRepository.UserRepository;
 import clipstudio.repository.AdvertisementRepository;
-import clipstudio.repository.DailyProfitOfAdvertisementRepository;
-import clipstudio.repository.DailyProfitOfVideoRepository;
+import clipstudio.repository.batch.DailyProfitOfAdvertisementRepository;
+import clipstudio.repository.batch.DailyProfitOfVideoRepository;
 import clipstudio.repository.VideoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +22,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class DailyProfitOfVideoService {
+public class DailyProfitService {
     private final UserRepository userRepository;
     private final VideoRepository videoRepository;
     private final AdvertisementRepository advertisementRepository;
@@ -44,9 +43,9 @@ public class DailyProfitOfVideoService {
             // 각 동영상별 일일 동영상 및 광고 정산 금액 dto 생성
             DailyProfitDto dailyProfitDto = new DailyProfitDto();
             // 일일 동영상 수익 필드 업데이트
-            DailyProfitOfVideo dailyProfitOfVideo = dailyProfitOfVideoRepository.findByVideoNumberAndCalculatedDate(video.getNumber(), date).orElse(null);
-            if (dailyProfitOfVideo != null) {
-                dailyProfitDto.setVideoProfit(dailyProfitOfVideo.getDailyProfit());
+            VideoDailyProfit videoDailyProfit = dailyProfitOfVideoRepository.findByVideoNumberAndCalculatedDate(video.getNumber(), date).orElse(null);
+            if (videoDailyProfit != null) {
+                dailyProfitDto.setVideoProfit(videoDailyProfit.getDailyProfit());
             }
             // 일일 광고 수익 필드 업데이트
             List<Advertisement> advertisementList = advertisementRepository
@@ -55,9 +54,9 @@ public class DailyProfitOfVideoService {
             if (advertisementList != null) { // 광고 목록이 존재한다면, 광고 목록을 순회하며, 각 광고 넘버와 조회 날짜로 광고 정산 내역을 조회할 것
                 double totalAdvertisementsProfit = 0;
                 for (Advertisement advertisement : advertisementList) {
-                    DailyProfitOfAdvertisement dailyProfitOfAdvertisement = dailyProfitOfAdvertisementRepository.
+                    AdvertisementDailyProfit advertisementDailyProfit = dailyProfitOfAdvertisementRepository.
                             findByAdvertisementNumberAndCalculatedDate(advertisement.getNumber(), date); // 각 광고별 정산 내역을 조회
-                    totalAdvertisementsProfit += dailyProfitOfAdvertisement.getDailyProfit(); // 각 광고별 정산 금액을 합산
+                    totalAdvertisementsProfit += advertisementDailyProfit.getDailyProfit(); // 각 광고별 정산 금액을 합산
                 }
                 dailyProfitDto.setTotalProfitOfAllAdvertisementsInVideo(totalAdvertisementsProfit);
             }
