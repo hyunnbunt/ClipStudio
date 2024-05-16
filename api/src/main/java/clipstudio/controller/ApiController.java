@@ -52,36 +52,6 @@ public class ApiController {
         }
     }
 
-    // 일일 동영상 수익 정산금 조회
-    @GetMapping("/api/profit/videos")
-    public ResponseEntity<List<DailyProfitOfVideo>> showDailyProfitOfVideos(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
-                                                                            LocalDate date) {
-//        if (!customOAuth2User.getRole().equals(Role.seller)) {
-//            throw new Exception();
-//        }
-        log.info(customOAuth2User.getEmail());
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(dailyProfitOfVideoService.showDailyProfitOfVideos(customOAuth2User.getEmail(), date));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-    }
-
-    // 일일 광고 수익 정산금 조회
-    @GetMapping("/api/profit/advertisements")
-    public ResponseEntity<List<TotalAdvertisementsProfitOfVideoDto>> showDailyProfitOfAdvertisements(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
-                                                                                                     LocalDate date) {
-//        if (!customOAuth2User.getRole().equals(Role.seller)) {
-//            throw new Exception();
-//        }
-        log.info(customOAuth2User.getEmail());
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(dailyProfitOfVideoService.showDailyProfitOfAdvertisements(customOAuth2User.getEmail(), date));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-    }
-
     // 일일 광고 수익 정산금 조회
     @GetMapping("/api/profit")
     public ResponseEntity<List<DailyProfitDto>> showDailyProfit(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
