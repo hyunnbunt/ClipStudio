@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Setter
 @Getter
@@ -13,7 +12,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class VideoDailyHistory {
+public class DailyProfitOfVideo {
     @Id
     @PrimaryKeyJoinColumn // 공부할 것
     long videoNumber; // video number 와 일치

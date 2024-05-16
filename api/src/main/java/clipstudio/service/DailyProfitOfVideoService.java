@@ -1,11 +1,10 @@
 package clipstudio.service;
 
 import clipstudio.Entity.Video;
-import clipstudio.Entity.daily.VideoDailyHistory;
+import clipstudio.Entity.daily.DailyProfitOfVideo;
 import clipstudio.oauth2.User.User;
 import clipstudio.oauth2.User.userRepository.UserRepository;
-import clipstudio.repository.AdvertisementDailyHistoryRepository;
-import clipstudio.repository.VideoDailyHistoryRepository;
+import clipstudio.repository.DailyProfitOfVideoRepository;
 import clipstudio.repository.VideoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,24 +20,24 @@ import java.util.List;
 public class DailyProfitOfVideoService {
     private final UserRepository userRepository;
     private final VideoRepository videoRepository;
-    private final VideoDailyHistoryRepository videoDailyHistoryRepository;
-    private final AdvertisementDailyHistoryRepository advertisementDailyHistoryRepository;
-    public List<VideoDailyHistory> showDailyProfitOfAllVideos(String userEmail, LocalDate historyDate) {
+    private final DailyProfitOfVideoRepository dailyProfitOfVideoRepository;
+    public List<DailyProfitOfVideo> showDailyProfitOf(String userEmail, LocalDate date) throws IllegalArgumentException {
         log.info("inside DailyProfitOfVideoService");
         User user = userRepository.findByEmail(userEmail).orElseThrow();
-        List<Video> videoList = videoRepository.findByUploader(user).orElseThrow();
-        log.info(String.valueOf(videoList.size()));
-        List<VideoDailyHistory> resultList = new LinkedList<>();
-        for (Video video : videoList) {
-            log.info(String.valueOf(video.getNumber()));
-            VideoDailyHistory videoDailyHistory = videoDailyHistoryRepository.findByVideoNumberAndCalculatedDate(video.getNumber(), historyDate).orElse(null);
-            if (videoDailyHistory == null) {
-                log.info("no history for this video, number: " + video.getNumber());
-            } else {
-                resultList.add(videoDailyHistory);
-            }
+        List<Video> videoList = videoRepository.findByUploader(user).orElseThrow(); // 사용자가 업로드한 모든 동영상 목록 불러오기
+        if (videoList.isEmpty()) {
+            log.info("You don't have any uploaded video.");
+            throw new IllegalArgumentException();
         }
-        log.info("resultList size: " + resultList.size());
+        log.info(String.valueOf(videoList.size()));
+        List<DailyProfitOfVideo> resultList = new LinkedList<>(); // 동영상 각각의 해당 날짜 정산 내역을 찾아 목록 생성
+        for (Video video : videoList) {
+            // 해당 날짜에 정산 내역이 있는 동영상만 목록에 추가
+            dailyProfitOfVideoRepository.findByVideoNumberAndCalculatedDate(video.getNumber(), date).ifPresent(resultList::add);
+        }
+        if (resultList.isEmpty()) {
+            log.info("Can't find your profit statistic on " + date.toString());
+        }
         return resultList;
     }
 

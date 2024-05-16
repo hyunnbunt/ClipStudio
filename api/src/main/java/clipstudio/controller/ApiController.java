@@ -1,6 +1,6 @@
 package clipstudio.controller;
 
-import clipstudio.Entity.daily.VideoDailyHistory;
+import clipstudio.Entity.daily.DailyProfitOfVideo;
 import java.time.LocalDate;
 import clipstudio.dto.video.VideoUploadDto;
 import clipstudio.dto.video.VideoDto;
@@ -42,30 +42,27 @@ public class ApiController {
                                                      @RequestBody PlayVideoDto playVideoDto,
                                                      @AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
         WatchHistoryDto updatedDto = watchHistoryService.playVideo(videoNumber, playVideoDto, customOAuth2User.getEmail());
-        return ResponseEntity.status(HttpStatus.OK).build();
-    }
-
-    // 수익 정산금 조회
-    @GetMapping("/api/videos")
-    public ResponseEntity<List<VideoDailyHistory>> showDailyProfitOfAllVideos(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) throws Exception {
-//        if (!customOAuth2User.getRole().equals(Role.seller)) {
-//            throw new Exception();
-//        }
-        log.info(customOAuth2User.getEmail());
-        LocalDate date = LocalDate.now();
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(dailyProfitOfVideoService.showDailyProfitOfAllVideos(customOAuth2User.getEmail(), date));
+            return ResponseEntity.status(HttpStatus.OK).body(updatedDto);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 
-    // 어떤 유저가 비디오를 재생했을 때, 이미 히스토리가 있으면 있는 걸 보내주고, 없으면 새로 만들어서 보내줄 것.
-//    @GetMapping("/api/videos/{videoNumber}")
-//    public WatchHistoryDto playVideo(@PathVariable long videoNumber) {
-//        log.info(String.valueOf(videoNumber));
-//        return new WatchHistoryDto();
-//    }
+    // 일일 수익 정산금 조회
+    @GetMapping("/api/videos")
+    public ResponseEntity<List<DailyProfitOfVideo>> showDailyProfitOf(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
+                                                                      LocalDate date) {
+//        if (!customOAuth2User.getRole().equals(Role.seller)) {
+//            throw new Exception();
+//        }
+        log.info(customOAuth2User.getEmail());
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(dailyProfitOfVideoService.showDailyProfitOf(customOAuth2User.getEmail(), date));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
 
 
 
