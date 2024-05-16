@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Builder
@@ -14,5 +15,5 @@ public class VideoDailyHistory {
     long updatedTotalViews;
     long dailyViews;
     double dailyProfit;
-    Date calculatedDate;
+    LocalDate calculatedDate;
 }

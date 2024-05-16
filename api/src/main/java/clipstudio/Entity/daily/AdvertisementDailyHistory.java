@@ -1,8 +1,9 @@
-package clipstudio.Entity;
+package clipstudio.Entity.daily;
 
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -16,5 +17,5 @@ public class AdvertisementDailyHistory {
     @Column(nullable = false)
     long dailyViews;
     @Column(nullable = false)
-    Date calculatedDate;
+    LocalDate calculatedDate;
 }

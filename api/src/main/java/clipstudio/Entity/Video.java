@@ -1,12 +1,12 @@
 package clipstudio.Entity;
 
-import clipstudio.dto.VideoUploadDto;
+import clipstudio.dto.video.VideoUploadDto;
 import jakarta.persistence.*;
 import lombok.*;
-import clipstudio.dto.VideoDto;
+import clipstudio.dto.video.VideoDto;
 import clipstudio.oauth2.User.User;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Builder
@@ -27,7 +27,7 @@ public class Video {
     @JoinColumn(nullable = false, name = "uploader_number")
     public User uploader;
     @Column(nullable = false)
-    public Date createdDate;
+    public LocalDate createdDate;
     @Column(nullable = false)
     public Long totalViews;
     @Column(nullable = false)
@@ -42,7 +42,7 @@ public class Video {
                 .title(videoUploadDto.getTitle())
                 .uploader(videoUploadDto.getUploader())
                 .durationSec(videoUploadDto.getDurationSec())
-                .createdDate(new Date())
+                .createdDate(LocalDate.now())
                 .tempDailyViews(0L)
                 .totalViews(0L)
                 .build();

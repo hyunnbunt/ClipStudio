@@ -1,10 +1,9 @@
-package clipstudio.dto;
+package clipstudio.dto.video;
 
 import lombok.*;
 import clipstudio.Entity.Video;
 
-import java.util.Date;
-import java.sql.Timestamp;
+import java.time.LocalDate;
 
 @Builder
 @NoArgsConstructor
@@ -14,7 +13,7 @@ public class VideoDto {
     public Long id;
     public int durationSec;
     public Long uploaderNumber;
-    public Date createdDate;
+    public LocalDate createdDate;
     public String title;
     public Long totalViews;
     public Long tempDailyViews;

@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Component
@@ -20,6 +21,6 @@ public class AdvertisementProfitCalculationProcessor implements ItemProcessor<Ad
                 .updatedTotalViews(prevTotal + daily)
                 .dailyProfit(profit)
                 .dailyViews(daily)
-                .calculatedDate(new Date()).build();
+                .calculatedDate(LocalDate.now()).build();
     }
 }

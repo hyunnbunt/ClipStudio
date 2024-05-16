@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Component
@@ -16,12 +17,13 @@ public class VideoProfitCalculationProcessor implements ItemProcessor<Video, Vid
     public VideoDailyHistory process(Video video) throws Exception {
         final Long prevTotal = video.getTotalViews();
         final Long daily = video.getTempDailyViews();
+        log.info(String.valueOf(daily));
         double profit = ProfitCalculator.getDailyProfit(prevTotal, daily, "video");
         return VideoDailyHistory.builder()
                 .videoNumber(video.getNumber())
                 .updatedTotalViews(prevTotal+daily)
                 .dailyProfit(profit)
                 .dailyViews(daily)
-                .calculatedDate(new Date()).build();
+                .calculatedDate(LocalDate.now()).build();
     }
 }

@@ -1,4 +1,4 @@
-package clipstudio.dto;
+package clipstudio.dto.video;
 
 import clipstudio.oauth2.User.User;
 import lombok.Builder;

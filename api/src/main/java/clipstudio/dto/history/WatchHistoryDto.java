@@ -1,4 +1,4 @@
-package clipstudio.dto;
+package clipstudio.dto.history;
 
 import lombok.*;
 import clipstudio.Entity.WatchHistory;

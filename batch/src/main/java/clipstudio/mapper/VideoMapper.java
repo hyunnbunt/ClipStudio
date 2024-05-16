@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 @Slf4j
 @Component
@@ -17,7 +18,7 @@ public class VideoMapper implements RowMapper<Video> {
         Video video = Video.builder()
                 .title(rs.getString("title"))
                 .number(rs.getLong("number"))
-                .createdDate(rs.getDate("created_date"))
+                .createdDate(LocalDate.parse(rs.getString("created_date")))
                 .durationSec(rs.getInt("duration_sec"))
                 .tempDailyViews(rs.getLong("temp_daily_views"))
                 .totalViews(rs.getLong("total_views"))

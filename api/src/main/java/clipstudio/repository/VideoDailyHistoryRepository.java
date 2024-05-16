@@ -1,12 +1,11 @@
 package clipstudio.repository;
 
-import clipstudio.Entity.Advertisement;
-import clipstudio.Entity.VideoDailyHistory;
+import clipstudio.Entity.daily.VideoDailyHistory;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Optional;
 
-public interface VideoDailyHistoryRepository extends JpaRepository<clipstudio.Entity.VideoDailyHistory, Long> {
-    Optional<VideoDailyHistory> findByVideoNumberAndCalculatedDate(Long videoNumber, Date calculatedDate);
+public interface VideoDailyHistoryRepository extends JpaRepository<VideoDailyHistory, Long> {
+    Optional<VideoDailyHistory> findByVideoNumberAndCalculatedDate(Long videoNumber, LocalDate calculatedDate);
 }

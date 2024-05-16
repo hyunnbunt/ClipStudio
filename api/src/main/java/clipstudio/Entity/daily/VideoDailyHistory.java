@@ -1,15 +1,18 @@
-package clipstudio.Entity;
+package clipstudio.Entity.daily;
 
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Setter
 @Getter
-@Builder
 @Entity
 @Table(name="video_daily_histories")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class VideoDailyHistory {
     @Id
     @PrimaryKeyJoinColumn // 공부할 것
@@ -19,5 +22,5 @@ public class VideoDailyHistory {
     @Column(nullable = false)
     double dailyProfit;
     @Column(nullable = false)
-    Date calculatedDate;
+    LocalDate calculatedDate;
 }

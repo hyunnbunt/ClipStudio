@@ -1,6 +1,6 @@
 package clipstudio.service;
 
-import clipstudio.dto.VideoUploadDto;
+import clipstudio.dto.video.VideoUploadDto;
 import clipstudio.oauth2.User.User;
 import clipstudio.oauth2.User.userRepository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -9,10 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import clipstudio.Entity.Video;
-import clipstudio.dto.VideoDto;
+import clipstudio.dto.video.VideoDto;
 import clipstudio.repository.VideoRepository;
-
-import java.util.Date;
 
 @Service
 @Slf4j
