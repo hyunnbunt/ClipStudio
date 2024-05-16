@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import clipstudio.dto.video.VideoPlayDto;
 import clipstudio.dto.history.WatchHistoryDto;
 import clipstudio.oauth2.User.oauth2.CustomOAuth2User;
-import clipstudio.service.WatchHistoryService;
 import java.util.List;
 
 @RestController
@@ -26,9 +25,8 @@ import java.util.List;
 public class ApiController {
 
     // @RequiredArgsConstructor -> final field 생성자 주입
-    private final WatchHistoryService watchHistoryService;
-    private final DailyProfitService dailyProfitService;
     private final VideoService videoService;
+    private final DailyProfitService dailyProfitService;
 
     // 동영상 업로드
     @PostMapping("/api/videos/new")
@@ -42,7 +40,7 @@ public class ApiController {
     public ResponseEntity<WatchHistoryDto> playVideo(@PathVariable Long videoNumber,
                                                      @RequestBody VideoPlayDto videoPlayDto,
                                                      @AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
-        WatchHistoryDto updatedDto = watchHistoryService.playVideo(videoNumber, videoPlayDto, customOAuth2User.getEmail());
+        WatchHistoryDto updatedDto = videoService.playVideo(videoNumber, videoPlayDto, customOAuth2User.getEmail());
         try {
             return ResponseEntity.status(HttpStatus.OK).body(updatedDto);
         } catch (Exception e) {

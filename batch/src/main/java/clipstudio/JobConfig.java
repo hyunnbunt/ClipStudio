@@ -1,4 +1,4 @@
-package clipstudio.config;
+package clipstudio;
 
 import clipstudio.dto.Advertisement;
 import clipstudio.dto.AdvertisementDailyHistory;

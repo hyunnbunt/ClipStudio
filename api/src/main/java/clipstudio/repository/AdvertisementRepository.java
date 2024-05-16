@@ -8,4 +8,5 @@ import java.util.Optional;
 
 public interface AdvertisementRepository extends JpaRepository<Advertisement, Long> {
     Optional<List<Advertisement>> findByVideoNumber(Long videoNumber);
+    Optional<Advertisement> findByVideoNumberAndOrderInVideo(Long videoNumber, int orderInVideo);
 }

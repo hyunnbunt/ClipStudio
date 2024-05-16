@@ -7,6 +7,8 @@ import clipstudio.dto.video.VideoPlayDto;
 import clipstudio.dto.video.VideoUploadDto;
 import clipstudio.oauth2.User.User;
 import clipstudio.oauth2.User.userRepository.UserRepository;
+import clipstudio.repository.AdvertisementRepository;
+import clipstudio.repository.WatchHistoryRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +25,8 @@ import clipstudio.repository.VideoRepository;
 public class VideoService {
     private final VideoRepository videoRepository;
     private final UserRepository userRepository;
+    private final AdvertisementRepository advertisementRepository;
+    private final WatchHistoryRepository watchHistoryRepository;
     public Video increaseVideoViewsAndSave(Video video) {
         video.setTempDailyViews(video.getTempDailyViews()+1);
         log.info("daily views of video: " + video.getTempDailyViews());
