@@ -2,6 +2,9 @@ package clipstudio.controller;
 
 import clipstudio.Entity.daily.DailyProfitOfVideo;
 import java.time.LocalDate;
+
+import clipstudio.dto.DailyProfitDto;
+import clipstudio.dto.profit.TotalAdvertisementsProfitOfVideoDto;
 import clipstudio.dto.video.VideoUploadDto;
 import clipstudio.dto.video.VideoDto;
 import clipstudio.service.DailyProfitOfVideoService;
@@ -49,40 +52,48 @@ public class ApiController {
         }
     }
 
-    // 일일 수익 정산금 조회
-    @GetMapping("/api/videos")
-    public ResponseEntity<List<DailyProfitOfVideo>> showDailyProfitOf(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
-                                                                      LocalDate date) {
+    // 일일 동영상 수익 정산금 조회
+    @GetMapping("/api/profit/videos")
+    public ResponseEntity<List<DailyProfitOfVideo>> showDailyProfitOfVideos(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
+                                                                            LocalDate date) {
 //        if (!customOAuth2User.getRole().equals(Role.seller)) {
 //            throw new Exception();
 //        }
         log.info(customOAuth2User.getEmail());
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(dailyProfitOfVideoService.showDailyProfitOf(customOAuth2User.getEmail(), date));
+            return ResponseEntity.status(HttpStatus.OK).body(dailyProfitOfVideoService.showDailyProfitOfVideos(customOAuth2User.getEmail(), date));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 
-
-
-//    @PatchMapping("api/videos/{video_id}")
-//    public ResponseEntity<VideoDto> updateWatchHistory(@PathVariable Long videoId, @RequestBody WatchHistoryDto watchHistoryDto) {
-//        log.info(videoId.toString());
-//        watchHistoryService.
-
-        // video 조회수 증가
-//        try {
-//            return ResponseEntity.status(HttpStatus.OK).body(videoService.increaseViews(videoId));
-//        } catch (Exception e) {
-//            log.info(e.getMessage());
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    // 일일 광고 수익 정산금 조회
+    @GetMapping("/api/profit/advertisements")
+    public ResponseEntity<List<TotalAdvertisementsProfitOfVideoDto>> showDailyProfitOfAdvertisements(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
+                                                                                                     LocalDate date) {
+//        if (!customOAuth2User.getRole().equals(Role.seller)) {
+//            throw new Exception();
 //        }
-//    }
+        log.info(customOAuth2User.getEmail());
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(dailyProfitOfVideoService.showDailyProfitOfAdvertisements(customOAuth2User.getEmail(), date));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
 
-//    @PostMapping("api/videos/test/new")
-//    public VideoDto testNewVideo(@RequestBody VideoDto videoDto) {
-//        log.info("controller, post mapping to /videos/test/new" + videoDto.toString());
-//        return videoService.testNewVideo(videoDto);
-//    }
+    // 일일 광고 수익 정산금 조회
+    @GetMapping("/api/profit")
+    public ResponseEntity<List<DailyProfitDto>> showDailyProfit(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
+                                                                LocalDate date) {
+//        if (!customOAuth2User.getRole().equals(Role.seller)) {
+//            throw new Exception();
+//        }
+        log.info(customOAuth2User.getEmail());
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(dailyProfitOfVideoService.showDailyProfit(customOAuth2User.getEmail(), date));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
 }

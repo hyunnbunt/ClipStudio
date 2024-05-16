@@ -4,16 +4,16 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Entity
 @Data
 @Table(name="advertisement_daily_histories")
-public class AdvertisementDailyHistory {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class DailyProfitOfAdvertisement {
+    @Id
+    @PrimaryKeyJoinColumn // 공부할 것
     long advertisementNumber;
     @Column(nullable = false)
-    long dailyProfit;
+    double dailyProfit;
     @Column(nullable = false)
     long dailyViews;
     @Column(nullable = false)
