@@ -45,7 +45,7 @@ public class DailyProfitService {
             // 일일 동영상 수익 필드 업데이트
             VideoDailyProfit videoDailyProfit = dailyProfitOfVideoRepository.findByVideoNumberAndCalculatedDate(video.getNumber(), date).orElse(null);
             if (videoDailyProfit != null) {
-                dailyProfitDto.setVideoProfit(videoDailyProfit.getDailyProfit());
+                dailyProfitDto.setVideoProfit(videoDailyProfit.getVideoDailyProfit());
             }
             // 일일 광고 수익 필드 업데이트
             List<Advertisement> advertisementList = advertisementRepository

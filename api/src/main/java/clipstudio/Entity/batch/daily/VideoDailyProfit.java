@@ -20,6 +20,7 @@ public class VideoDailyProfit {
     long dailyViews;
     @Column(nullable = false)
     double dailyProfit;
+    double dailyTotalProfitOfAdvertisements;
     @Column(nullable = false)
     LocalDate calculatedDate;
 }

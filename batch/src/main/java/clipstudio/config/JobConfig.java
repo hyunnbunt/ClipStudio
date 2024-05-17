@@ -4,6 +4,9 @@ import clipstudio.dto.AdvertisementDto;
 import clipstudio.dto.VideoDto;
 import clipstudio.mapper.AdvertisementMapper;
 import clipstudio.mapper.VideoMapper;
+import clipstudio.processor.AdvertisementProfitCalculationProcessor;
+import clipstudio.writer.AdvertisementCompositeWriter;
+import clipstudio.writer.AdvertisementCompositeWriterConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -29,7 +32,9 @@ import org.springframework.transaction.PlatformTransactionManager;
 import javax.sql.DataSource;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
+
 
 @RequiredArgsConstructor
 @Configuration
@@ -42,31 +47,34 @@ public class JobConfig {
 
     private final ItemProcessor<VideoDto, VideoDto> videoProfitCalculationProcessor;
     private final ItemProcessor<AdvertisementDto, AdvertisementDto> advertisementProfitCalculationProcessor;
-    private final Step videoProfitCalculationStep;
-    private final Step advertisementProfitCalculationStep;
+    private final ItemProcessor<AdvertisementDto, VideoDto> sumAdvertisementDailyProfitInVideoProcessor;
+    private final Step videoDailyProfitStep;
+    private final Step advertisementDailyProfitStep;
     private final DataSource dataSource;
     private final AdvertisementMapper advertisementMapper;
     private final VideoMapper videoMapper;
+    public final HashMap<Long, Double> dailyTotalProfitOfAdvertisements = new HashMap<>(); // static?
 
     @Bean
     public JdbcTransactionManager transactionManager() {
         return new JdbcTransactionManager(dataSource);
     }
     @Bean
-    public Job dailyProfitCalculationJob(JobRepository jobRepository) throws ParseException{
-        return new JobBuilder("dailyProfitCalculationJob", jobRepository)
+    public Job dailyProfitJob(JobRepository jobRepository) throws ParseException{
+        return new JobBuilder("dailyProfitJob", jobRepository)
                 .incrementer(new RunIdIncrementer()) // test environment, 중복 실행 허용
-                .start(videoProfitCalculationStep)
-                .next(advertisementProfitCalculationStep)
+                .start(videoDailyProfitStep)
+                .next(advertisementDailyProfitStep)
+                .next(totalAdvertisementDailyProfitStep)
                 .build();
     }
 
     @Bean
     @JobScope
-    public Step advertisementProfitCalculationStep(JobRepository jobRepository, PlatformTransactionManager transactionManager,
-                                                   @Value("#{jobParameters[batchDate]}") String batchDate) throws ParseException {
+    public Step advertisementDailyProfitStep(JobRepository jobRepository, PlatformTransactionManager transactionManager,
+                                        @Value("#{jobParameters[batchDate]}") String batchDate) throws ParseException {
         log.info(String.valueOf(new SimpleDateFormat("yyyy-MM-dd").parse(batchDate)));
-        return new StepBuilder("advertisementProfitCalculationStep", jobRepository)
+        return new StepBuilder("advertisementDailyProfitStep", jobRepository)
                 .<AdvertisementDto, AdvertisementDto>chunk(10, transactionManager)
                 .reader(advertisementReader())
                 .processor(advertisementProfitCalculationProcessor)
@@ -76,10 +84,10 @@ public class JobConfig {
 
     @Bean
     @JobScope // 빈의 생성 시점을 지정된 Scope가 실행되는 시점으로 지연 (late binding), 동일한 컴포넌트를 병렬 처리할 때 유리
-    public Step videoProfitCalculationStep(JobRepository jobRepository, PlatformTransactionManager transactionManager,
-                                           @Value("#{jobParameters[batchDate]}") String batchDate) throws ParseException {
+    public Step videoDailyProfitStep(JobRepository jobRepository, PlatformTransactionManager transactionManager,
+                                     @Value("#{jobParameters[batchDate]}") String batchDate) throws ParseException {
         log.info(String.valueOf(new SimpleDateFormat("yyyy-MM-dd").parse(batchDate)));
-        return new StepBuilder("videoProfitCalculationStep", jobRepository)
+        return new StepBuilder("videoDailyProfitStep", jobRepository)
                 .<VideoDto, VideoDto>chunk(10, transactionManager) // test if the result changes by chunk size.
                 //	transactionManager: Spring’s PlatformTransactionManager that begins and commits transactions during processing.
                 .reader(videoReader())
@@ -88,7 +96,6 @@ public class JobConfig {
                 .writer(videoCompositeWriter())
                 .build();
     }
-
 
     @Bean
     public JdbcCursorItemReader<AdvertisementDto> advertisementReader() {
@@ -112,15 +119,10 @@ public class JobConfig {
         return reader;
     }//  batchDate=2024-05-10
 
+    // 광고 정산 writer
     @Bean
     public CompositeItemWriter advertisementCompositeWriter() {
         List<JdbcBatchItemWriter> writers = List.of(initializeAdvertisementTempDailyViewsWriter(), updateAdvertisementDailyProfitWriter());
-        return new CompositeItemWriterBuilder()
-                .delegates(writers).build();
-    }
-    @Bean
-    public CompositeItemWriter videoCompositeWriter() {
-        List<JdbcBatchItemWriter> writers = List.of(initializeVideoTempDailyViewsWriter(), updateVideoDailyProfitWriter());
         return new CompositeItemWriterBuilder()
                 .delegates(writers).build();
     }
@@ -133,14 +135,7 @@ public class JobConfig {
                 .beanMapped()
                 .build();
     }
-    @Bean
-    public JdbcBatchItemWriter<VideoDto> initializeVideoTempDailyViewsWriter() {
-        return new JdbcBatchItemWriterBuilder<VideoDto>()
-                .sql("UPDATE videos SET temp_daily_views=0, total_views=:totalViews where number=:number")
-                .dataSource(dataSource)
-                .beanMapped() // ?? https://jojoldu.tistory.com/339
-                .build();
-    }
+
     @Bean
     public JdbcBatchItemWriter<AdvertisementDto> updateAdvertisementDailyProfitWriter() {
         return new JdbcBatchItemWriterBuilder<AdvertisementDto>()
@@ -149,6 +144,25 @@ public class JobConfig {
                 .beanMapped()
                 .build();
     }
+
+    // 동영상 정산 writer
+    @Bean
+    public CompositeItemWriter videoCompositeWriter() {
+        List<JdbcBatchItemWriter> writers = List.of(initializeVideoTempDailyViewsWriter(), updateVideoDailyProfitWriter());
+        return new CompositeItemWriterBuilder()
+                .delegates(writers).build();
+    }
+
+
+    @Bean
+    public JdbcBatchItemWriter<VideoDto> initializeVideoTempDailyViewsWriter() {
+        return new JdbcBatchItemWriterBuilder<VideoDto>()
+                .sql("UPDATE videos SET temp_daily_views=0, total_views=:totalViews where number=:number")
+                .dataSource(dataSource)
+                .beanMapped() // ?? https://jojoldu.tistory.com/339
+                .build();
+    }
+
     @Bean
     public JdbcBatchItemWriter<VideoDto> updateVideoDailyProfitWriter() {
         /**
@@ -159,7 +173,7 @@ public class JobConfig {
         */
 
         return new JdbcBatchItemWriterBuilder<VideoDto>()
-                .sql("INSERT INTO video_daily_histories(video_number, calculated_date, daily_views, daily_profit) VALUES(:number, :calculatedDate, :dailyViews, :dailyProfit)")
+                .sql("INSERT INTO video_daily_histories(video_number, calculated_date, daily_views, daily_profit, daily_total_profit_of_advertisements) VALUES(:number, :calculatedDate, :dailyViews, :dailyProfit, :dailyTotalProfitOfAdvertisements)")
                 .dataSource(dataSource)
                 .beanMapped() // ?? https://jojoldu.tistory.com/339
                 .build();
