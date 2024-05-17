@@ -1,26 +1,27 @@
 package clipstudio.processor;
 
+import clipstudio.util.ProfitCalculator;
 import clipstudio.dto.*;
+import clipstudio.dto.domain.AdvertisementDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Component
 @Slf4j
-public class AdvertisementProfitCalculationProcessor implements ItemProcessor<Advertisement, AdvertisementDailyHistory> {
+public class AdvertisementProfitCalculationProcessor implements ItemProcessor<AdvertisementDto, AdvertisementDto> {
     @Override
-    public AdvertisementDailyHistory process(Advertisement advertisement) throws Exception {
+    public AdvertisementDto process(AdvertisementDto advertisement) throws Exception {
         final Long prevTotal = advertisement.getTotalViews();
         final Long daily = advertisement.getTempDailyViews();
         double profit = ProfitCalculator.getDailyProfit(prevTotal, daily, "advertisement");
-        return AdvertisementDailyHistory.builder()
-                .advertisementNumber(advertisement.getNumber())
-                .updatedTotalViews(prevTotal + daily)
-                .dailyProfit(profit)
-                .dailyViews(daily)
-                .calculatedDate(LocalDate.now()).build();
+        advertisement.setTotalViews(prevTotal + daily);
+        advertisement.setDailyViews(daily);
+        advertisement.setTempDailyViews(0);
+        advertisement.setDailyProfit(profit);
+        advertisement.setCalculatedDate(LocalDate.now());
+        return advertisement;
     }
 }

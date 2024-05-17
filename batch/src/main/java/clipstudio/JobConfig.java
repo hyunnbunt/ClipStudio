@@ -1,9 +1,9 @@
 package clipstudio;
 
-import clipstudio.dto.Advertisement;
-import clipstudio.dto.AdvertisementDailyHistory;
-import clipstudio.dto.Video;
-import clipstudio.dto.VideoDailyHistory;
+import clipstudio.dto.AdvertisementDailyProfitDto;
+import clipstudio.dto.domain.AdvertisementDto;
+import clipstudio.dto.domain.VideoDto;
+import clipstudio.dto.VideoDailyProfitDto;
 import clipstudio.mapper.AdvertisementMapper;
 import clipstudio.mapper.VideoMapper;
 import lombok.RequiredArgsConstructor;
@@ -42,8 +42,8 @@ public class JobConfig {
      * configured
      */
 
-    private final ItemProcessor<Video, VideoDailyHistory> videoProfitCalculationProcessor;
-    private final ItemProcessor<Advertisement, AdvertisementDailyHistory> advertisementProfitCalculationProcessor;
+    private final ItemProcessor<VideoDto, VideoDto> videoProfitCalculationProcessor;
+    private final ItemProcessor<AdvertisementDto, AdvertisementDto> advertisementProfitCalculationProcessor;
     private final Step videoProfitCalculationStep;
     private final Step advertisementProfitCalculationStep;
     private final DataSource dataSource;
@@ -69,7 +69,7 @@ public class JobConfig {
                                                    @Value("#{jobParameters[batchDate]}") String batchDate) throws ParseException {
         log.info(String.valueOf(new SimpleDateFormat("yyyy-MM-dd").parse(batchDate)));
         return new StepBuilder("advertisementProfitCalculationStep", jobRepository)
-                .<Advertisement, AdvertisementDailyHistory>chunk(10, transactionManager)
+                .<AdvertisementDto, AdvertisementDto>chunk(10, transactionManager)
                 .reader(advertisementReader())
                 .processor(advertisementProfitCalculationProcessor)
                 .writer(advertisementCompositeWriter())
@@ -82,21 +82,19 @@ public class JobConfig {
                                            @Value("#{jobParameters[batchDate]}") String batchDate) throws ParseException {
         log.info(String.valueOf(new SimpleDateFormat("yyyy-MM-dd").parse(batchDate)));
         return new StepBuilder("videoProfitCalculationStep", jobRepository)
-                .<Video, VideoDailyHistory>chunk(10, transactionManager) // test if the result changes by chunk size.
-                //	transactionManager: Spring’s PlatformTransactionManager that begins
-                //	and commits transactions during processing.
+                .<VideoDto, VideoDto>chunk(10, transactionManager) // test if the result changes by chunk size.
+                //	transactionManager: Spring’s PlatformTransactionManager that begins and commits transactions during processing.
                 .reader(videoReader())
 //                .allowStartIfComplete(true) // test environment, 중복 실행 허용
                 .processor(videoProfitCalculationProcessor)
-//                .writer(videoProfitWriter())
                 .writer(videoCompositeWriter())
                 .build();
     }
 
 
     @Bean
-    public JdbcCursorItemReader<Advertisement> advertisementReader() {
-        JdbcCursorItemReader<Advertisement> reader = new JdbcCursorItemReaderBuilder<Advertisement>()
+    public JdbcCursorItemReader<AdvertisementDto> advertisementReader() {
+        JdbcCursorItemReader<AdvertisementDto> reader = new JdbcCursorItemReaderBuilder<AdvertisementDto>()
                 .name("advertisementReader")
                 .dataSource(dataSource)
                 .rowMapper(advertisementMapper)
@@ -105,11 +103,9 @@ public class JobConfig {
         return reader;
     }
 
-
-
     @Bean
-    public JdbcCursorItemReader<Video> videoReader() {
-        JdbcCursorItemReader<Video> reader = new JdbcCursorItemReaderBuilder<Video>()
+    public JdbcCursorItemReader<VideoDto> videoReader() {
+        JdbcCursorItemReader<VideoDto> reader = new JdbcCursorItemReaderBuilder<VideoDto>()
                 .name("videoReader")
                 .dataSource(dataSource)
                 .rowMapper(videoMapper)
@@ -120,44 +116,43 @@ public class JobConfig {
 
     @Bean
     public CompositeItemWriter advertisementCompositeWriter() {
-        List<JdbcBatchItemWriter> writers = List.of(initializeAdvertisementTempDailyViewsWriter(), advertisementProfitWriter());
+        List<JdbcBatchItemWriter> writers = List.of(initializeAdvertisementTempDailyViewsWriter(), updateAdvertisementDailyProfitWriter());
         return new CompositeItemWriterBuilder()
                 .delegates(writers).build();
     }
     @Bean
     public CompositeItemWriter videoCompositeWriter() {
-        List<JdbcBatchItemWriter> writers = List.of(initializeVideoTempDailyViewsWriter(), videoProfitWriter());
+        List<JdbcBatchItemWriter> writers = List.of(initializeVideoTempDailyViewsWriter(), updateVideoDailyProfitWriter());
         return new CompositeItemWriterBuilder()
                 .delegates(writers).build();
     }
 
     @Bean
-    public JdbcBatchItemWriter<AdvertisementDailyHistory> initializeAdvertisementTempDailyViewsWriter() {
-        return new JdbcBatchItemWriterBuilder<AdvertisementDailyHistory>()
-                .sql("UPDATE advertisements SET temp_daily_views=0, total_views=:updatedTotalViews WHERE number=:advertisementNumber")
+    public JdbcBatchItemWriter<AdvertisementDto> initializeAdvertisementTempDailyViewsWriter() {
+        return new JdbcBatchItemWriterBuilder<AdvertisementDto>()
+                .sql("UPDATE advertisements SET temp_daily_views=0, total_views=:totalViews WHERE number=:number")
                 .dataSource(dataSource)
                 .beanMapped()
                 .build();
     }
     @Bean
-    public JdbcBatchItemWriter<VideoDailyHistory> initializeVideoTempDailyViewsWriter() {
-
-        return new JdbcBatchItemWriterBuilder<VideoDailyHistory>()
-                .sql("UPDATE videos SET temp_daily_views=0, total_views=:updatedTotalViews where number=:videoNumber")
+    public JdbcBatchItemWriter<VideoDto> initializeVideoTempDailyViewsWriter() {
+        return new JdbcBatchItemWriterBuilder<VideoDto>()
+                .sql("UPDATE videos SET temp_daily_views=0, total_views=:totalViews where number=:number")
                 .dataSource(dataSource)
                 .beanMapped() // ?? https://jojoldu.tistory.com/339
                 .build();
     }
     @Bean
-    public JdbcBatchItemWriter<AdvertisementDailyHistory> advertisementProfitWriter() {
-        return new JdbcBatchItemWriterBuilder<AdvertisementDailyHistory>()
-                .sql("INSERT INTO advertisement_daily_histories(advertisement_number, calculated_date, daily_views, daily_profit) VALUES(:advertisementNumber, :calculatedDate, :dailyViews, :dailyProfit)")
+    public JdbcBatchItemWriter<AdvertisementDto> updateAdvertisementDailyProfitWriter() {
+        return new JdbcBatchItemWriterBuilder<AdvertisementDto>()
+                .sql("INSERT INTO advertisement_daily_histories(advertisement_number, calculated_date, daily_views, daily_profit) VALUES(:number, :calculatedDate, :dailyViews, :dailyProfit)")
                 .dataSource(dataSource)
                 .beanMapped()
                 .build();
     }
     @Bean
-    public JdbcBatchItemWriter<VideoDailyHistory> videoProfitWriter() {
+    public JdbcBatchItemWriter<VideoDto> updateVideoDailyProfitWriter() {
         /**
          * The JdbcBatchItemWriter is an ItemWriter that uses the batching features
          * from NamedParameterJdbcTemplate to execute a batch of statements
@@ -165,8 +160,8 @@ public class JobConfig {
          * to construct an instance of the JdbcBatchItemWriter.
         */
 
-        return new JdbcBatchItemWriterBuilder<VideoDailyHistory>()
-                .sql("INSERT INTO video_daily_histories(video_number, calculated_date, daily_views, daily_profit) VALUES(:videoNumber, :calculatedDate, :dailyViews, :dailyProfit)")
+        return new JdbcBatchItemWriterBuilder<VideoDto>()
+                .sql("INSERT INTO video_daily_histories(video_number, calculated_date, daily_views, daily_profit) VALUES(:number, :calculatedDate, :dailyViews, :dailyProfit)")
                 .dataSource(dataSource)
                 .beanMapped() // ?? https://jojoldu.tistory.com/339
                 .build();

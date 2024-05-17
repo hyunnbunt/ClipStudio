@@ -1,29 +1,28 @@
 package clipstudio.processor;
 
-import clipstudio.dto.ProfitCalculator;
-import clipstudio.dto.Video;
-import clipstudio.dto.VideoDailyHistory;
+import clipstudio.util.ProfitCalculator;
+import clipstudio.dto.domain.VideoDto;
+import clipstudio.dto.VideoDailyProfitDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Component
 @Slf4j
-public class VideoProfitCalculationProcessor implements ItemProcessor<Video, VideoDailyHistory> {
+public class VideoProfitCalculationProcessor implements ItemProcessor<VideoDto, VideoDto> {
     @Override
-    public VideoDailyHistory process(Video video) throws Exception {
+    public VideoDto process(VideoDto video) throws Exception {
         final Long prevTotal = video.getTotalViews();
         final Long daily = video.getTempDailyViews();
         log.info(String.valueOf(daily));
         double profit = ProfitCalculator.getDailyProfit(prevTotal, daily, "video");
-        return VideoDailyHistory.builder()
-                .videoNumber(video.getNumber())
-                .updatedTotalViews(prevTotal+daily)
-                .dailyProfit(profit)
-                .dailyViews(daily)
-                .calculatedDate(LocalDate.now()).build();
+        video.setTotalViews(prevTotal + daily);
+        video.setDailyViews(daily);
+        video.setTempDailyViews(0);
+        video.setDailyProfit(profit);
+        video.setCalculatedDate(LocalDate.now());
+        return video;
     }
 }
