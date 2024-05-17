@@ -1,5 +1,6 @@
 package clipstudio.processor;
 
+import clipstudio.singleton.AdvertisementsProfitCache;
 import clipstudio.util.ProfitCalculator;
 import clipstudio.dto.AdvertisementDto;
 import lombok.RequiredArgsConstructor;
@@ -14,8 +15,7 @@ import java.util.HashMap;
 @Slf4j
 @RequiredArgsConstructor
 public class AdvertisementProfitCalculationProcessor implements ItemProcessor<AdvertisementDto, AdvertisementDto> {
-
-    public final HashMap<Long, Double> dailyTotalProfitOfAdvertisementsCache;
+    public final AdvertisementsProfitCache advertisementsProfitCache;
     @Override
     public AdvertisementDto process(AdvertisementDto advertisement) throws Exception {
         final Long prevTotal = advertisement.getTotalViews();
@@ -26,8 +26,8 @@ public class AdvertisementProfitCalculationProcessor implements ItemProcessor<Ad
         advertisement.setTempDailyViews(0);
         advertisement.setDailyProfit(profit);
         advertisement.setCalculatedDate(LocalDate.now());
-        long videoNumber = advertisement.getVideo().getNumber();
-        dailyTotalProfitOfAdvertisementsCache.put(videoNumber, dailyTotalProfitOfAdvertisementsCache.getOrDefault(videoNumber, 0d) + profit);
-        return advertisement;
+        long videoNumber = advertisement.getVideoNumber();
+        advertisementsProfitCache.addAdProfitInVideo(videoNumber, profit);
+         return advertisement;
     }
 }

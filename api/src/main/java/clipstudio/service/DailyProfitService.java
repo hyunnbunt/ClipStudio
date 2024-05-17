@@ -45,21 +45,12 @@ public class DailyProfitService {
             // 일일 동영상 수익 필드 업데이트
             VideoDailyProfit videoDailyProfit = dailyProfitOfVideoRepository.findByVideoNumberAndCalculatedDate(video.getNumber(), date).orElse(null);
             if (videoDailyProfit != null) {
-                dailyProfitDto.setVideoProfit(videoDailyProfit.getVideoDailyProfit());
+                dailyProfitDto.setVideoProfit(videoDailyProfit.getDailyProfitOfVideo());
             }
             // 일일 광고 수익 필드 업데이트
-            List<Advertisement> advertisementList = advertisementRepository
-                    .findByVideoNumber(video.getNumber())
-                    .orElse(null); // 사용자 업로드 동영상별 광고 목록 가져오기
-            if (advertisementList != null) { // 광고 목록이 존재한다면, 광고 목록을 순회하며, 각 광고 넘버와 조회 날짜로 광고 정산 내역을 조회할 것
-                double totalAdvertisementsProfit = 0;
-                for (Advertisement advertisement : advertisementList) {
-                    AdvertisementDailyProfit advertisementDailyProfit = dailyProfitOfAdvertisementRepository.
-                            findByAdvertisementNumberAndCalculatedDate(advertisement.getNumber(), date); // 각 광고별 정산 내역을 조회
-                    totalAdvertisementsProfit += advertisementDailyProfit.getDailyProfit(); // 각 광고별 정산 금액을 합산
-                }
-                dailyProfitDto.setTotalProfitOfAllAdvertisementsInVideo(totalAdvertisementsProfit);
-            }
+            dailyProfitDto.setTotalProfitOfAllAdvertisementsInVideo(videoDailyProfit.getDailyTotalProfitOfAdvertisements());
+            dailyProfitDto.setVideoNumber(videoDailyProfit.getVideoNumber());
+            dailyProfitDto.setCalculatedDate(videoDailyProfit.getCalculatedDate());
             // 각 동영상별 일일 동영상 및 광고 정산 금액 dto를 목록에 추가
             dailyProfitDtoList.add(dailyProfitDto);
         }

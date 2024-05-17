@@ -11,7 +11,7 @@ import java.util.Map;
 @Setter
 public class AdvertisementDto {
     public Long number;
-    public VideoDto video;
+    public Long videoNumber;
     public int orderInVideo;
     public Long totalViews;
     public long tempDailyViews; // 최근 하루 동안의 조회수 => 정산시 비우고 AdvertisementDailyProfitDto 에 합침

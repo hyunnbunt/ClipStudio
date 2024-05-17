@@ -8,7 +8,7 @@ import java.time.LocalDate;
 @Setter
 @Getter
 @Entity
-@Table(name="video_daily_histories")
+@Table(name="video_daily_profit")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -19,7 +19,7 @@ public class VideoDailyProfit {
     @Column(nullable = false)
     long dailyViews;
     @Column(nullable = false)
-    double dailyProfit;
+    double dailyProfitOfVideo;
     double dailyTotalProfitOfAdvertisements;
     @Column(nullable = false)
     LocalDate calculatedDate;

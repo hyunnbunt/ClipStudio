@@ -49,15 +49,15 @@ public class ApiController {
     }
 
     // 일일 광고 수익 정산금 조회
-    @GetMapping("/api/profit")
+    @GetMapping("/api/profit/{date}")
     public ResponseEntity<List<DailyProfitDto>> showDailyProfit(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
-                                                                LocalDate date) {
+                                                                @PathVariable String date) {
 //        if (!customOAuth2User.getRole().equals(Role.seller)) {
 //            throw new Exception();
 //        }
         log.info(customOAuth2User.getEmail());
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(dailyProfitService.showDailyProfit(customOAuth2User.getEmail(), date));
+            return ResponseEntity.status(HttpStatus.OK).body(dailyProfitService.showDailyProfit("douhbngv@flygyyrc.com", LocalDate.parse(date)));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }

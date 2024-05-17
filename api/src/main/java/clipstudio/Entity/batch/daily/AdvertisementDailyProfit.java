@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 @Entity
 @Data
-@Table(name="advertisement_daily_histories")
+@Table(name="advertisement_daily_profit")
 public class AdvertisementDailyProfit {
     @Id
     @PrimaryKeyJoinColumn // 공부할 것

@@ -19,7 +19,7 @@ public class VideoDto {
     public long tempDailyViews;
     public long totalViews;
     public double dailyViews;
-    public double dailyProfit;
+    public double dailyProfitOfVideo;
     public LocalDate calculatedDate;
     public double dailyTotalProfitOfAdvertisements;
     public static Long[] views = new Long[]{0L, 100000L, 500000L, 1000000L, Long.MAX_VALUE};

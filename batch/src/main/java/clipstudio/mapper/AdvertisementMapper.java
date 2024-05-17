@@ -15,6 +15,7 @@ public class AdvertisementMapper implements RowMapper<AdvertisementDto> {
         log.info("inside videoMapper");
         AdvertisementDto advertisementDto = AdvertisementDto.builder()
                 .number(rs.getLong("number"))
+                .videoNumber(rs.getLong("video_number"))
                 .orderInVideo(rs.getInt("order_in_video"))
                 .tempDailyViews(rs.getLong("temp_daily_views"))
                 .totalViews(rs.getLong("total_views"))
