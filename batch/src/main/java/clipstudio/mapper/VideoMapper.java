@@ -1,13 +1,12 @@
 package clipstudio.mapper;
 
-import clipstudio.dto.domain.VideoDto;
+import clipstudio.dto.VideoDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 
 @Slf4j
 @Component

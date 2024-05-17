@@ -1,9 +1,7 @@
-package clipstudio;
+package clipstudio.config;
 
-import clipstudio.dto.AdvertisementDailyProfitDto;
-import clipstudio.dto.domain.AdvertisementDto;
-import clipstudio.dto.domain.VideoDto;
-import clipstudio.dto.VideoDailyProfitDto;
+import clipstudio.dto.AdvertisementDto;
+import clipstudio.dto.VideoDto;
 import clipstudio.mapper.AdvertisementMapper;
 import clipstudio.mapper.VideoMapper;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,7 @@
 package clipstudio.processor;
 
 import clipstudio.util.ProfitCalculator;
-import clipstudio.dto.domain.VideoDto;
+import clipstudio.dto.VideoDto;
 import clipstudio.dto.VideoDailyProfitDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemProcessor;

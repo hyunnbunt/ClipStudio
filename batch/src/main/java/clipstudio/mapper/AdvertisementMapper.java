@@ -1,6 +1,6 @@
 package clipstudio.mapper;
 
-import clipstudio.dto.domain.AdvertisementDto;
+import clipstudio.dto.AdvertisementDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;

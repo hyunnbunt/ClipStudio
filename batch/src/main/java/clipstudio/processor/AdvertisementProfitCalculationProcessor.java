@@ -1,8 +1,7 @@
 package clipstudio.processor;
 
 import clipstudio.util.ProfitCalculator;
-import clipstudio.dto.*;
-import clipstudio.dto.domain.AdvertisementDto;
+import clipstudio.dto.AdvertisementDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;

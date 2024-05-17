@@ -1,7 +1,7 @@
 package clipstudio.util;
 
-import clipstudio.dto.AdvertisementDailyProfitDto;
-import clipstudio.dto.VideoDailyProfitDto;
+import clipstudio.dto.AdvertisementDto;
+import clipstudio.dto.VideoDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,9 +31,9 @@ public class ProfitCalculator {
     public static double getDailyProfit(Long prevTotal, Long daily, String type) throws Exception {
         List<Map<String, Object>> priceTable;
         if (type.equals("video")) {
-            priceTable = VideoDailyProfitDto.priceTable;
+            priceTable = VideoDto.priceTable;
         } else if(type.equals("advertisement")) {
-            priceTable = AdvertisementDailyProfitDto.priceTable;
+            priceTable = AdvertisementDto.priceTable;
         } else {
             throw new Exception("The type of profit calculation should be video or advertisement.");
         }
