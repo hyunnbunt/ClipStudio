@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.support.JdbcTransactionManager;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
@@ -55,6 +56,7 @@ public class JobConfig {
         return new JdbcTransactionManager(dataSource);
     }
     @Bean
+    @Scheduled(cron = "0 58 22 * * *")
     public Job dailyProfitJob(JobRepository jobRepository) throws ParseException{
         return new JobBuilder("dailyProfitJob", jobRepository)
                 .incrementer(new RunIdIncrementer()) // test environment, 중복 실행 허용

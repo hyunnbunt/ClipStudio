@@ -1,8 +1,6 @@
 package clipstudio.service;
 
-import clipstudio.Entity.Advertisement;
 import clipstudio.Entity.Video;
-import clipstudio.Entity.batch.daily.AdvertisementDailyProfit;
 import clipstudio.Entity.batch.daily.VideoDailyProfit;
 import clipstudio.dto.profit.DailyProfitDto;
 import clipstudio.oauth2.User.User;
