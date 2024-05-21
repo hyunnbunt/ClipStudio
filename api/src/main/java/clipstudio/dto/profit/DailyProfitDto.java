@@ -11,7 +11,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class DailyProfitDto {
     long videoNumber;
-    double videoProfit;
-    double totalProfitOfAllAdvertisementsInVideo;
     LocalDate calculatedDate;
+    double profitOfVideo;
+    double profitOfAdvertisements;
+    double profitTotal;
 }

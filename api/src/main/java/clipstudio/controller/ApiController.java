@@ -29,14 +29,18 @@ public class ApiController {
     private final DailyProfitService dailyProfitService;
 
     // 동영상 업로드
-    @PostMapping("/api/videos/new")
+    @PostMapping("/api/videos")
     public ResponseEntity<VideoDto> uploadVideo(@RequestBody VideoUploadDto videoUploadDto,
                                                 @AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
-        return ResponseEntity.status(HttpStatus.OK).body(videoService.uploadVideo(videoUploadDto, customOAuth2User.getEmail()));
+           try {
+               return ResponseEntity.status(HttpStatus.OK).body(videoService.uploadVideo(videoUploadDto, customOAuth2User.getEmail()));
+           } catch (Exception e) {
+               return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+           }
     }
 
     // 동영상 재생, 접속한 사용자의 동영상 시청 기록 생성 또는 업데이트
-    @PostMapping("/api/videos/player/{videoNumber}")
+    @PostMapping("/api/player/{videoNumber}")
     public ResponseEntity<WatchHistoryDto> playVideo(@PathVariable Long videoNumber,
                                                      @RequestBody VideoPlayDto videoPlayDto,
                                                      @AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
@@ -49,13 +53,47 @@ public class ApiController {
     }
 
     // 일일 광고 수익 정산금 조회
-    @GetMapping("/api/profit/{date}")
+    @GetMapping("/api/profit/day/{date}")
     public ResponseEntity<List<DailyProfitDto>> showDailyProfit(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
                                                                 @PathVariable String date) {
 //        if (!customOAuth2User.getRole().equals(Role.seller)) {
 //            throw new Exception();
 //        }
         log.info(customOAuth2User.getEmail());
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(dailyProfitService.showDailyProfit("sid@ybgxpdiu.com", LocalDate.parse(date)));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    // 주간 광고 수익 정산금 조회
+    @GetMapping("/api/profit/week/{date}")
+    public ResponseEntity<List<DailyProfitDto>> showWeeklyProfit(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
+                                                                @PathVariable String date) {
+        log.info(customOAuth2User.getEmail());
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(dailyProfitService.showDailyProfit("douhbngv@flygyyrc.com", LocalDate.parse(date)));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    // 월별 광고 수익 정산금 조회
+    @GetMapping("/api/profit/month/{date}")
+    public ResponseEntity<List<DailyProfitDto>> showMonthlyProfit(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
+                                                                 @PathVariable String date) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(dailyProfitService.showDailyProfit("douhbngv@flygyyrc.com", LocalDate.parse(date)));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    // 연 광고 수익 정산금 조회
+    @GetMapping("/api/profit/year/{date}")
+    public ResponseEntity<List<DailyProfitDto>> showYearlyProfit(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
+                                                                 @PathVariable String date) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(dailyProfitService.showDailyProfit("douhbngv@flygyyrc.com", LocalDate.parse(date)));
         } catch (Exception e) {

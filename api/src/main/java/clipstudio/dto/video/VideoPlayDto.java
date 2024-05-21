@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
 @Data
@@ -11,5 +12,5 @@ import java.time.ZonedDateTime;
 @AllArgsConstructor
 public class VideoPlayDto {
     Integer videoStoppedTime;
-    ZonedDateTime requestTime;
+    LocalDate requestTime;
 }

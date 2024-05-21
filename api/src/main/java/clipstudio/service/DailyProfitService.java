@@ -2,6 +2,7 @@ package clipstudio.service;
 
 import clipstudio.Entity.Video;
 import clipstudio.Entity.batch.daily.VideoDailyProfit;
+import clipstudio.Entity.batch.daily.VideoDailyProfitKey;
 import clipstudio.dto.profit.DailyProfitDto;
 import clipstudio.oauth2.User.User;
 import clipstudio.oauth2.User.userRepository.UserRepository;
@@ -30,26 +31,22 @@ public class DailyProfitService {
     public List<DailyProfitDto> showDailyProfit(String userEmail, LocalDate date) {
         User user = userRepository.findByEmail(userEmail).orElseThrow();
         List<Video> videoList = videoRepository.findByUploader(user).orElse(null); // 사용자가 업로드한 모든 동영상 목록 불러오기
-        // 사용자가 업로드한 동영상이 없다면 exception 던지기
-        if (videoList == null) {
-            log.info("You don't have any uploaded video.");
-            throw new IllegalArgumentException();
-        }
-        // 사용자의 모든 동영상 수익 정산 금액 dto 목록 생성
+        // 사용자의 모든 동영상 수익 목록 생성
         List<DailyProfitDto> dailyProfitDtoList = new LinkedList<>();
         for (Video video : videoList) {
             // 각 동영상별 일일 동영상 및 광고 정산 금액 dto 생성
             DailyProfitDto dailyProfitDto = new DailyProfitDto();
             // 일일 동영상 수익 필드 업데이트
-            VideoDailyProfit videoDailyProfit = dailyProfitOfVideoRepository.findByVideoNumberAndCalculatedDate(video.getNumber(), date).orElse(null);
+            VideoDailyProfit videoDailyProfit = dailyProfitOfVideoRepository.findById(new VideoDailyProfitKey(video.getNumber(), date)).orElse(null);
             if (videoDailyProfit != null) {
-                dailyProfitDto.setVideoProfit(videoDailyProfit.getDailyProfitOfVideo());
+                dailyProfitDto.setProfitOfVideo(videoDailyProfit.getDailyProfitOfVideo());
             }
             // 일일 광고 수익 필드 업데이트
-            dailyProfitDto.setTotalProfitOfAllAdvertisementsInVideo(videoDailyProfit.getDailyTotalProfitOfAdvertisements());
+            dailyProfitDto.setProfitOfAdvertisements(videoDailyProfit.getDailyTotalProfitOfAdvertisements());
             dailyProfitDto.setVideoNumber(videoDailyProfit.getVideoNumber());
             dailyProfitDto.setCalculatedDate(videoDailyProfit.getCalculatedDate());
-            // 각 동영상별 일일 동영상 및 광고 정산 금액 dto를 목록에 추가
+            dailyProfitDto.setProfitTotal(videoDailyProfit.getDailyProfitOfVideo() + videoDailyProfit.getDailyTotalProfitOfAdvertisements());
+            // 현재 동영상 수익을 반환 목록에 추가
             dailyProfitDtoList.add(dailyProfitDto);
         }
         return dailyProfitDtoList;

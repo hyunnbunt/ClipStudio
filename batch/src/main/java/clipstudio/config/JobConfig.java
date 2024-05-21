@@ -16,6 +16,7 @@ import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.*;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.database.JdbcCursorItemReader;
+import org.springframework.batch.item.database.JdbcPagingItemReader;
 import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
 import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuilder;
 import org.springframework.batch.item.support.CompositeItemWriter;
@@ -115,6 +116,11 @@ public class JobConfig {
         return reader;
     }//  batchDate=2024-05-10
 
+    // multi-thread 테스트용
+    @Bean
+    public JdbcPagingItemReader<VideoDto> testVideoReader() {
+        return null;
+    }
     // 광고 정산 writer
     @Bean
     public CompositeItemWriter advertisementCompositeWriter() {
