@@ -1,5 +1,6 @@
 package clipstudio.config;
 
+import clipstudio.ReadListener;
 import clipstudio.dto.AdvertisementDto;
 import clipstudio.dto.VideoDto;
 import clipstudio.mapper.AdvertisementMapper;
@@ -20,15 +21,20 @@ import org.springframework.batch.item.database.JdbcPagingItemReader;
 import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
 import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuilder;
 import org.springframework.batch.item.support.CompositeItemWriter;
+import org.springframework.batch.item.support.SynchronizedItemStreamReader;
 import org.springframework.batch.item.support.builder.CompositeItemWriterBuilder;
+import org.springframework.batch.item.support.builder.SynchronizedItemStreamReaderBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.jdbc.support.JdbcTransactionManager;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
+import java.net.http.WebSocket;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -87,10 +93,12 @@ public class JobConfig {
         return new StepBuilder("videoDailyProfitStep", jobRepository)
                 .<VideoDto, VideoDto>chunk(10, transactionManager) // test if the result changes by chunk size.
                 //	transactionManager: Spring’s PlatformTransactionManager that begins and commits transactions during processing.
-                .reader(videoReader())
+                .reader(syncVideoReader())
+                .listener(new ReadListener()) // (1)
 //                .allowStartIfComplete(true) // test environment, 중복 실행 허용
                 .processor(videoProfitCalculationProcessor)
                 .writer(videoCompositeWriter())
+                .taskExecutor(executor())
                 .build();
     }
 
@@ -116,11 +124,36 @@ public class JobConfig {
         return reader;
     }//  batchDate=2024-05-10
 
-    // multi-thread 테스트용
     @Bean
-    public JdbcPagingItemReader<VideoDto> testVideoReader() {
-        return null;
+    public SynchronizedItemStreamReader<VideoDto> syncVideoReader() {
+        JdbcCursorItemReader<VideoDto> reader = new JdbcCursorItemReaderBuilder<VideoDto>()
+                .name("videoReader")
+                .dataSource(dataSource)
+                .rowMapper(videoMapper)
+                .sql("SELECT * FROM videos")
+                .build();
+        return new SynchronizedItemStreamReaderBuilder<VideoDto>()
+                .delegate(reader)
+                .build();
+    }//  batchDate=2024-05-10
+
+    private int poolSize;
+    @Value("${poolSize:10}") // 기본으로 10개의 thread
+    public void setPoolSize(int poolSize) {
+        this.poolSize = poolSize;
     }
+
+    @Bean
+    public TaskExecutor executor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor(); // (2)
+        executor.setCorePoolSize(poolSize);
+        executor.setMaxPoolSize(poolSize);
+        executor.setThreadNamePrefix("multi-thread-");
+        executor.setWaitForTasksToCompleteOnShutdown(Boolean.TRUE);
+        executor.initialize();
+        return executor;
+    }
+    // multi-thread 테스트용
     // 광고 정산 writer
     @Bean
     public CompositeItemWriter advertisementCompositeWriter() {

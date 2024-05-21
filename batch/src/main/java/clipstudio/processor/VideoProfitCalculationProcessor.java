@@ -27,6 +27,7 @@ public class VideoProfitCalculationProcessor implements ItemProcessor<VideoDto, 
         video.setTempDailyViews(0);
         video.setDailyProfitOfVideo(profit);
         video.setCalculatedDate(LocalDate.now());
+//        Thread.sleep(1000);
         final double dailyTotalProfitOfAdvertisements = advertisementsProfitCache.getAdProfitInVideo(video.getNumber());
         video.setDailyTotalProfitOfAdvertisements(dailyTotalProfitOfAdvertisements);
         return video;
