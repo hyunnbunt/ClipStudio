@@ -61,18 +61,18 @@ public class DailyProfitService {
         return dailyProfitDto;
     }
 
-    public WeeklyProfitDto showWeeklyProfit(String userEmail, LocalDate date) {
-        LocalDate[] monSun = getWeek(date);
-        WeeklyProfitDto weeklyProfitDto = new WeeklyProfitDto();
-        weeklyProfitDto.setStartDate(monSun[0]);
-        weeklyProfitDto.setEndDate(monSun[1]);
-        List<DailyProfitDto> dailyProfitDtoList = new ArrayList<>();
-        for (LocalDate curr = monSun[0]; curr.isBefore(monSun[1]) || curr.isEqual(monSun[1]); curr = curr.plusDays(1)) {
-
-        }
-    }
-    public LocalDate[] getWeek(LocalDate localDate) {
-        LocalDate[] monSun = new LocalDate[2];
-        log.info(localDate.getDayOfWeek().toString());
-    }
+//    public WeeklyProfitDto showWeeklyProfit(String userEmail, LocalDate date) {
+//        LocalDate[] monSun = getWeek(date);
+//        WeeklyProfitDto weeklyProfitDto = new WeeklyProfitDto();
+//        weeklyProfitDto.setStartDate(monSun[0]);
+//        weeklyProfitDto.setEndDate(monSun[1]);
+//        List<DailyProfitDto> dailyProfitDtoList = new ArrayList<>();
+//        for (LocalDate curr = monSun[0]; curr.isBefore(monSun[1]) || curr.isEqual(monSun[1]); curr = curr.plusDays(1)) {
+//
+//        }
+//    }
+//    public LocalDate[] getWeek(LocalDate localDate) {
+//        LocalDate[] monSun = new LocalDate[2];
+//        log.info(localDate.getDayOfWeek().toString());
+//    }
 }
