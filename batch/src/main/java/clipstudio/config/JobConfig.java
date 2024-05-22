@@ -9,7 +9,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
+import org.springframework.batch.core.StepListener;
 import org.springframework.batch.core.configuration.annotation.JobScope;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
@@ -30,6 +32,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.jdbc.support.JdbcTransactionManager;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.concurrent.ConcurrentTaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.transaction.PlatformTransactionManager;
 
@@ -37,6 +40,7 @@ import javax.sql.DataSource;
 import java.net.http.WebSocket;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 
@@ -76,13 +80,18 @@ public class JobConfig {
     @Bean
     @JobScope
     public Step advertisementDailyProfitStep(JobRepository jobRepository, PlatformTransactionManager transactionManager,
-                                        @Value("#{jobParameters[batchDate]}") String batchDate) throws ParseException {
+                                        @Value("#{jobParameters['batchDate']}") String batchDate) throws ParseException {
         log.info(String.valueOf(new SimpleDateFormat("yyyy-MM-dd").parse(batchDate)));
         return new StepBuilder("advertisementDailyProfitStep", jobRepository)
                 .<AdvertisementDto, AdvertisementDto>chunk(10, transactionManager)
-                .reader(advertisementReader())
+                .reader(syncAdvertisementReader())
                 .processor(advertisementProfitCalculationProcessor)
                 .writer(advertisementCompositeWriter())
+                .taskExecutor(
+                    new ConcurrentTaskExecutor(
+                            executorServiceConfig.virtualThreadExecutor() //가상 스레드
+                    ))
+//                .taskExecutor(executorServiceConfig.executor())
                 .build();
     }
 
@@ -99,7 +108,11 @@ public class JobConfig {
 //                .allowStartIfComplete(true) // test environment, 중복 실행 허용
                 .processor(videoProfitCalculationProcessor)
                 .writer(videoCompositeWriter())
-                .taskExecutor(executorServiceConfig.executor())
+                .taskExecutor(
+                        new ConcurrentTaskExecutor(
+                                executorServiceConfig.virtualThreadExecutor() //가상 스레드
+                        ))
+//                .taskExecutor(executorServiceConfig.executor())
                 .build();
     }
 
@@ -126,6 +139,18 @@ public class JobConfig {
     }//  batchDate=2024-05-10
 
     @Bean
+    public SynchronizedItemStreamReader<AdvertisementDto> syncAdvertisementReader() {
+        JdbcCursorItemReader<AdvertisementDto> reader = new JdbcCursorItemReaderBuilder<AdvertisementDto>()
+                .name("advertisementReader")
+                .dataSource(dataSource)
+                .rowMapper(advertisementMapper)
+                .sql("SELECT * FROM advertisements")
+                .build();
+        return new SynchronizedItemStreamReaderBuilder<AdvertisementDto>()
+                .delegate(reader)
+                .build();
+    }//  batchDate=2024-05-10
+    @Bean
     public SynchronizedItemStreamReader<VideoDto> syncVideoReader() {
         JdbcCursorItemReader<VideoDto> reader = new JdbcCursorItemReaderBuilder<VideoDto>()
                 .name("videoReader")
@@ -137,13 +162,6 @@ public class JobConfig {
                 .delegate(reader)
                 .build();
     }//  batchDate=2024-05-10
-
-    private int poolSize;
-    @Value("${poolSize:10}") // 기본으로 10개의 thread
-    public void setPoolSize(int poolSize) {
-        this.poolSize = poolSize;
-    }
-
 
     // The @ConditionalOnThreading annotation allows the creation of a bean only if Spring is configured to use a specific type of threading internally. By type of threads, it means either the platform threads or virtual threads. To recall, since Java 21, we have had the ability to use virtual threads instead of platform ones.
     //

@@ -54,50 +54,50 @@ public class ApiController {
 
     // 일일 광고 수익 정산금 조회
     @GetMapping("/api/profit/day/{date}")
-    public ResponseEntity<List<DailyProfitDto>> showDailyProfit(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
+    public ResponseEntity<DailyProfitDto> showDailyProfit(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
                                                                 @PathVariable String date) {
 //        if (!customOAuth2User.getRole().equals(Role.seller)) {
 //            throw new Exception();
 //        }
         log.info(customOAuth2User.getEmail());
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(dailyProfitService.showDailyProfit("sid@ybgxpdiu.com", LocalDate.parse(date)));
+            return ResponseEntity.status(HttpStatus.OK).body(dailyProfitService.showDailyProfit("tpslkg@ccnbvp.com", LocalDate.parse(date)));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 
     // 주간 광고 수익 정산금 조회
-    @GetMapping("/api/profit/week/{date}")
-    public ResponseEntity<List<DailyProfitDto>> showWeeklyProfit(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
-                                                                @PathVariable String date) {
-        log.info(customOAuth2User.getEmail());
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(dailyProfitService.showDailyProfit("douhbngv@flygyyrc.com", LocalDate.parse(date)));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-    }
-
-    // 월별 광고 수익 정산금 조회
-    @GetMapping("/api/profit/month/{date}")
-    public ResponseEntity<List<DailyProfitDto>> showMonthlyProfit(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
-                                                                 @PathVariable String date) {
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(dailyProfitService.showDailyProfit("douhbngv@flygyyrc.com", LocalDate.parse(date)));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-    }
-
-    // 연 광고 수익 정산금 조회
-    @GetMapping("/api/profit/year/{date}")
-    public ResponseEntity<List<DailyProfitDto>> showYearlyProfit(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
-                                                                 @PathVariable String date) {
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(dailyProfitService.showDailyProfit("douhbngv@flygyyrc.com", LocalDate.parse(date)));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-    }
+//    @GetMapping("/api/profit/week/{date}")
+//    public ResponseEntity<List<List<DailyProfitDto>>> showWeeklyProfit(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
+//                                                                @PathVariable String date) {
+//        log.info(customOAuth2User.getEmail());
+//        try {
+//            return ResponseEntity.status(HttpStatus.OK).body(dailyProfitService.showWeeklyProfit("douhbngv@flygyyrc.com", LocalDate.parse(date)));
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+//        }
+//    }
+//
+//    // 월별 광고 수익 정산금 조회
+//    @GetMapping("/api/profit/month/{date}")
+//    public ResponseEntity<List<DailyProfitDto>> showMonthlyProfit(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
+//                                                                 @PathVariable String date) {
+//        try {
+//            return ResponseEntity.status(HttpStatus.OK).body(dailyProfitService.showDailyProfit("douhbngv@flygyyrc.com", LocalDate.parse(date)));
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+//        }
+//    }
+//
+//    // 연 광고 수익 정산금 조회
+//    @GetMapping("/api/profit/year/{date}")
+//    public ResponseEntity<List<DailyProfitDto>> showYearlyProfit(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
+//                                                                 @PathVariable String date) {
+//        try {
+//            return ResponseEntity.status(HttpStatus.OK).body(dailyProfitService.showDailyProfit("douhbngv@flygyyrc.com", LocalDate.parse(date)));
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+//        }
+//    }
 }

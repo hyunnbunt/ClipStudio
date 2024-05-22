@@ -11,13 +11,13 @@ import java.time.LocalDate;
 @IdClass(AdvertisementDailyProfitKey.class)
 public class AdvertisementDailyProfit {
     @Id
-    @PrimaryKeyJoinColumn // 공부할 것
+    @Column(nullable = false)
     long advertisementNumber;
     @Id
+    @Column(nullable = false)
+    LocalDate calculatedDate;
     @Column(nullable = false)
     double dailyProfit;
     @Column(nullable = false)
     long dailyViews;
-    @Column(nullable = false)
-    LocalDate calculatedDate;
 }

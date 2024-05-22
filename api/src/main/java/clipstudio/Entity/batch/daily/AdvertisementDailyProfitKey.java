@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class AdvertisementDailyProfitKey implements Serializable {
-    @Column(name = "video_number", nullable = false)
+    @Column(name = "advertisement_number", nullable = false)
     long advertisementNumber;
     @Column(name = "calculated_date", nullable = false)
     LocalDate calculatedDate;
