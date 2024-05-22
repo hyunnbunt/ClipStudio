@@ -3,6 +3,7 @@ package clipstudio.controller;
 import java.time.LocalDate;
 
 import clipstudio.dto.profit.DailyProfitDto;
+import clipstudio.dto.profit.WeeklyProfitDto;
 import clipstudio.dto.video.VideoUploadDto;
 import clipstudio.dto.video.VideoDto;
 import clipstudio.service.DailyProfitService;
@@ -68,16 +69,16 @@ public class ApiController {
     }
 
     // 주간 광고 수익 정산금 조회
-//    @GetMapping("/api/profit/week/{date}")
-//    public ResponseEntity<List<List<DailyProfitDto>>> showWeeklyProfit(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
-//                                                                @PathVariable String date) {
-//        log.info(customOAuth2User.getEmail());
-//        try {
-//            return ResponseEntity.status(HttpStatus.OK).body(dailyProfitService.showWeeklyProfit("douhbngv@flygyyrc.com", LocalDate.parse(date)));
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-//        }
-//    }
+    @GetMapping("/api/profit/week/{date}")
+    public ResponseEntity<WeeklyProfitDto> showWeeklyProfit(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
+                                                            @PathVariable String date) {
+        log.info(customOAuth2User.getEmail());
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(dailyProfitService.showWeeklyProfit("tpslkg@ccnbvp.com", LocalDate.parse(date)));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
 //
 //    // 월별 광고 수익 정산금 조회
 //    @GetMapping("/api/profit/month/{date}")

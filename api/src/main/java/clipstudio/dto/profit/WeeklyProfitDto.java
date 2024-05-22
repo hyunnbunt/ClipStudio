@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class WeeklyProfitDto {
-    List<DailyProfitDto> weeklyProfit;
     LocalDate startDate;
     LocalDate endDate;
+    List<DailyProfitDto> weeklyProfit;
 }
