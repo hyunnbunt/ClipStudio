@@ -57,6 +57,7 @@ public class JobConfig {
     private final DataSource dataSource;
     private final AdvertisementMapper advertisementMapper;
     private final VideoMapper videoMapper;
+    private final ExecutorServiceConfig executorServiceConfig;
 
     @Bean
     public JdbcTransactionManager transactionManager() {
@@ -98,7 +99,7 @@ public class JobConfig {
 //                .allowStartIfComplete(true) // test environment, 중복 실행 허용
                 .processor(videoProfitCalculationProcessor)
                 .writer(videoCompositeWriter())
-                .taskExecutor(executor())
+                .taskExecutor(executorServiceConfig.executor())
                 .build();
     }
 
@@ -143,17 +144,10 @@ public class JobConfig {
         this.poolSize = poolSize;
     }
 
-    @Bean
-    public TaskExecutor executor() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor(); // (2)
-        executor.setCorePoolSize(poolSize);
-        executor.setMaxPoolSize(poolSize);
-        executor.setThreadNamePrefix("multi-thread-");
-        executor.setWaitForTasksToCompleteOnShutdown(Boolean.TRUE);
-        executor.initialize();
-        return executor;
-    }
-    // multi-thread 테스트용
+
+    // The @ConditionalOnThreading annotation allows the creation of a bean only if Spring is configured to use a specific type of threading internally. By type of threads, it means either the platform threads or virtual threads. To recall, since Java 21, we have had the ability to use virtual threads instead of platform ones.
+    //
+    //So, to configure Spring to use virtual threads internally, we use a property named spring.threads.virtual.enabled. If this property is true and we’re running on Java 21 or higher, then @ConditionalOnThreading annotation would allow the creation of the bean.
     // 광고 정산 writer
     @Bean
     public CompositeItemWriter advertisementCompositeWriter() {

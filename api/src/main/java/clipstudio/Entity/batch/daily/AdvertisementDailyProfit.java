@@ -8,10 +8,12 @@ import java.time.LocalDate;
 @Entity
 @Data
 @Table(name="advertisement_daily_profit")
+@IdClass(AdvertisementDailyProfitKey.class)
 public class AdvertisementDailyProfit {
     @Id
     @PrimaryKeyJoinColumn // 공부할 것
     long advertisementNumber;
+    @Id
     @Column(nullable = false)
     double dailyProfit;
     @Column(nullable = false)
