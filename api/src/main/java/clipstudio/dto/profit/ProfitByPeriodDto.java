@@ -10,8 +10,8 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class WeeklyProfitDto {
+public class ProfitByPeriodDto {
     LocalDate startDate;
     LocalDate endDate;
-    List<DailyProfitDto> weeklyProfit;
+    List<DailyProfitDto> profitByPeriod;
 }

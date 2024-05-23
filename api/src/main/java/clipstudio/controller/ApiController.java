@@ -3,7 +3,7 @@ package clipstudio.controller;
 import java.time.LocalDate;
 
 import clipstudio.dto.profit.DailyProfitDto;
-import clipstudio.dto.profit.WeeklyProfitDto;
+import clipstudio.dto.profit.ProfitByPeriodDto;
 import clipstudio.dto.video.VideoUploadDto;
 import clipstudio.dto.video.VideoDto;
 import clipstudio.service.DailyProfitService;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import clipstudio.dto.video.VideoPlayDto;
 import clipstudio.dto.history.WatchHistoryDto;
 import clipstudio.oauth2.User.oauth2.CustomOAuth2User;
-import java.util.List;
 
 @RestController
 @Slf4j
@@ -70,8 +69,8 @@ public class ApiController {
 
     // 주간 광고 수익 정산금 조회
     @GetMapping("/api/profit/week/{date}")
-    public ResponseEntity<WeeklyProfitDto> showWeeklyProfit(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
-                                                            @PathVariable String date) {
+    public ResponseEntity<ProfitByPeriodDto> showWeeklyProfit(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
+                                                              @PathVariable String date) {
         log.info(customOAuth2User.getEmail());
         try {
             return ResponseEntity.status(HttpStatus.OK).body(dailyProfitService.showWeeklyProfit("tpslkg@ccnbvp.com", LocalDate.parse(date)));
@@ -79,26 +78,26 @@ public class ApiController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
-//
-//    // 월별 광고 수익 정산금 조회
-//    @GetMapping("/api/profit/month/{date}")
-//    public ResponseEntity<List<DailyProfitDto>> showMonthlyProfit(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
-//                                                                 @PathVariable String date) {
-//        try {
-//            return ResponseEntity.status(HttpStatus.OK).body(dailyProfitService.showDailyProfit("douhbngv@flygyyrc.com", LocalDate.parse(date)));
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-//        }
-//    }
+
+    // 월별 광고 수익 정산금 조회
+    @GetMapping("/api/profit/month/{date}")
+    public ResponseEntity<ProfitByPeriodDto> showMonthlyProfit(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
+                                                               @PathVariable String date) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(dailyProfitService.showMonthlyProfit("tpslkg@ccnbvp.com", LocalDate.parse(date)));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
 //
 //    // 연 광고 수익 정산금 조회
-//    @GetMapping("/api/profit/year/{date}")
-//    public ResponseEntity<List<DailyProfitDto>> showYearlyProfit(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
-//                                                                 @PathVariable String date) {
-//        try {
-//            return ResponseEntity.status(HttpStatus.OK).body(dailyProfitService.showDailyProfit("douhbngv@flygyyrc.com", LocalDate.parse(date)));
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-//        }
-//    }
+    @GetMapping("/api/profit/year/{date}")
+    public ResponseEntity<ProfitByPeriodDto> showYearlyProfit(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
+                                                                 @PathVariable String date) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(dailyProfitService.showYearlyProfit("tpslkg@ccnbvp.com", LocalDate.parse(date)));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
 }
