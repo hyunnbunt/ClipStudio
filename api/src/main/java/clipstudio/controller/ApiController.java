@@ -4,6 +4,8 @@ import java.time.LocalDate;
 
 import clipstudio.dto.profit.DailyProfitDto;
 import clipstudio.dto.profit.ProfitByPeriodDto;
+import clipstudio.dto.stastistics.Top5ViewsByPeriod;
+import clipstudio.dto.stastistics.Top5ViewsDaily;
 import clipstudio.dto.video.VideoUploadDto;
 import clipstudio.dto.video.VideoDto;
 import clipstudio.service.DailyProfitService;
@@ -61,7 +63,7 @@ public class ApiController {
 //        }
         log.info(customOAuth2User.getEmail());
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(dailyProfitService.showDailyProfit("tpslkg@ccnbvp.com", LocalDate.parse(date)));
+            return ResponseEntity.status(HttpStatus.OK).body(dailyProfitService.showDailyProfit("cyqw@poakoi.com", LocalDate.parse(date)));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -73,7 +75,7 @@ public class ApiController {
                                                               @PathVariable String date) {
         log.info(customOAuth2User.getEmail());
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(dailyProfitService.showWeeklyProfit("tpslkg@ccnbvp.com", LocalDate.parse(date)));
+            return ResponseEntity.status(HttpStatus.OK).body(dailyProfitService.showWeeklyProfit("cyqw@poakoi.com", LocalDate.parse(date)));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -84,7 +86,7 @@ public class ApiController {
     public ResponseEntity<ProfitByPeriodDto> showMonthlyProfit(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
                                                                @PathVariable String date) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(dailyProfitService.showMonthlyProfit("tpslkg@ccnbvp.com", LocalDate.parse(date)));
+            return ResponseEntity.status(HttpStatus.OK).body(dailyProfitService.showMonthlyProfit("cyqw@poakoi.com", LocalDate.parse(date)));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -95,9 +97,30 @@ public class ApiController {
     public ResponseEntity<ProfitByPeriodDto> showYearlyProfit(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
                                                                  @PathVariable String date) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(dailyProfitService.showYearlyProfit("tpslkg@ccnbvp.com", LocalDate.parse(date)));
+            return ResponseEntity.status(HttpStatus.OK).body(dailyProfitService.showYearlyProfit("cyqw@poakoi.com", LocalDate.parse(date)));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
+
+    @GetMapping("/api/top5/views/day/{date}")
+    public ResponseEntity<Top5ViewsDaily> showDailyTop5Views(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
+                                                             @PathVariable String date) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(dailyProfitService.showDailyTop5Views("cyqw@poakoi.com", LocalDate.parse(date)));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    @GetMapping("/api/top5/views/week/{date}")
+    public ResponseEntity<Top5ViewsByPeriod> showWeeklyTop5Views(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
+                                                             @PathVariable String date) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(dailyProfitService.showWeeklyTop5Views("cyqw@poakoi.com", LocalDate.parse(date)));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
 }

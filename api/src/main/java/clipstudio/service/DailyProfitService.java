@@ -6,18 +6,21 @@ import clipstudio.Entity.batch.daily.VideoDailyProfitKey;
 import clipstudio.dto.profit.DailyProfitDto;
 import clipstudio.dto.profit.ProfitDto;
 import clipstudio.dto.profit.ProfitByPeriodDto;
+import clipstudio.dto.stastistics.Top5ViewsByPeriod;
+import clipstudio.dto.stastistics.Top5ViewsDaily;
+import clipstudio.dto.stastistics.ViewsByPeriod;
 import clipstudio.oauth2.User.User;
 import clipstudio.oauth2.User.userRepository.UserRepository;
 import clipstudio.repository.batch.DailyProfitOfVideoRepository;
 import clipstudio.repository.VideoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -215,4 +218,85 @@ public class DailyProfitService {
         }
         return profitByPeriodDto;
     }
+
+    public Top5ViewsDaily showDailyTop5Views(String userEmail, LocalDate date) {
+        User user = userRepository.findByEmail(userEmail).orElseThrow();
+        log.info(user.getEmail());
+        List<Video> videos = videoRepository.findByUploader(user).orElse(null);
+        if (videos == null) {
+            return null;
+        }
+        Top5ViewsDaily top5ViewsDaily = new Top5ViewsDaily();
+        PriorityQueue<ViewsByPeriod> pq = new PriorityQueue<>((o1, o2) -> (int) (o2.getViewsByPeriod() - o1.getViewsByPeriod()));
+        for (Video video : videos) {
+            dailyProfitOfVideoRepository.findById(new VideoDailyProfitKey(video.getNumber(), date)).ifPresent(videoDailyProfit -> {
+                ViewsByPeriod curr = ViewsByPeriod.builder()
+                        .videoNumber(videoDailyProfit.getVideoNumber())
+                        .viewsByPeriod(videoDailyProfit.getDailyViews())
+                        .build();
+                pq.add(curr);
+            });
+        }
+        for (int i = 0; i < Math.min(5, videos.size()); i ++) {
+            top5ViewsDaily.getViewsByPeriodList().add(pq.poll());
+        }
+        top5ViewsDaily.setDate(date);
+        return top5ViewsDaily;
+    }
+
+    public Top5ViewsByPeriod showWeeklyTop5Views(String userEmail, LocalDate date) {
+        User user = userRepository.findByEmail(userEmail).orElseThrow();
+        log.info(user.getEmail());
+        List<Video> videos = videoRepository.findByUploader(user).orElse(null);
+        if (videos == null) {
+            return null;
+        }
+        ViewsByPeriod viewsByPeriod = new ViewsByPeriod();
+        PriorityQueue<ViewsByPeriod> pq = new PriorityQueue<>((o1, o2) -> (int) (o2.getViewsByPeriod() - o1.getViewsByPeriod()));
+        LocalDate monday = getClosestMondayBefore(date);
+        for (Video video : videos) {
+            LocalDate currDate = monday;
+            long weeklyViews = 0L;
+            for (int i = 1; i <= 7; i++) {
+                if (currDate.isAfter(LocalDate.now())) {
+                    break;
+                }
+                VideoDailyProfit videoDaily = dailyProfitOfVideoRepository.findById(new VideoDailyProfitKey(video.getNumber(), currDate)).orElse(null);
+                if (videoDaily != null) {
+                    weeklyViews += videoDaily.getDailyViews();
+                }
+                currDate = monday.plusDays(i);
+            }
+            viewsByPeriod.setViewsByPeriod(weeklyViews);
+            viewsByPeriod.setVideoNumber(video.getNumber());
+            pq.add(viewsByPeriod);
+        }
+        Top5ViewsByPeriod top5ViewsByPeriod = new Top5ViewsByPeriod();
+        top5ViewsByPeriod.setStartDate(monday);
+        top5ViewsByPeriod.setEndDate(monday.plusDays(6));
+        for (int i = 0; i <= 5; i++) {
+            top5ViewsByPeriod.getViewsByPeriodList().add(pq.poll());
+        }
+        return top5ViewsByPeriod;
+    }
+//
+//        Top5ViewsByPeriod top5ViewsByPeriod = new Top5ViewsByPeriod();
+//        LocalDate monday = getClosestMondayBefore(date);
+//        top5ViewsByPeriod.setStartDate(monday);
+//        top5ViewsByPeriod.setEndDate(monday.plusDays(6));
+//        LocalDate currDate = monday;
+//        PriorityQueue<ViewsByPeriod> pq = new PriorityQueue<>((o1, o2) -> (int) (o2.getViewsByPeriod() - o1.getViewsByPeriod()));
+//        HashMap<Long, ViewsByPeriod> weeklyViews = new HashMap<>();
+//        for (int i = 1; i <= 7; i ++) {
+//            if (currDate.isAfter(LocalDate.now())) {
+//                top5ViewsByPeriod.setEndDate(LocalDate.now());
+//                break;
+//            }
+//            for (Video video : videos) {
+//                dailyProfitOfVideoRepository.findById(new VideoDailyProfitKey(video.getNumber(), date)).ifPresent(videoDailyProfit -> {
+//                    weeklyViews.put(video.getNumber(), weeklyViews.getOrDefault(video.getNumber(), new ViewsByPeriod(video.getNumber(), videoDailyProfit.getDailyViews()+));
+//                });
+//            }
+//        }
+//    }
 }

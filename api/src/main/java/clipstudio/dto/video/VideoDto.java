@@ -25,7 +25,7 @@ public class VideoDto {
                 .createdDate(videoEntity.getCreatedDate())
                 .title(videoEntity.getTitle())
                 .totalViews(videoEntity.getTotalViews())
-                .tempDailyViews(videoEntity.getTempDailyViews())
+                .tempDailyViews(videoEntity.getTodayViews())
                 .build();
     }
 }

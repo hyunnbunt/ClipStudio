@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -21,7 +22,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role; // USER, SELLER
     @Column // social login 수정하고 나서 => nullable = true 로 수정
-    private Timestamp createDate;
+    private LocalDate createdDate;
     @Enumerated(EnumType.STRING)
     private SocialType socialType; // GOOGLE, ...
     private String socialId;

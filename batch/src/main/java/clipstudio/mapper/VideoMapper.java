@@ -13,15 +13,15 @@ import java.sql.SQLException;
 public class VideoMapper implements RowMapper<VideoDto> {
     @Override
     public VideoDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-        log.info("inside videoMapper");
         VideoDto video = VideoDto.builder()
                 .title(rs.getString("title"))
                 .number(rs.getLong("number"))
                 .durationSec(rs.getInt("duration_sec"))
-                .tempDailyViews(rs.getLong("temp_daily_views"))
+                .dailyPlayedSec(rs.getLong("today_played_sec"))
+                .todayViews(rs.getLong("today_views"))
                 .totalViews(rs.getLong("total_views"))
                 .build();
-        log.info(String.valueOf(video.getTempDailyViews()));
+        log.info(String.valueOf(video.getTodayViews()));
         return video;
     }
 

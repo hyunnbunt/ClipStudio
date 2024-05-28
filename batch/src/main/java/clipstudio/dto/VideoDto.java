@@ -16,9 +16,10 @@ public class VideoDto {
     public String title;
     public long number;
     public int durationSec;
-    public long tempDailyViews;
+    public long todayViews;
     public long totalViews;
-    public double dailyViews;
+    public double dailyViews; //?
+    public long dailyPlayedSec;
     public double dailyProfitOfVideo;
     public LocalDate calculatedDate;
     public double dailyTotalProfitOfAdvertisements;

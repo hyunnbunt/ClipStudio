@@ -24,6 +24,8 @@ public class VideoDailyProfit  {
     @Column(nullable = false)
     long dailyViews;
     @Column(nullable = false)
+    long dailyPlayedSec;
+    @Column(nullable = false)
     double dailyProfitOfVideo;
     double dailyTotalProfitOfAdvertisements;
 }

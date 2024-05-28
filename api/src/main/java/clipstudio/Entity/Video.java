@@ -31,7 +31,9 @@ public class Video {
     @Column(nullable = false)
     public Long totalViews;
     @Column(nullable = false)
-    public Long tempDailyViews;
+    public Long todayViews;
+    @Column(nullable = false)
+    public Long todayPlayedSec;
     public static Video fromDto(VideoDto videoDto) {
         return builder()
                 .title(videoDto.getTitle())
@@ -43,11 +45,12 @@ public class Video {
                 .uploader(videoUploadDto.getUploader())
                 .durationSec(videoUploadDto.getDurationSec())
                 .createdDate(LocalDate.now())
-                .tempDailyViews(0L)
+                .todayViews(0L)
                 .totalViews(0L)
                 .build();
     }
     public void increaseViews() {
         this.totalViews++;
     }
+    public void updatePlayedSec(int playedSec) {this.todayPlayedSec += playedSec;}
 }

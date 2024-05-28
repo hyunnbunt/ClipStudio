@@ -17,10 +17,10 @@ public class AdvertisementMapper implements RowMapper<AdvertisementDto> {
                 .number(rs.getLong("number"))
                 .videoNumber(rs.getLong("video_number"))
                 .orderInVideo(rs.getInt("order_in_video"))
-                .tempDailyViews(rs.getLong("temp_daily_views"))
+                .todayViews(rs.getLong("today_views"))
                 .totalViews(rs.getLong("total_views"))
                 .build();
-        log.info(String.valueOf(advertisementDto.getTempDailyViews()));
+        log.info(String.valueOf(advertisementDto.getTodayViews()));
         return advertisementDto;
     }
 }
