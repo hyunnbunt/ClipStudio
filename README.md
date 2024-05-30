@@ -194,10 +194,71 @@
 
 ## 프로젝트 구조
 - **ClipStudio(multi-module)**
-    - API module
-    - Batch module
-
-- **DummyDataGenerator**
-    - JDBC template으로 DML 구현
-    - 사용자 데이터, 동영상 데이터 랜덤 생성
-    - 랜덤 사용자의 랜덤 동영상 시청 기록 업데이트
+<pre>
+clipstudio
+ ┣ Entity
+ ┃ ┣ batch
+ ┃ ┃ ┣ daily
+ ┃ ┃ ┃ ┣ AdvertisementDailyProfit.java
+ ┃ ┃ ┃ ┣ AdvertisementDailyProfitKey.java
+ ┃ ┃ ┃ ┣ VideoDailyProfit.java
+ ┃ ┃ ┃ ┗ VideoDailyProfitKey.java
+ ┃ ┃ ┗ weekly
+ ┃ ┣ Advertisement.java
+ ┃ ┣ Video.java
+ ┃ ┗ WatchHistory.java
+ ┣ MVCController
+ ┃ ┗ UserController.java
+ ┣ api
+ ┃ ┗ SocialLoginController.java
+ ┣ controller
+ ┃ ┗ ApiController.java
+ ┣ dto
+ ┃ ┣ history
+ ┃ ┃ ┗ WatchHistoryDto.java
+ ┃ ┣ profit
+ ┃ ┃ ┣ DailyProfitDto.java
+ ┃ ┃ ┣ ProfitByPeriodDto.java
+ ┃ ┃ ┗ ProfitDto.java
+ ┃ ┣ stastistics
+ ┃ ┃ ┣ PlayedTimeByPeriod.java
+ ┃ ┃ ┣ Top5PlayedTimeByPeriod.java
+ ┃ ┃ ┣ Top5ViewsByPeriod.java
+ ┃ ┃ ┣ Top5ViewsDaily.java
+ ┃ ┃ ┗ ViewsByPeriod.java
+ ┃ ┗ video
+ ┃ ┃ ┣ VideoDto.java
+ ┃ ┃ ┣ VideoPlayDto.java
+ ┃ ┃ ┗ VideoUploadDto.java
+ ┣ oauth2
+ ┃ ┣ User
+ ┃ ┃ ┣ oauth2
+ ┃ ┃ ┃ ┣ CustomOAuth2User.java
+ ┃ ┃ ┃ ┗ OAuth2Attributes.java
+ ┃ ┃ ┣ service
+ ┃ ┃ ┃ ┗ CustomOAuth2UserService.java
+ ┃ ┃ ┣ userRepository
+ ┃ ┃ ┃ ┗ UserRepository.java
+ ┃ ┃ ┣ userinfo
+ ┃ ┃ ┃ ┣ GoogleOAuth2UserInfo.java
+ ┃ ┃ ┃ ┗ OAuth2UserInfo.java
+ ┃ ┃ ┣ Role.java
+ ┃ ┃ ┣ SocialType.java
+ ┃ ┃ ┗ User.java
+ ┃ ┣ config
+ ┃ ┃ ┗ SecurityConfig.java
+ ┃ ┣ handler
+ ┃ ┃ ┗ OAuth2LoginSuccessHandler.java
+ ┃ ┗ .DS_Store
+ ┣ repository
+ ┃ ┣ batch
+ ┃ ┃ ┣ DailyProfitOfAdvertisementRepository.java
+ ┃ ┃ ┗ DailyProfitOfVideoRepository.java
+ ┃ ┣ AdvertisementRepository.java
+ ┃ ┣ VideoRepository.java
+ ┃ ┗ WatchHistoryRepository.java
+ ┣ service
+ ┃ ┣ DailyProfitService.java
+ ┃ ┗ VideoService.java
+ ┗ APIApplication.java
+</pre>
