@@ -2,15 +2,15 @@
 #### 동영상 관리 및 동영상 조회수 기반 수익 정산과 조회 기능을 제공하는 프로그램입니다.
 
 ## 개발 환경 및 사용 기술
-
-- Java21
-- docker
-- mariaDB
-- Spring Boot 3.2.5
-    - Spring Security
-    - Spring Batch
-- JPA hibernate
-- JDBC template
+![JAVA21 badge](https://img.shields.io/badge/Java-21-d9381e?style=for-the-badge)
+![Spring Boot badge](https://img.shields.io/badge/Spring%20Boot-3.2.5-ff8f00?style=for-the-badge)
+![Spring Batch badge](https://img.shields.io/badge/Spring%20Batch-fac898?style=for-the-badge)
+![Spring Security badge](https://img.shields.io/badge/Spring%20Security-f7ddbe?style=for-the-badge)
+![Spring Data JPA badge](https://img.shields.io/badge/JPA%20hibernate-lightgreen?style=for-the-badge)
+![MariaDB badge](https://img.shields.io/badge/MariaDB-dcffe4?style=for-the-badge)
+![JDBC templates badge](http://img.shields.io/badge/JDBC%20templates-0f52ba?style=for-the-badge)
+![DOCKER badge](https://img.shields.io/badge/Docker-9cf?style=for-the-badge)
+![Github badge](https://img.shields.io/badge/Github-6488ea?style=for-the-badge)
 
 ## API 명세
 
