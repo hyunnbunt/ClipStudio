@@ -193,7 +193,8 @@
 </details>
 
 ## 프로젝트 구조
-- **ClipStudio(multi-module)**
+**ClipStudio(multi-module)**
+* API module
 <pre>
 clipstudio
  ┣ Entity
@@ -261,4 +262,33 @@ clipstudio
  ┃ ┣ DailyProfitService.java
  ┃ ┗ VideoService.java
  ┗ APIApplication.java
+</pre>
+* Batch module
+
+<pre>
+clipstudio
+ ┣ config
+ ┃ ┣ AdvertisementStepConfig.java
+ ┃ ┣ ExecutorServiceConfig.java
+ ┃ ┣ JobConfig.java
+ ┃ ┗ VideoStepConfig.java
+ ┣ dto
+ ┃ ┣ AdvertisementDto.java
+ ┃ ┗ VideoDto.java
+ ┣ listener
+ ┣ mapper
+ ┃ ┣ AdvertisementMapper.java
+ ┃ ┣ VideoMapper.java
+ ┃ ┗ WeeklyVideoProfitMapper.java
+ ┣ processor
+ ┃ ┣ AdvertisementProfitProcessor.java
+ ┃ ┗ VideoProfitProcessor.java
+ ┣ reader
+ ┣ singleton
+ ┃ ┗ AdvertisementsProfitCache.java
+ ┣ util
+ ┃ ┗ ProfitCalculator.java
+ ┣ writer
+ ┣ BatchApplication.java
+ ┗ ReadListener.java
 </pre>
