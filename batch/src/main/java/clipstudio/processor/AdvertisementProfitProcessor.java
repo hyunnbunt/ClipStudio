@@ -27,15 +27,14 @@ public class AdvertisementProfitProcessor implements ItemProcessor<Advertisement
         log.info("Advertisement number:" + advertisementDto.getNumber());
         advertisementDto.setCalculatedDate(LocalDate.parse(batchDate));
         final Long prevTotal = advertisementDto.getTotalViews();
-        final Long daily = advertisementDto.getTodayViews();
-        double profit = ProfitCalculator.getDailyProfit(prevTotal, daily, "advertisement");
-        advertisementDto.setTotalViews(prevTotal + daily);
-        advertisementDto.setDailyViews(daily);
-        advertisementDto.setTodayViews(0);
+        final Long todayViews = advertisementDto.getTodayViews();
+        double profit = ProfitCalculator.getDailyProfit(prevTotal, todayViews, "advertisement");
+        advertisementDto.setTotalViews(prevTotal + todayViews);
+        advertisementDto.setDailyViews(todayViews);
+        advertisementDto.setTodayViews(todayViews); // multi, single thread 환경에서 동일 데이터 2번 돌리기 위해 초기화하지 않고 진행
         advertisementDto.setDailyProfit(profit);
 //        advertisementDto.setCalculatedDate(LocalDate.now());
 //        Thread.sleep(10);
-        log.info(batchDate);
         advertisementDto.setCalculatedDate(LocalDate.parse(batchDate));
         long videoNumber = advertisementDto.getVideoNumber();
         advertisementsProfitCache.addAdProfitInVideo(videoNumber, profit);

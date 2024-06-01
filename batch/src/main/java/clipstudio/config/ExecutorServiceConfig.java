@@ -17,7 +17,7 @@ import java.util.concurrent.ThreadFactory;
 @Slf4j
 public class ExecutorServiceConfig {
     private int poolSize;
-    @Value("${poolSize:10}") // 기본으로 10개의 thread 재사용
+    @Value("${poolSize:20}") // 기본으로 10개의 thread 재사용
     public void setPoolSize(int poolSize) {
         this.poolSize = poolSize;
     }
@@ -26,7 +26,7 @@ public class ExecutorServiceConfig {
     public TaskExecutor executor() {
         // virtual thread 사용할 때는 threadpool 설정이 없어도 된다. 재사용 없이 계속 thread 생성 가능
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-//        executor.setCorePoolSize(poolSize); // 가상 스레드의 경우 의미 없음
+        executor.setCorePoolSize(poolSize); // 가상 스레드의 경우 의미 없음
 //        executor.setMaxPoolSize(poolSize); // 가상 스레드는 거의 무제한 생성 가능
         executor.setThreadNamePrefix("multi-thread-");
         executor.setWaitForTasksToCompleteOnShutdown(Boolean.TRUE);
