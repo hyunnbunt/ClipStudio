@@ -18,5 +18,14 @@ public class CacheService {
     public Double getFromCache(Long key) {
         return redisTemplate.opsForValue().get(key);
     }
+
+    public void addAdvertisementProfitToCache(long videoNumber, double profit) {
+        Double prevProfit = this.getFromCache(videoNumber);
+        if (prevProfit == null) {
+            this.putToCache(videoNumber, profit);
+            return;
+        }
+        this.putToCache(videoNumber, this.getFromCache(videoNumber) + profit);
+    }
 }
 

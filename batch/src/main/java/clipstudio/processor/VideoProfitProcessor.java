@@ -24,7 +24,7 @@ public class VideoProfitProcessor implements ItemProcessor<VideoDto, VideoDto> {
     private String batchDate;
     @Override
     public VideoDto process(VideoDto videoDto) throws Exception {
-        log.info("Inside advertisement step: " + Thread.currentThread());
+        log.info("Inside profit processor: " + Thread.currentThread());
         log.info("Video number:" + videoDto.getNumber());
 //        log.info("Is thread virtual: " + Thread.currentThread().isVirtual());
         final Long prevTotal = videoDto.getTotalViews();
@@ -36,7 +36,11 @@ public class VideoProfitProcessor implements ItemProcessor<VideoDto, VideoDto> {
         videoDto.setDailyProfitOfVideo(profit);
 //        Thread.sleep(500);
         videoDto.setCalculatedDate(LocalDate.parse(batchDate));
-        videoDto.setDailyTotalProfitOfAdvertisements(cacheService.getFromCache(videoDto.getNumber()));
+        log.info("before getFromCache");
+        synchronized (cacheService) {
+            videoDto.setDailyTotalProfitOfAdvertisements(cacheService.getFromCache(videoDto.getNumber()));
+        }
+        log.info("after getFromCache");
 //                .getAdProfitInVideo(videoDto.getNumber()));
         return videoDto;
     }

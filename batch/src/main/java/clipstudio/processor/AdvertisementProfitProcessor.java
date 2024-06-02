@@ -39,7 +39,10 @@ public class AdvertisementProfitProcessor implements ItemProcessor<Advertisement
         advertisementDto.setCalculatedDate(LocalDate.parse(batchDate));
         long videoNumber = advertisementDto.getVideoNumber();
 //        advertisementsProfitCache.addAdProfitInVideo(videoNumber, profit);
-        cacheService.putToCache(videoNumber, profit);
+        synchronized (cacheService) {
+            cacheService.addAdvertisementProfitToCache(videoNumber, profit);
+        }
+//        cacheService.putToCache(videoNumber, profit);
          return advertisementDto;
     }
 }
