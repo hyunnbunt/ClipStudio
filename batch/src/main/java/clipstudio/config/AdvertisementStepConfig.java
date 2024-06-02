@@ -75,6 +75,7 @@ public class AdvertisementStepConfig {
     @Bean
     @StepScope
     public SynchronizedItemStreamReader<AdvertisementDto> syncAdvertisementReader() { // multi-thread 환경에서 사용
+        log.info("inside advertisement reader");
         JdbcCursorItemReader<AdvertisementDto> reader = new JdbcCursorItemReaderBuilder<AdvertisementDto>()
                 .name("advertisementReader")
                 .dataSource(dataSource)

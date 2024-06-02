@@ -1,5 +1,6 @@
 package clipstudio.processor;
 
+import clipstudio.service.CacheService;
 import clipstudio.singleton.AdvertisementsProfitCache;
 import clipstudio.util.ProfitCalculator;
 import clipstudio.dto.VideoDto;
@@ -17,8 +18,8 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 @StepScope
 public class VideoProfitProcessor implements ItemProcessor<VideoDto, VideoDto> {
-    final AdvertisementsProfitCache advertisementsProfitCache;
-
+//    final AdvertisementsProfitCache advertisementsProfitCache;
+    private final CacheService cacheService;
     @Value("#{jobParameters['batchDate']}")
     private String batchDate;
     @Override
@@ -35,8 +36,8 @@ public class VideoProfitProcessor implements ItemProcessor<VideoDto, VideoDto> {
         videoDto.setDailyProfitOfVideo(profit);
 //        Thread.sleep(500);
         videoDto.setCalculatedDate(LocalDate.parse(batchDate));
-        videoDto.setDailyTotalProfitOfAdvertisements(advertisementsProfitCache
-                .getAdProfitInVideo(videoDto.getNumber()));
+        videoDto.setDailyTotalProfitOfAdvertisements(cacheService.getFromCache(videoDto.getNumber()));
+//                .getAdProfitInVideo(videoDto.getNumber()));
         return videoDto;
     }
 }
