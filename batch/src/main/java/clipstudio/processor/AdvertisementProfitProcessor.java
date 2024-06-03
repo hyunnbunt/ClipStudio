@@ -23,8 +23,8 @@ public class AdvertisementProfitProcessor implements ItemProcessor<Advertisement
     private String batchDate;
     @Override
     public AdvertisementDto process(AdvertisementDto advertisementDto) throws Exception {
-        log.info("Inside advertisementDto step: " + Thread.currentThread());
-        log.info("Advertisement number:" + advertisementDto.getNumber());
+//        log.info("Inside advertisementDto step: " + Thread.currentThread());
+//        log.info("Advertisement number:" + advertisementDto.getNumber());
         advertisementDto.setCalculatedDate(LocalDate.parse(batchDate));
         final Long prevTotal = advertisementDto.getTotalViews();
         final Long todayViews = advertisementDto.getTodayViews();
@@ -37,7 +37,7 @@ public class AdvertisementProfitProcessor implements ItemProcessor<Advertisement
 //        Thread.sleep(10);
         advertisementDto.setCalculatedDate(LocalDate.parse(batchDate));
         long videoNumber = advertisementDto.getVideoNumber();
-        advertisementsProfitCache.addAdProfitInVideo(videoNumber, profit);
+        advertisementsProfitCache.addAdProfitInVideo(videoNumber, advertisementDto.getNumber(), profit);
          return advertisementDto;
     }
 }

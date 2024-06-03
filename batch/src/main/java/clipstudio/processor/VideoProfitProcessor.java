@@ -23,8 +23,8 @@ public class VideoProfitProcessor implements ItemProcessor<VideoDto, VideoDto> {
     private String batchDate;
     @Override
     public VideoDto process(VideoDto videoDto) throws Exception {
-        log.info("Inside advertisement step: " + Thread.currentThread());
-        log.info("Video number:" + videoDto.getNumber());
+//        log.info("Inside advertisement step: " + Thread.currentThread());
+//        log.info("Video number:" + videoDto.getNumber());
 //        log.info("Is thread virtual: " + Thread.currentThread().isVirtual());
         final Long prevTotal = videoDto.getTotalViews();
         final Long todayViews = videoDto.getTodayViews();

@@ -1,4 +1,4 @@
-package clipstudio.config;
+package clipstudio.batch;
 
 import clipstudio.ReadListener;
 import clipstudio.dto.VideoDto;
@@ -45,10 +45,10 @@ public class VideoStepConfig {
     @JobScope // 빈의 생성 시점을 지정된 Scope가 실행되는 시점으로 지연 (late binding), 동일한 컴포넌트를 병렬 처리할 때 유리
     public Step videoDailyProfitStep(JobRepository jobRepository, PlatformTransactionManager transactionManager,
                                      @Value("#{jobParameters[batchDate]}") String batchDate) throws ParseException {
-        log.info(String.valueOf(new SimpleDateFormat("yyyy-MM-dd").parse(batchDate)));
+//        log.info(String.valueOf(new SimpleDateFormat("yyyy-MM-dd").parse(batchDate)));
         return new StepBuilder("videoDailyProfitStep", jobRepository)
                 .<VideoDto, VideoDto>chunk(20, transactionManager) // test if the result changes by chunk size. TransactionManager: Spring’s PlatformTransactionManager that begins and commits transactions during processing.
-                .reader(videoReader())
+                .reader(syncVideoReader())
                 .listener(new ReadListener()) // (1)
 //                .allowStartIfComplete(true) // test environment, 중복 실행 허용
                 .processor(videoProfitProcessor)

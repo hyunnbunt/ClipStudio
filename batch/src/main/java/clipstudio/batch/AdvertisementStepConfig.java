@@ -1,10 +1,8 @@
-package clipstudio.config;
+package clipstudio.batch;
 
 import clipstudio.dto.AdvertisementDto;
 import clipstudio.mapper.AdvertisementMapper;
-import clipstudio.mapper.VideoMapper;
 import clipstudio.processor.AdvertisementProfitProcessor;
-import clipstudio.processor.VideoProfitProcessor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Step;
