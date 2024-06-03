@@ -38,7 +38,11 @@ public class VideoProfitProcessor implements ItemProcessor<VideoDto, VideoDto> {
         videoDto.setCalculatedDate(LocalDate.parse(batchDate));
         log.info("before getFromCache");
         synchronized (cacheService) {
-            videoDto.setDailyTotalProfitOfAdvertisements(cacheService.getFromCache(videoDto.getNumber()));
+            Double dailyTotalProfitOfAdvertisements = cacheService.getFromCache(videoDto.getNumber());
+            if (dailyTotalProfitOfAdvertisements == null) {
+                dailyTotalProfitOfAdvertisements = 0d;
+            }
+            videoDto.setDailyTotalProfitOfAdvertisements(dailyTotalProfitOfAdvertisements);
         }
         log.info("after getFromCache");
 //                .getAdProfitInVideo(videoDto.getNumber()));

@@ -2,11 +2,13 @@ package clipstudio.service;
 
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CacheService {
 
     private final RedisTemplate<Long, Double> redisTemplate;
@@ -21,11 +23,11 @@ public class CacheService {
 
     public void addAdvertisementProfitToCache(long videoNumber, double profit) {
         Double prevProfit = this.getFromCache(videoNumber);
+        log.info(prevProfit + "");
         if (prevProfit == null) {
-            this.putToCache(videoNumber, profit);
-            return;
+            prevProfit = 0d;
         }
-        this.putToCache(videoNumber, this.getFromCache(videoNumber) + profit);
+        this.putToCache(videoNumber, prevProfit + profit);
     }
 }
 
