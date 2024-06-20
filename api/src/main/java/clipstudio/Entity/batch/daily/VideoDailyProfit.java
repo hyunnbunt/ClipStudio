@@ -22,6 +22,8 @@ public class VideoDailyProfit  {
     @Column(name = "calculated_date", nullable = false)
     LocalDate calculatedDate;
     @Column(nullable = false)
+    Long uploaderNumber;
+    @Column(nullable = false)
     long dailyViews;
     @Column(nullable = false)
     long dailyPlayedSec;

@@ -102,7 +102,7 @@ public class VideoStepConfig {
     @StepScope
     public JdbcBatchItemWriter<VideoDto> updateVideoDailyProfitWriter() {
         return new JdbcBatchItemWriterBuilder<VideoDto>()
-                .sql("INSERT INTO video_daily_profit(video_number, calculated_date, daily_views, daily_played_sec, daily_profit_of_video, daily_total_profit_of_advertisements) VALUES(:number, :calculatedDate, :dailyViews, :dailyPlayedSec, :dailyProfitOfVideo, :dailyTotalProfitOfAdvertisements)")
+                .sql("INSERT INTO video_daily_profit(uploader_number, video_number, calculated_date, daily_views, daily_played_sec, daily_profit_of_video, daily_total_profit_of_advertisements) VALUES(:uploaderNumber, :number, :calculatedDate, :dailyViews, :dailyPlayedSec, :dailyProfitOfVideo, :dailyTotalProfitOfAdvertisements)")
                 .dataSource(dataSource)
                 .beanMapped() // ?? https://jojoldu.tistory.com/339
                 .build();

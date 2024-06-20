@@ -13,6 +13,7 @@ import java.util.Map;
 @Getter
 @Setter
 public class VideoDto {
+    public Long uploaderNumber;
     public String title;
     public long number;
     public int durationSec;

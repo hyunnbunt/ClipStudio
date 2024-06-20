@@ -34,6 +34,7 @@ public class Video {
     public Long todayViews;
     @Column(nullable = false)
     public Long todayPlayedSec;
+
     public static Video fromDto(VideoDto videoDto) {
         return builder()
                 .title(videoDto.getTitle())
@@ -47,6 +48,7 @@ public class Video {
                 .createdDate(LocalDate.now())
                 .todayViews(0L)
                 .totalViews(0L)
+                .todayPlayedSec(0L)
                 .build();
     }
     public void increaseViews() {

@@ -14,6 +14,7 @@ public class VideoMapper implements RowMapper<VideoDto> {
     @Override
     public VideoDto mapRow(ResultSet rs, int rowNum) throws SQLException {
         VideoDto video = VideoDto.builder()
+                .uploaderNumber(rs.getLong("uploader_number"))
                 .title(rs.getString("title"))
                 .number(rs.getLong("number"))
                 .durationSec(rs.getInt("duration_sec"))

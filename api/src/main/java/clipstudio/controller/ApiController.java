@@ -34,9 +34,11 @@ public class ApiController {
     @PostMapping("/api/videos")
     public ResponseEntity<VideoDto> uploadVideo(@RequestBody VideoUploadDto videoUploadDto,
                                                 @AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
+            log.info("video upload requested");
            try {
                return ResponseEntity.status(HttpStatus.OK).body(videoService.uploadVideo(videoUploadDto, customOAuth2User.getEmail()));
            } catch (Exception e) {
+               log.info(e.getMessage());
                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
            }
     }
@@ -75,12 +77,12 @@ public class ApiController {
                                                               @PathVariable String date) {
         log.info(customOAuth2User.getEmail());
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(dailyProfitService.showWeeklyProfit("cyqw@poakoi.com", LocalDate.parse(date)));
+            return ResponseEntity.status(HttpStatus.OK).body(dailyProfitService.showWeeklyProfit(customOAuth2User.getEmail(), LocalDate.parse(date)));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
-
+/**
     // 월별 광고 수익 정산금 조회
     @GetMapping("/api/profit/month/{date}")
     public ResponseEntity<ProfitByPeriodDto> showMonthlyProfit(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
@@ -102,7 +104,7 @@ public class ApiController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
-
+*/
     @GetMapping("/api/top5/views/day/{date}")
     public ResponseEntity<Top5ViewsDaily> showDailyTop5Views(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
                                                              @PathVariable String date) {

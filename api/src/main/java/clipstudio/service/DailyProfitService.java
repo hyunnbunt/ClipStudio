@@ -84,44 +84,43 @@ public class DailyProfitService {
 //        return dailyProfitDto
 //    }
 
-    public ProfitByPeriodDto showWeeklyProfit(String userEmail, LocalDate date) {
-        ProfitByPeriodDto profitByPeriodDto = new ProfitByPeriodDto();
-        profitByPeriodDto.setProfitByPeriod(new ArrayList<>());
-        User user = userRepository.findByEmail(userEmail).orElseThrow();
-        log.info(user.getEmail());
-        List<Video> videos = videoRepository.findByUploader(user).orElse(null);
-        if (videos == null) {
-            return null;
-        }
-        log.info(videos.size() + "");
-        LocalDate monday = getClosestMondayBefore(date);
-        profitByPeriodDto.setStartDate(monday);
-        profitByPeriodDto.setEndDate(monday.plusDays(6));
-        LocalDate currDate = monday;
-        for (int i = 1; i <= 7; i ++) {
-            if (currDate.isAfter(LocalDate.now())) {
-                profitByPeriodDto.setEndDate(LocalDate.now());
-                break;
-            }
-            DailyProfitDto dailyProfitDto = new DailyProfitDto();
-            dailyProfitDto.setDailyProfit(new ArrayList<>());
-            dailyProfitDto.setDate(currDate);
-            for (Video video : videos) {
-                dailyProfitOfVideoRepository.findById(new VideoDailyProfitKey(video.getNumber(), currDate)).ifPresent(videoDailyProfit -> {
-                    ProfitDto curr = ProfitDto.builder()
-                            .videoNumber(video.getNumber())
-                            .profitTotal(videoDailyProfit.getDailyProfitOfVideo() + videoDailyProfit.getDailyTotalProfitOfAdvertisements())
-                            .profitOfVideo(videoDailyProfit.getDailyProfitOfVideo())
-                            .profitOfAdvertisements(videoDailyProfit.getDailyTotalProfitOfAdvertisements())
-                            .build();
-                    dailyProfitDto.getDailyProfit().add(curr);
-                });
-            }
-            profitByPeriodDto.getProfitByPeriod().add(dailyProfitDto);
-            currDate = monday.plusDays(i);
-        }
-        return profitByPeriodDto;
-    }
+//    public ProfitByPeriodDto showWeeklyProfit2(String userEmail, LocalDate date) {
+//        ProfitByPeriodDto profitByPeriodDto = new ProfitByPeriodDto();
+//        profitByPeriodDto.setProfitByPeriod(new ArrayList<>());
+//        User user = userRepository.findByEmail(userEmail).orElseThrow();
+//        log.info(user.getEmail());
+//        List<Video> videos = videoRepository.findByUploader(user).orElse(null);
+//        if (videos == null) {
+//            return null;
+//        }
+//        log.info(videos.size() + "");
+//        LocalDate monday = getClosestMondayBefore(date);
+//        profitByPeriodDto.setStartDate(monday);
+//        profitByPeriodDto.setEndDate(monday.plusDays(6));
+//        LocalDate currDate = monday;
+//        for (int i = 1; i <= 7; i ++) {
+//            if (currDate.isAfter(LocalDate.now())) {
+//                profitByPeriodDto.setEndDate(LocalDate.now());
+//                break;
+//            }
+//            DailyProfitDto dailyProfitDto = new DailyProfitDto();
+//            dailyProfitDto.setDailyProfit(new ArrayList<>());
+//            dailyProfitDto.setDate(currDate);
+//            for (Video video : videos) {
+//                dailyProfitOfVideoRepository.findById(new VideoDailyProfitKey(video.getNumber(), currDate)).ifPresent(videoDailyProfit -> {
+//                    ProfitDto curr = ProfitDto.builder()
+//                            .videoNumber(video.getNumber())
+//                            .profitTotal(videoDailyProfit.getDailyProfitOfVideo() + videoDailyProfit.getDailyTotalProfitOfAdvertisements())
+//                            .profitOfVideo(videoDailyProfit.getDailyProfitOfVideo())
+//                            .profitOfAdvertisements(videoDailyProfit.getDailyTotalProfitOfAdvertisements())
+//                            .build();
+//                    dailyProfitDto.getDailyProfit().add(curr);
+//                });
+//            }
+//            profitByPeriodDto.getProfitByPeriod().add(dailyProfitDto);
+//            currDate = monday.plusDays(i);
+//        }
+//    }
     public LocalDate getClosestMondayBefore(LocalDate localDate) {
         int fromMon = localDate.getDayOfWeek().compareTo(DayOfWeek.MONDAY);
         return localDate.minusDays(fromMon);
@@ -136,9 +135,9 @@ public class DailyProfitService {
         int fromFirstDay = localDate.getDayOfYear();
         return localDate.minusDays(fromFirstDay-1);
     }
-
+/**
     public ProfitByPeriodDto showMonthlyProfit(String userEmail, LocalDate date) {
-        ProfitByPeriodDto profitByPeriodDto = new ProfitByPeriodDto();
+        ProfitByPeriodDto profitByPeriodDto = new ProfitByPeriodDto(date, date.plusDays(30L));
         profitByPeriodDto.setProfitByPeriod(new ArrayList<>());
         User user = userRepository.findByEmail(userEmail).orElseThrow();
         log.info(user.getEmail());
@@ -175,9 +174,26 @@ public class DailyProfitService {
             currDate = firstDayOfTheMonth.plusDays(i);
         }
         return profitByPeriodDto;
+    } */
+// 비교를 위함. findByDateBetween 사용해서 기간별 데이터를 조회한 후에, userEmail로 업로더 관련 내용 찾기
+    public ProfitByPeriodDto showWeeklyProfit(String userEmail, LocalDate start) {
+        log.info(start.toString());
+        Long userNumber = userRepository.findByEmail(userEmail).orElseThrow().getNumber();
+        LocalDate end = start.plusDays(6);
+        List<VideoDailyProfit> weeklyProfitList = dailyProfitOfVideoRepository.findAllByUploaderNumberAndDateBetween(userNumber, start, end);
+        log.info("result from repository method, first video dailyProfit: " + weeklyProfitList.getFirst().getDailyProfitOfVideo());
+        ProfitByPeriodDto profitByPeriodDto = new ProfitByPeriodDto(start, end);
+        Map<LocalDate, DailyProfitDto> daily = profitByPeriodDto.getDaily();
+        for (VideoDailyProfit videoDailyProfit : weeklyProfitList) {
+            LocalDate curr = videoDailyProfit.getCalculatedDate();
+            daily.put(curr, daily.getOrDefault(curr, new DailyProfitDto(curr)).addProfit(ProfitDto.fromEntity(videoDailyProfit)));
+        }
+        log.info(profitByPeriodDto.toString());
+        return profitByPeriodDto;
     }
-    public ProfitByPeriodDto showYearlyProfit(String userEmail, LocalDate date) {
-        ProfitByPeriodDto profitByPeriodDto = new ProfitByPeriodDto();
+
+   /** public ProfitByPeriodDto showYearlyProfit(String userEmail, LocalDate date) {
+        ProfitByPeriodDto profitByPeriodDto = new ProfitByPeriodDto(date, date.plusDays(365L));
         profitByPeriodDto.setProfitByPeriod(new ArrayList<>());
         User user = userRepository.findByEmail(userEmail).orElseThrow();
         log.info(user.getEmail());
@@ -217,7 +233,7 @@ public class DailyProfitService {
             currDate = firstDayOfTheYear.plusDays(i);
         }
         return profitByPeriodDto;
-    }
+    } */
 
     public Top5ViewsDaily showDailyTop5Views(String userEmail, LocalDate date) {
         User user = userRepository.findByEmail(userEmail).orElseThrow();
