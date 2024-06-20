@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-public interface DailyProfitOfVideoRepository extends JpaRepository<VideoDailyProfit, VideoDailyProfitKey> {
+public interface ProfitRepository extends JpaRepository<VideoDailyProfit, VideoDailyProfitKey> {
     Optional<VideoDailyProfit> findById(VideoDailyProfitKey videoDailyProfitKey);
 
     @Query(value = "SELECT * FROM video_daily_profit WHERE uploader_number = :uploaderNumber AND calculated_date BETWEEN :startDate AND :endDate", nativeQuery = true)

@@ -11,11 +11,10 @@ import clipstudio.dto.stastistics.Top5ViewsDaily;
 import clipstudio.dto.stastistics.ViewsByPeriod;
 import clipstudio.oauth2.User.User;
 import clipstudio.oauth2.User.userRepository.UserRepository;
-import clipstudio.repository.batch.DailyProfitOfVideoRepository;
+import clipstudio.repository.batch.ProfitRepository;
 import clipstudio.repository.VideoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
@@ -25,10 +24,13 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class DailyProfitService {
+public class ProfitService {
     private final UserRepository userRepository;
     private final VideoRepository videoRepository;
-    private final DailyProfitOfVideoRepository dailyProfitOfVideoRepository;
+    private final ProfitRepository profitRepository;
+
+
+
 
     public DailyProfitDto showDailyProfit(String userEmail, LocalDate date) {
         log.info("inside showDailyProfit");
@@ -46,7 +48,7 @@ public class DailyProfitService {
             // 각 동영상별 일일 동영상 및 광고 정산 금액 dto 생성
             ProfitDto profitDto = new ProfitDto();
             // 일일 동영상 수익 필드 업데이트
-            VideoDailyProfit videoDailyProfit = dailyProfitOfVideoRepository.findById(new VideoDailyProfitKey(video.getNumber(), date)).orElse(null);
+            VideoDailyProfit videoDailyProfit = profitRepository.findById(new VideoDailyProfitKey(video.getNumber(), date)).orElse(null);
             if (videoDailyProfit != null) {
                 profitDto.setProfitOfVideo(videoDailyProfit.getDailyProfitOfVideo());
                 profitDto.setVideoNumber(videoDailyProfit.getVideoNumber());
@@ -175,20 +177,47 @@ public class DailyProfitService {
         }
         return profitByPeriodDto;
     } */
-// 비교를 위함. findByDateBetween 사용해서 기간별 데이터를 조회한 후에, userEmail로 업로더 관련 내용 찾기
-    public ProfitByPeriodDto showWeeklyProfit(String userEmail, LocalDate start) {
-        log.info(start.toString());
-        Long userNumber = userRepository.findByEmail(userEmail).orElseThrow().getNumber();
-        LocalDate end = start.plusDays(6);
-        List<VideoDailyProfit> weeklyProfitList = dailyProfitOfVideoRepository.findAllByUploaderNumberAndDateBetween(userNumber, start, end);
-        log.info("result from repository method, first video dailyProfit: " + weeklyProfitList.getFirst().getDailyProfitOfVideo());
+
+
+
+    public ProfitByPeriodDto showWeeklyProfit(String userEmail, LocalDate date) {
+        User user = userRepository.findByEmail(userEmail).orElseThrow();
+        LocalDate start = getClosestMondayBefore(date);
+        LocalDate end = start.plusDays(6L);
+        List<VideoDailyProfit> weeklyProfitList = profitRepository.findAllByUploaderNumberAndDateBetween(user.getNumber(), start, end);
         ProfitByPeriodDto profitByPeriodDto = new ProfitByPeriodDto(start, end);
-        Map<LocalDate, DailyProfitDto> daily = profitByPeriodDto.getDaily();
         for (VideoDailyProfit videoDailyProfit : weeklyProfitList) {
-            LocalDate curr = videoDailyProfit.getCalculatedDate();
-            daily.put(curr, daily.getOrDefault(curr, new DailyProfitDto(curr)).addProfit(ProfitDto.fromEntity(videoDailyProfit)));
+            profitByPeriodDto.updateProfit(videoDailyProfit);
         }
-        log.info(profitByPeriodDto.toString());
+        return profitByPeriodDto;
+    }
+
+    public ProfitByPeriodDto showMonthlyProfit(String userEmail, LocalDate date) {
+        User user = userRepository.findByEmail(userEmail).orElseThrow();
+        LocalDate start = getFirstDayOfTheMonth(date);
+        int daysOfMonth = date.getMonth().length(date.isLeapYear());
+        LocalDate end = start.plusDays(daysOfMonth-1);
+        List<VideoDailyProfit> monthlyProfitList = profitRepository.findAllByUploaderNumberAndDateBetween(user.getNumber(), start, end);
+        ProfitByPeriodDto profitByPeriodDto = new ProfitByPeriodDto(start, end);
+        for (VideoDailyProfit videoDailyProfit : monthlyProfitList) {
+            profitByPeriodDto.updateProfit(videoDailyProfit);
+        }
+        return profitByPeriodDto;
+    }
+
+    public ProfitByPeriodDto showYearlyProfit(String userEmail, LocalDate date) {
+        User user = userRepository.findByEmail(userEmail).orElseThrow();
+        LocalDate start = getFirstDayOfTheYear(date);
+        int daysOfYear = 365;
+        if (date.isLeapYear()) {
+            daysOfYear = 366;
+        }
+        LocalDate end = start.plusDays(daysOfYear-1);
+        List<VideoDailyProfit> yearlyProfitList = profitRepository.findAllByUploaderNumberAndDateBetween(user.getNumber(), start, end);
+        ProfitByPeriodDto profitByPeriodDto = new ProfitByPeriodDto(start, end);
+        for (VideoDailyProfit videoDailyProfit : yearlyProfitList) {
+            profitByPeriodDto.updateProfit(videoDailyProfit);
+        }
         return profitByPeriodDto;
     }
 
@@ -245,7 +274,7 @@ public class DailyProfitService {
         Top5ViewsDaily top5ViewsDaily = new Top5ViewsDaily();
         PriorityQueue<ViewsByPeriod> pq = new PriorityQueue<>((o1, o2) -> (int) (o2.getViewsByPeriod() - o1.getViewsByPeriod()));
         for (Video video : videos) {
-            dailyProfitOfVideoRepository.findById(new VideoDailyProfitKey(video.getNumber(), date)).ifPresent(videoDailyProfit -> {
+            profitRepository.findById(new VideoDailyProfitKey(video.getNumber(), date)).ifPresent(videoDailyProfit -> {
                 ViewsByPeriod curr = ViewsByPeriod.builder()
                         .videoNumber(videoDailyProfit.getVideoNumber())
                         .viewsByPeriod(videoDailyProfit.getDailyViews())
@@ -277,7 +306,7 @@ public class DailyProfitService {
                 if (currDate.isAfter(LocalDate.now())) {
                     break;
                 }
-                VideoDailyProfit videoDaily = dailyProfitOfVideoRepository.findById(new VideoDailyProfitKey(video.getNumber(), currDate)).orElse(null);
+                VideoDailyProfit videoDaily = profitRepository.findById(new VideoDailyProfitKey(video.getNumber(), currDate)).orElse(null);
                 if (videoDaily != null) {
                     weeklyViews += videoDaily.getDailyViews();
                 }
