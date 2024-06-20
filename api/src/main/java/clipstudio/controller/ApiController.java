@@ -56,7 +56,7 @@ public class ApiController {
                                                                 @PathVariable String date) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(
-                    profitService.showDailyProfit(customOAuth2User.getEmail(), LocalDate.parse(date)));
+                    profitService.showProfit(customOAuth2User.getEmail(), LocalDate.parse(date)));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -66,7 +66,7 @@ public class ApiController {
     public ResponseEntity<DailyProfitDto> showTodayProfit(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(
-                    profitService.showDailyProfit(customOAuth2User.getEmail(), LocalDate.now()));
+                    profitService.showProfit(customOAuth2User.getEmail(), LocalDate.now()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -110,7 +110,7 @@ public class ApiController {
                                                              @PathVariable String date) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(
-                    profitService.showDailyTop5Views(customOAuth2User.getEmail(), LocalDate.parse(date)));
+                    profitService.showTop5Views(customOAuth2User.getEmail(), LocalDate.parse(date)));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
