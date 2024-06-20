@@ -12,7 +12,6 @@ import java.sql.SQLException;
 public class AdvertisementMapper implements RowMapper<AdvertisementDto> {
     @Override
     public AdvertisementDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-//        log.info("inside videoMapper");
         AdvertisementDto advertisementDto = AdvertisementDto.builder()
                 .number(rs.getLong("number"))
                 .videoNumber(rs.getLong("video_number"))
@@ -20,7 +19,6 @@ public class AdvertisementMapper implements RowMapper<AdvertisementDto> {
                 .todayViews(rs.getLong("today_views"))
                 .totalViews(rs.getLong("total_views"))
                 .build();
-//        log.info(String.valueOf(advertisementDto.getTodayViews()));
         return advertisementDto;
     }
 }

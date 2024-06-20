@@ -22,7 +22,7 @@ public class VideoMapper implements RowMapper<VideoDto> {
                 .todayViews(rs.getLong("today_views"))
                 .totalViews(rs.getLong("total_views"))
                 .build();
-//        log.info(String.valueOf(video.getTodayViews()));
+        log.info(String.valueOf(video.getTodayViews()));
         return video;
     }
 

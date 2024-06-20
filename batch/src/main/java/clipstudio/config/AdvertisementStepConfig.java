@@ -1,4 +1,4 @@
-package clipstudio.batch;
+package clipstudio.config;
 
 import clipstudio.dto.AdvertisementDto;
 import clipstudio.mapper.AdvertisementMapper;
@@ -43,11 +43,11 @@ public class AdvertisementStepConfig {
 
     @Bean
     @JobScope
-    public Step advertisementDailyProfitStep(JobRepository jobRepository, PlatformTransactionManager transactionManager,
-                                             @Value("#{jobParameters['batchDate']}") String batchDate) throws ParseException {
+    public Step advertisementProfitStep(JobRepository jobRepository, PlatformTransactionManager transactionManager,
+                                        @Value("#{jobParameters['batchDate']}") String batchDate) throws ParseException {
         log.info(String.valueOf(new SimpleDateFormat("yyyy-MM-dd").parse(batchDate)));
-        return new StepBuilder("advertisementDailyProfitStep", jobRepository)
-                .<AdvertisementDto, AdvertisementDto>chunk(20, transactionManager)
+        return new StepBuilder("advertisementProfitStep", jobRepository)
+                .<AdvertisementDto, AdvertisementDto>chunk(100, transactionManager)
                 .reader(syncAdvertisementReader())
                 .processor(advertisementProfitProcessor)
                 .writer(advertisementCompositeWriter())
@@ -59,8 +59,9 @@ public class AdvertisementStepConfig {
                 .build();
     }
 
+    // single-thread 환경에서 사용
     @Bean
-    public JdbcCursorItemReader<AdvertisementDto> advertisementReader() { // single-thread 환경에서 사용
+    public JdbcCursorItemReader<AdvertisementDto> advertisementReader() {
         JdbcCursorItemReader<AdvertisementDto> reader = new JdbcCursorItemReaderBuilder<AdvertisementDto>()
                 .name("advertisementReader")
                 .dataSource(dataSource)
@@ -70,9 +71,10 @@ public class AdvertisementStepConfig {
         return reader;
     }
 
+    // multi-thread 환경에서 사용
     @Bean
     @StepScope
-    public SynchronizedItemStreamReader<AdvertisementDto> syncAdvertisementReader() { // multi-thread 환경에서 사용
+    public SynchronizedItemStreamReader<AdvertisementDto> syncAdvertisementReader() {
         JdbcCursorItemReader<AdvertisementDto> reader = new JdbcCursorItemReaderBuilder<AdvertisementDto>()
                 .name("advertisementReader")
                 .dataSource(dataSource)
@@ -99,7 +101,7 @@ public class AdvertisementStepConfig {
     @StepScope
     public JdbcBatchItemWriter<AdvertisementDto> updateAdvertisementDailyProfitWriter() {
         return new JdbcBatchItemWriterBuilder<AdvertisementDto>()
-                .sql("INSERT INTO advertisement_daily_profit(advertisement_number, calculated_date, daily_views, daily_profit) VALUES(:number, :calculatedDate, :dailyViews, :dailyProfit)")
+                .sql("INSERT INTO advertisement_profit(advertisement_number, date, daily_views, daily_profit) VALUES(:number, :calculatedDate, :dailyViews, :dailyProfit)")
                 .dataSource(dataSource)
                 .beanMapped()
                 .build();

@@ -1,6 +1,6 @@
 package clipstudio.processor;
 
-import clipstudio.singleton.AdvertisementsProfitCache;
+import clipstudio.cache.AdvertisementsProfitCache;
 import clipstudio.util.ProfitCalculator;
 import clipstudio.dto.AdvertisementDto;
 import lombok.RequiredArgsConstructor;

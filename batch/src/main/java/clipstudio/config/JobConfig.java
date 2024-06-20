@@ -1,4 +1,4 @@
-package clipstudio.batch;
+package clipstudio.config;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,9 +24,9 @@ public class JobConfig {
      */
 
     // Video step
-    private final Step videoDailyProfitStep;
+    private final Step videoProfitStep;
     // Advertisement step
-    private final Step advertisementDailyProfitStep;
+    private final Step advertisementProfitStep;
     private final DataSource dataSource;
 
     @Bean
@@ -38,8 +38,8 @@ public class JobConfig {
     public Job profitCalculationJob(JobRepository jobRepository) {
         return new JobBuilder("dailyProfitJob", jobRepository)
                 .incrementer(new RunIdIncrementer()) // test environment, 중복 실행 허용
-                .start(advertisementDailyProfitStep) // test 상황에서 임시로 코멘트 처리
-                .next(videoDailyProfitStep)
+                .start(advertisementProfitStep) // test 상황에서 임시로 코멘트 처리
+                .next(videoProfitStep)
                 .build();
     }
 

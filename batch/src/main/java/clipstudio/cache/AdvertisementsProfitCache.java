@@ -1,9 +1,8 @@
-package clipstudio.singleton;
+package clipstudio.cache;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
@@ -20,7 +19,7 @@ public class AdvertisementsProfitCache {
         }
         adProfitInVideo.put(videoNumber, prevProfit + profit);
     }
-    public double getAdProfitInVideo(Long videoNumber) {
+    public double getAdvertisementsProfit(Long videoNumber) {
         return adProfitInVideo.getOrDefault(videoNumber, 0d);
     }
 }
