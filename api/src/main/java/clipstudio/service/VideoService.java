@@ -27,28 +27,6 @@ public class VideoService {
     private final UserRepository userRepository;
     private final AdvertisementRepository advertisementRepository;
     private final WatchHistoryRepository watchHistoryRepository;
-    public Video increaseVideoViewsAndSave(Video video) {
-        video.setTodayViews(video.getTodayViews()+1);
-        log.info("daily views of video: " + video.getTodayViews());
-        return videoRepository.save(video);
-    }
-
-    public boolean validateVideoStoppedTime(Video video, int videoStoppedTime) {
-        return video.getDurationSec() >= videoStoppedTime;
-    }
-
-    /** 재생 시점에 따른 광고 조회 여부 확인, 필요시 조회수 1 증가 */
-    public void updateAdvertisementViews(int lastVideoStoppedTime, long videoNumber, int videoStoppedTime, int videoDurationSec) {
-        int currOrder = lastVideoStoppedTime / 300 + 1; // 이미 조회수가 카운트 된 기존 재생 광고는 제외, 새로운 카운팅 시점 설정
-        int endBound = videoDurationSec - 3; // 동영상 길이 -3초까지만 광고가 붙음
-        while (currOrder <= Math.min(videoStoppedTime / 300, endBound)) { // 재생된 광고 순회하기
-            Advertisement advertisement = advertisementRepository.findByVideoNumberAndOrderInVideo(videoNumber, currOrder).orElseThrow();
-            advertisement.setTodayViews(advertisement.getTodayViews()+1); // 하루 동안 유효한 임시 광고 조회수 1 증가
-            Advertisement updated = advertisementRepository.save(advertisement); // 업데이트한 광고 저장
-            log.info(currOrder + "th advertisement of video number " + videoNumber + ", daily views: " + updated.getTodayViews());
-            currOrder += 1;
-        }
-    }
 
     @Transactional
     public WatchHistoryDto playVideo(@PathVariable Long videoNumber,
@@ -82,27 +60,47 @@ public class VideoService {
         updateAdvertisementViews(prevVideoStoppedTime, videoNumber, videoStoppedTime, video.getDurationSec()); // 재생 시점에 따른 광고 조회 여부 확인, 필요시 조회수 1 증가
         return WatchHistoryDto.fromEntity(watchHistoryRepository.save(prevWatchHistory)); // 새로운 정보로 엔티티 생성, 시청기록 리파지토리에 저장 요청
     }
-    public VideoDto increaseViews(@PathVariable Long videoNumber) {
-        Video target = videoRepository.getReferenceById(videoNumber); //getId() is deprecated
-        target.setTotalViews(target.getTotalViews()+1);
-        Video updated = videoRepository.save(target);
-        return VideoDto.fromEntity(updated);
-    }
-
-    public VideoDto testNewVideo(@RequestBody VideoDto videoDto) {
-        log.info("service, post mapping to /videos/test/new" + videoDto.toString());
-        Video newVideo = Video.fromEntity(videoDto);
-        Video created = videoRepository.save(newVideo);
-        return VideoDto.fromEntity(created);
-    }
 
     public VideoDto uploadVideo(VideoUploadDto videoUploadDto, String userEmail) {
         User uploader = userRepository.findByEmail(userEmail).orElseThrow();
-        videoUploadDto.setUploader(uploader);
-        Video video = Video.generateVideo(videoUploadDto);
-        // 조회수 데이터 업데이트
-        video.setTodayViews(550000L);
+        Video video = Video.generateVideo(videoUploadDto, uploader);
+        video.setTodayViews(500000L); // 테스트 위한 가상 조회수 데이터
         Video created = videoRepository.save(video);
         return VideoDto.fromEntity(created);
     }
+
+    public Video increaseVideoViewsAndSave(Video video) {
+        video.setTodayViews(video.getTodayViews()+1);
+        return videoRepository.save(video);
+    }
+
+    public boolean validateVideoStoppedTime(Video video, int videoStoppedTime) {
+        return video.getDurationSec() >= videoStoppedTime;
+    }
+
+    /** 재생 시점에 따른 광고 조회 여부 확인, 필요시 조회수 1 증가 */
+    public void updateAdvertisementViews(int lastVideoStoppedTime, long videoNumber, int videoStoppedTime, int videoDurationSec) {
+        int currOrder = lastVideoStoppedTime / 300 + 1; // 이미 조회수가 카운트 된 기존 재생 광고는 제외, 새로운 카운팅 시점 설정
+        int endBound = videoDurationSec - 3; // 동영상 길이 -3초까지만 광고가 붙음
+        while (currOrder <= Math.min(videoStoppedTime / 300, endBound)) { // 재생된 광고 순회하기
+            Advertisement advertisement = advertisementRepository.findByVideoNumberAndOrderInVideo(videoNumber, currOrder).orElseThrow();
+            advertisement.setTodayViews(advertisement.getTodayViews()+1); // 하루 동안 유효한 임시 광고 조회수 1 증가
+            Advertisement updated = advertisementRepository.save(advertisement); // 업데이트한 광고 저장
+            log.info(currOrder + "th advertisement of video number " + videoNumber + ", daily views: " + updated.getTodayViews());
+            currOrder += 1;
+        }
+    }
+    //    public VideoDto increaseViews(@PathVariable Long videoNumber) {
+//        Video target = videoRepository.getReferenceById(videoNumber); //getId() is deprecated
+//        target.setTotalViews(target.getTotalViews()+1);
+//        Video updated = videoRepository.save(target);
+//        return VideoDto.fromEntity(updated);
+//    }
+//
+//    public VideoDto testNewVideo(@RequestBody VideoDto videoDto) {
+//        log.info("service, post mapping to /videos/test/new" + videoDto.toString());
+//        Video newVideo = Video.fromEntity(videoDto);
+//        Video created = videoRepository.save(newVideo);
+//        return VideoDto.fromEntity(created);
+//    }
 }

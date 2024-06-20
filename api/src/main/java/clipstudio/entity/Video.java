@@ -39,10 +39,10 @@ public class Video {
                 .title(videoDto.getTitle())
                 .totalViews(videoDto.getTotalViews()).build();
     }
-    public static Video generateVideo(VideoUploadDto videoUploadDto) {
+    public static Video generateVideo(VideoUploadDto videoUploadDto, User uploader) {
         return builder()
                 .title(videoUploadDto.getTitle())
-                .uploader(videoUploadDto.getUploader())
+                .uploader(uploader)
                 .durationSec(videoUploadDto.getDurationSec())
                 .createdDate(LocalDate.now())
                 .todayViews(0L)

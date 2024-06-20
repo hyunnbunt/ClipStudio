@@ -11,5 +11,4 @@ import lombok.Setter;
 public class VideoUploadDto {
     public String title;
     public int durationSec;
-    public User uploader;
 }

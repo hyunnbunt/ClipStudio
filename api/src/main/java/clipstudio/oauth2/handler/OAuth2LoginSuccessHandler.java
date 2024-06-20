@@ -26,6 +26,6 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         log.info("OAuth2 Login 성공");
         log.info(authentication.getPrincipal().toString());
         GoogleOAuth2UserInfo.CustomOAuth2User oAuth2User = (GoogleOAuth2UserInfo.CustomOAuth2User) authentication.getPrincipal();
-        // CustomOAuth2User로 바꾸고 role 추가할 예정
+        // CustomOAuth2User로 바꾸고 role 추가할 것
     }
 }
