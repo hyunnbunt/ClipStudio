@@ -1,9 +1,8 @@
 package clipstudio.repository;
 
-import clipstudio.oauth2.User.User;
-import org.springframework.data.domain.Sort;
+import clipstudio.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import clipstudio.Entity.Video;
+import clipstudio.entity.Video;
 
 import java.util.List;
 import java.util.Optional;

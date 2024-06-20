@@ -1,7 +1,7 @@
 package clipstudio.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import clipstudio.Entity.Advertisement;
+import clipstudio.entity.Advertisement;
 
 import java.util.List;
 import java.util.Optional;

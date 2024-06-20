@@ -1,5 +1,6 @@
-package clipstudio.oauth2.config;
+package clipstudio.oauth2;
 
+import clipstudio.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -14,7 +15,7 @@ import clipstudio.oauth2.handler.OAuth2LoginSuccessHandler;
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final clipstudio.oauth2.User.userRepository.UserRepository userRepository;
+    private final UserRepository userRepository;
     private final ObjectMapper objectMapper;
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
 
@@ -24,7 +25,7 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests((authorize) -> authorize.anyRequest().authenticated());
         http.oauth2Login(oAuth2LoginConfigurer -> oAuth2LoginConfigurer
-                .defaultSuccessUrl("/hello", true));
+                .defaultSuccessUrl("/index", true));
         return http.build();
     }
 }

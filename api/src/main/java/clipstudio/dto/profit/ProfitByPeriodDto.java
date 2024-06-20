@@ -1,12 +1,10 @@
 package clipstudio.dto.profit;
 
-import clipstudio.Entity.batch.daily.VideoDailyProfit;
+import clipstudio.entity.profit.TotalProfit;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Builder
@@ -16,14 +14,14 @@ import java.util.Map;
 public class ProfitByPeriodDto {
     LocalDate startDate;
     LocalDate endDate;
-    Map<LocalDate, DailyProfitDto> profit;
+    Map<LocalDate, ProfitDetail> profit;
     public ProfitByPeriodDto(LocalDate start, LocalDate end) {
         this.startDate = start;
         this.endDate = end;
         this.profit = new HashMap<>();
     }
-    public void updateProfit(VideoDailyProfit videoDailyProfit) {
-        LocalDate curr = videoDailyProfit.getCalculatedDate();
-        this.profit.put(curr, profit.getOrDefault(curr, new DailyProfitDto(curr)).addProfit(ProfitDto.fromEntity(videoDailyProfit)));
+    public void add(TotalProfit totalProfit) {
+        LocalDate curr = totalProfit.getDate();
+        this.profit.put(curr, profit.getOrDefault(curr, ProfitDetail.fromEntity(totalProfit)));
     }
 }

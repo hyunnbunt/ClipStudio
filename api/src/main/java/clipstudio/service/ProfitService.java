@@ -1,16 +1,16 @@
 package clipstudio.service;
 
-import clipstudio.Entity.Video;
-import clipstudio.Entity.batch.daily.VideoDailyProfit;
-import clipstudio.Entity.batch.daily.VideoDailyProfitKey;
-import clipstudio.dto.profit.DailyProfitDto;
+import clipstudio.entity.Video;
+import clipstudio.entity.profit.TotalProfit;
+import clipstudio.entity.profit.TotalProfitKey;
 import clipstudio.dto.profit.ProfitDto;
+import clipstudio.dto.profit.ProfitDetail;
 import clipstudio.dto.profit.ProfitByPeriodDto;
 import clipstudio.dto.stastistics.Top5ViewsByPeriod;
-import clipstudio.dto.stastistics.Top5ViewsDaily;
-import clipstudio.oauth2.User.User;
-import clipstudio.oauth2.User.userRepository.UserRepository;
-import clipstudio.repository.batch.ProfitRepository;
+import clipstudio.dto.stastistics.Top5Views;
+import clipstudio.entity.User;
+import clipstudio.repository.UserRepository;
+import clipstudio.repository.batch.TotalProfitRepository;
 import clipstudio.repository.VideoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,24 +26,24 @@ import java.util.*;
 public class ProfitService {
     private final UserRepository userRepository;
     private final VideoRepository videoRepository;
-    private final ProfitRepository profitRepository;
+    private final TotalProfitRepository totalProfitRepository;
 
-    public DailyProfitDto showProfit(String userEmail, LocalDate date) {
+    public ProfitDto showProfit(String userEmail, LocalDate date) {
         User user = userRepository.findByEmail(userEmail).orElseThrow();
         List<Video> videos = videoRepository.findByUploader(user).orElseThrow();
-        DailyProfitDto dailyProfitDto = new DailyProfitDto(date);
+        ProfitDto profitDto = new ProfitDto(date);
         for (Video video : videos) {
-            VideoDailyProfit profit = profitRepository.findById(new VideoDailyProfitKey(video.getNumber(), date)).orElseThrow();
-            dailyProfitDto.addProfit(ProfitDto.fromEntity(profit));
+            TotalProfit profit = totalProfitRepository.findById(new TotalProfitKey(video.getNumber(), date)).orElseThrow();
+            profitDto.addProfit(ProfitDetail.fromEntity(profit));
         }
-        return dailyProfitDto;
+        return profitDto;
     }
 
     public ProfitByPeriodDto showProfitByPeriod(User user, LocalDate start, LocalDate end) {
-        List<VideoDailyProfit> weeklyProfitList = profitRepository.findAllByUploaderNumberAndDateBetween(user.getNumber(), start, end);
+        List<TotalProfit> weeklyProfitList = totalProfitRepository.findAllByUploaderNumberAndDateBetween(user.getNumber(), start, end);
         ProfitByPeriodDto profitByPeriodDto = new ProfitByPeriodDto(start, end);
-        for (VideoDailyProfit videoDailyProfit : weeklyProfitList) {
-            profitByPeriodDto.updateProfit(videoDailyProfit);
+        for (TotalProfit videoProfit : weeklyProfitList) {
+            profitByPeriodDto.add(videoProfit);
         }
         return profitByPeriodDto;
     }
@@ -74,22 +74,22 @@ public class ProfitService {
         return showProfitByPeriod(user, start, end);
     }
 
-    public Top5ViewsDaily showTop5Views(String userEmail, LocalDate date) {
+    public Top5Views showTop5Views(String userEmail, LocalDate date) {
         User user = userRepository.findByEmail(userEmail).orElseThrow();
-        List<VideoDailyProfit> histories  = profitRepository.findAllByUploaderNumberAndDateBetween(user.getNumber(), date, date);
-        PriorityQueue<VideoDailyProfit> pq = new PriorityQueue<>((o1, o2) -> (int) (o2.getDailyViews() - o1.getDailyViews()));
+        List<TotalProfit> histories  = totalProfitRepository.findAllByUploaderNumberAndDateBetween(user.getNumber(), date, date);
+        PriorityQueue<TotalProfit> pq = new PriorityQueue<>((o1, o2) -> (int) (o2.getDailyViews() - o1.getDailyViews()));
         pq.addAll(histories);
-        Top5ViewsDaily top5ViewsDaily = new Top5ViewsDaily(date);
+        Top5Views top5Views = new Top5Views(date);
         for (int i = 0; i < Math.min(5, histories.size()); i ++) {
-            top5ViewsDaily.addTop5(pq.poll());
+            top5Views.addToTop5(pq.poll());
         }
-        return top5ViewsDaily;
+        return top5Views;
     }
 
     public Top5ViewsByPeriod showTop5ViewsByPeriod(User user, LocalDate start, LocalDate end) {
         Map<Long, Long> views = new HashMap<>();
-        List<VideoDailyProfit> histories  = profitRepository.findAllByUploaderNumberAndDateBetween(user.getNumber(), start, end);
-        for (VideoDailyProfit history : histories) {
+        List<TotalProfit> histories  = totalProfitRepository.findAllByUploaderNumberAndDateBetween(user.getNumber(), start, end);
+        for (TotalProfit history : histories) {
             Long videoNumber = history.getVideoNumber();
             views.put(history.getVideoNumber(), views.getOrDefault(videoNumber, 0L) + history.getDailyViews());
         }

@@ -1,19 +1,18 @@
-package clipstudio.Entity;
+package clipstudio.entity;
 
 import clipstudio.dto.video.VideoUploadDto;
 import jakarta.persistence.*;
 import lombok.*;
 import clipstudio.dto.video.VideoDto;
-import clipstudio.oauth2.User.User;
 
 import java.time.LocalDate;
 
 @Entity
+@Setter
+@Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
 @Table(name="videos")
 public class Video {
     @Id
@@ -35,12 +34,12 @@ public class Video {
     @Column(nullable = false)
     public Long todayPlayedSec;
 
-    public static Video fromDto(VideoDto videoDto) {
+    public static Video fromEntity(VideoDto videoDto) {
         return builder()
                 .title(videoDto.getTitle())
                 .totalViews(videoDto.getTotalViews()).build();
     }
-    public static Video fromDto(VideoUploadDto videoUploadDto) {
+    public static Video generateVideo(VideoUploadDto videoUploadDto) {
         return builder()
                 .title(videoUploadDto.getTitle())
                 .uploader(videoUploadDto.getUploader())

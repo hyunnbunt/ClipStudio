@@ -1,12 +1,12 @@
 package clipstudio.service;
 
-import clipstudio.Entity.Advertisement;
-import clipstudio.Entity.WatchHistory;
+import clipstudio.entity.Advertisement;
+import clipstudio.entity.WatchHistory;
 import clipstudio.dto.history.WatchHistoryDto;
 import clipstudio.dto.video.VideoPlayDto;
 import clipstudio.dto.video.VideoUploadDto;
-import clipstudio.oauth2.User.User;
-import clipstudio.oauth2.User.userRepository.UserRepository;
+import clipstudio.entity.User;
+import clipstudio.repository.UserRepository;
 import clipstudio.repository.AdvertisementRepository;
 import clipstudio.repository.WatchHistoryRepository;
 import jakarta.transaction.Transactional;
@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import clipstudio.Entity.Video;
+import clipstudio.entity.Video;
 import clipstudio.dto.video.VideoDto;
 import clipstudio.repository.VideoRepository;
 
@@ -91,7 +91,7 @@ public class VideoService {
 
     public VideoDto testNewVideo(@RequestBody VideoDto videoDto) {
         log.info("service, post mapping to /videos/test/new" + videoDto.toString());
-        Video newVideo = Video.fromDto(videoDto);
+        Video newVideo = Video.fromEntity(videoDto);
         Video created = videoRepository.save(newVideo);
         return VideoDto.fromEntity(created);
     }
@@ -99,7 +99,7 @@ public class VideoService {
     public VideoDto uploadVideo(VideoUploadDto videoUploadDto, String userEmail) {
         User uploader = userRepository.findByEmail(userEmail).orElseThrow();
         videoUploadDto.setUploader(uploader);
-        Video video = Video.fromDto(videoUploadDto);
+        Video video = Video.generateVideo(videoUploadDto);
         // 조회수 데이터 업데이트
         video.setTodayViews(550000L);
         Video created = videoRepository.save(video);

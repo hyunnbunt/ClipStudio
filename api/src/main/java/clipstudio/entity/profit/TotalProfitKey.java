@@ -1,7 +1,6 @@
-package clipstudio.Entity.batch.daily;
+package clipstudio.entity.profit;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
 import lombok.*;
 
 import java.io.Serializable;
@@ -12,9 +11,9 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class VideoDailyProfitKey implements Serializable {
+public class TotalProfitKey implements Serializable {
     @Column(name = "video_number", nullable = false)
     long videoNumber;
-    @Column(name = "calculated_date", nullable = false)
-    LocalDate calculatedDate;
+    @Column(name = "date", nullable = false)
+    LocalDate date;
 }

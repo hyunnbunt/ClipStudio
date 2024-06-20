@@ -1,5 +1,7 @@
-package clipstudio.oauth2.User;
+package clipstudio.entity;
 
+import clipstudio.oauth2.User.Role;
+import clipstudio.oauth2.User.SocialType;
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -14,5 +14,10 @@ import java.util.List;
 public class Top5PlayedTimeByPeriod {
     LocalDate startDate;
     LocalDate endDate;
-    List<PlayedTimeByPeriod> playedTimeByPeriods = new ArrayList<>();
+    List<PlayedTimeByPeriod> playedTimeByPeriods;
+    public Top5PlayedTimeByPeriod(LocalDate start, LocalDate end) {
+        this.startDate = start;
+        this.endDate = end;
+        this.playedTimeByPeriods = new ArrayList<>();
+    }
 }

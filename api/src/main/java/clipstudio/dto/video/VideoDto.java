@@ -1,7 +1,7 @@
 package clipstudio.dto.video;
 
 import lombok.*;
-import clipstudio.Entity.Video;
+import clipstudio.entity.Video;
 
 import java.time.LocalDate;
 
