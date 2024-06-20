@@ -109,7 +109,8 @@ public class ApiController {
     public ResponseEntity<Top5ViewsDaily> showDailyTop5Views(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
                                                              @PathVariable String date) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(profitService.showDailyTop5Views("cyqw@poakoi.com", LocalDate.parse(date)));
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    profitService.showDailyTop5Views(customOAuth2User.getEmail(), LocalDate.parse(date)));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -119,7 +120,30 @@ public class ApiController {
     public ResponseEntity<Top5ViewsByPeriod> showWeeklyTop5Views(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
                                                              @PathVariable String date) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(profitService.showWeeklyTop5Views("cyqw@poakoi.com", LocalDate.parse(date)));
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    profitService.showWeeklyTop5Views(customOAuth2User.getEmail(), LocalDate.parse(date)));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    @GetMapping("/api/top5/views/month/{date}")
+    public ResponseEntity<Top5ViewsByPeriod> showMonthlyTop5Views(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
+                                                                 @PathVariable String date) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    profitService.showMonthlyTop5Views(customOAuth2User.getEmail(), LocalDate.parse(date)));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    @GetMapping("/api/top5/views/year/{date}")
+    public ResponseEntity<Top5ViewsByPeriod> showYearlyTop5Views(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
+                                                                  @PathVariable String date) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    profitService.showYearlyTop5Views(customOAuth2User.getEmail(), LocalDate.parse(date)));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }

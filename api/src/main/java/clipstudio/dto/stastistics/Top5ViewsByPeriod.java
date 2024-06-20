@@ -14,5 +14,14 @@ import java.util.List;
 public class Top5ViewsByPeriod {
     LocalDate startDate;
     LocalDate endDate;
-    List<ViewsByPeriod> viewsByPeriodList = new ArrayList<>();
+    List<ViewsByPeriod> videos;
+    public Top5ViewsByPeriod(LocalDate start, LocalDate end) {
+        this.startDate = start;
+        this.endDate = end;
+        this.videos = new ArrayList<>();
+    }
+
+    public void update(Long videoNumber, Long views) {
+        this.videos.add(new ViewsByPeriod(videoNumber, views));
+    }
 }

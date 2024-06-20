@@ -15,4 +15,5 @@ public interface ProfitRepository extends JpaRepository<VideoDailyProfit, VideoD
 
     @Query(value = "SELECT * FROM video_daily_profit WHERE uploader_number = :uploaderNumber AND calculated_date BETWEEN :startDate AND :endDate", nativeQuery = true)
     List<VideoDailyProfit> findAllByUploaderNumberAndDateBetween(@Param("uploaderNumber") Long uploaderNumber, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+
 }
