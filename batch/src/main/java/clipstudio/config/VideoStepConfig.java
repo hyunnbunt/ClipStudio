@@ -52,7 +52,8 @@ public class VideoStepConfig {
                 .listener(new ReadListener()) // reader 동작 테스트
                 // .allowStartIfComplete(true) // test environment, 중복 실행 허용
                 .processor(videoProfitProcessor)
-                .writer(videoCompositeWriter())
+//                .writer(videoCompositeWriter())
+                .writer(updateVideoDailyProfitWriter()) // test environment, 같은 데이터 활용을 위해 초기화하지 않음.
                 .taskExecutor(
                         new ConcurrentTaskExecutor(
                                 virtualThreadExecutor //가상 스레드
@@ -102,7 +103,8 @@ public class VideoStepConfig {
     @StepScope
     public JdbcBatchItemWriter<VideoDto> updateVideoDailyProfitWriter() {
         return new JdbcBatchItemWriterBuilder<VideoDto>()
-                .sql("INSERT INTO total_profit(uploader_number, video_number, date, daily_views, daily_played_sec, video_profit, advertisements_profit) VALUES(:uploaderNumber, :number, :calculatedDate, :dailyViews, :dailyPlayedSec, :dailyProfitOfVideo, :dailyTotalProfitOfAdvertisements)")
+                .sql("INSERT INTO total_profit(uploader_number, video_number, date, views, played_sec, video_profit, advertisements_profit) " +
+                        "VALUES(:uploaderNumber, :number, :date, :todayViews, :todayPlayedSec, :videoProfit, :advertisementsProfit)")
                 .dataSource(dataSource)
                 .beanMapped() // ?? https://jojoldu.tistory.com/339
                 .build();

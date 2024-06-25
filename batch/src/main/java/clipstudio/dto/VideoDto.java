@@ -13,18 +13,17 @@ import java.util.Map;
 @Getter
 @Setter
 public class VideoDto {
-    public Long uploaderNumber;
-    public String title;
+    public LocalDate date;
     public long number;
+    public Long uploaderNumber;
+    public double videoProfit;
+    public double advertisementsProfit;
+    public String title;
     public int durationSec;
     public long todayViews;
     public long totalViews;
-    public double dailyViews; //?
-    public long dailyPlayedSec;
-    public double videoProfit;
-    public LocalDate date;
-    public double advertisementsProfit;
-    public static Long[] views = new Long[]{0L, 100000L, 500000L, 1000000L, Long.MAX_VALUE};
-    public static Float[] won = new Float[]{1f, 1.1f, 1.3f, 1.5f};
+    public long todayPlayedSec;
+    public static long[] views = new long[]{0L, 100000L, 500000L, 1000000L, Long.MAX_VALUE};
+    public static float[] won = new float[]{1f, 1.1f, 1.3f, 1.5f};
     public static final List<Map<String, Object>> priceTable = ProfitCalculator.getPriceTable(views, won);
 }

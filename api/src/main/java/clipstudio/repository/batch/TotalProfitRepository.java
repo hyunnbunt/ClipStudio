@@ -11,9 +11,12 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TotalProfitRepository extends JpaRepository<TotalProfit, TotalProfitKey> {
-    Optional<TotalProfit> findById(TotalProfitKey totalProfitKey);
+//    Optional<TotalProfit> findById(TotalProfitKey totalProfitKey);
 
-    @Query(value = "SELECT * FROM video_profit WHERE uploader_number = :uploaderNumber AND date BETWEEN :startDate AND :endDate", nativeQuery = true)
+    @Query(value = "SELECT * FROM total_profit WHERE uploader_number = :uploaderNumber AND date BETWEEN :startDate AND :endDate", nativeQuery = true)
     List<TotalProfit> findAllByUploaderNumberAndDateBetween(@Param("uploaderNumber") Long uploaderNumber, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+
+    @Query(value = "SELECT * FROM total_profit WHERE date BETWEEN :startDate AND :endDate", nativeQuery = true)
+    List<TotalProfit> findAllByDateBetween(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
 }

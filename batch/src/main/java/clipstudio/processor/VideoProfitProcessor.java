@@ -29,8 +29,7 @@ public class VideoProfitProcessor implements ItemProcessor<VideoDto, VideoDto> {
         final Long todayViews = videoDto.getTodayViews();
         double profit = ProfitCalculator.getDailyProfit(prevTotal, todayViews, "video");
         videoDto.setTotalViews(prevTotal + todayViews);
-        videoDto.setDailyViews(todayViews);
-        videoDto.setTodayViews(todayViews); // multi, single thread 환경에서 동일 데이터 2번 돌리기 위해 초기화하지 않고 진행
+        videoDto.setTodayViews(todayViews); // 테스트시 동일 데이터 2번 돌리기 위해 초기화하지 않고 진행
         videoDto.setVideoProfit(profit);
 //        Thread.sleep(500);
         videoDto.setDate(LocalDate.parse(batchDate));

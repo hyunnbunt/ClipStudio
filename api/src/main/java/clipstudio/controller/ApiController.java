@@ -1,6 +1,7 @@
 package clipstudio.controller;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import clipstudio.dto.profit.ProfitDto;
 import clipstudio.dto.profit.ProfitByPeriodDto;
@@ -28,6 +29,16 @@ public class ApiController {
     private final VideoService videoService;
     private final ProfitService profitService;
 
+    @GetMapping("/api/videos")
+    public ResponseEntity<List<VideoDto>> showVideos(@AuthenticationPrincipal GoogleOAuth2UserInfo.CustomOAuth2User customOAuth2User) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    videoService.showVideos(customOAuth2User.getEmail()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
     @PostMapping("/api/videos")
     public ResponseEntity<VideoDto> uploadVideo(@RequestBody VideoUploadDto videoUploadDto,
                                                 @AuthenticationPrincipal GoogleOAuth2UserInfo.CustomOAuth2User customOAuth2User) {
@@ -52,7 +63,7 @@ public class ApiController {
     }
 
     @GetMapping("/api/profit/day/{date}") // 일일 수익 조회
-    public ResponseEntity<ProfitDto> showDailyProfit(@AuthenticationPrincipal GoogleOAuth2UserInfo.CustomOAuth2User customOAuth2User,
+    public ResponseEntity<ProfitByPeriodDto> showDailyProfit(@AuthenticationPrincipal GoogleOAuth2UserInfo.CustomOAuth2User customOAuth2User,
                                                      @PathVariable String date) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(
@@ -63,7 +74,7 @@ public class ApiController {
     }
 
     @GetMapping("/api/profit/today") // 오늘 수익 조회
-    public ResponseEntity<ProfitDto> showTodayProfit(@AuthenticationPrincipal GoogleOAuth2UserInfo.CustomOAuth2User customOAuth2User) {
+    public ResponseEntity<ProfitByPeriodDto> showTodayProfit(@AuthenticationPrincipal GoogleOAuth2UserInfo.CustomOAuth2User customOAuth2User) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(
                     profitService.showProfit(customOAuth2User.getEmail(), LocalDate.now()));
@@ -86,9 +97,17 @@ public class ApiController {
     @GetMapping("/api/profit/month/{startDate}") // 월별 수익 조회
     public ResponseEntity<ProfitByPeriodDto> showMonthlyProfit(@AuthenticationPrincipal GoogleOAuth2UserInfo.CustomOAuth2User customOAuth2User,
                                                                @PathVariable String startDate) {
+        String testEmail = "uzmphr@zzzjp.com";
+        log.info(testEmail);
+        long start = System.currentTimeMillis();
+        ProfitByPeriodDto profitByPeriodDto = profitService.showMonthlyProfit(testEmail, LocalDate.parse(startDate));
+        long executionTime = System.currentTimeMillis() - start;
+        log.info("monthly profit reading executed in " + executionTime + "ms");
         try {
             return ResponseEntity.status(HttpStatus.OK).body(
-                    profitService.showMonthlyProfit(customOAuth2User.getEmail(), LocalDate.parse(startDate)));
+//                    profitService.showMonthlyProfit(customOAuth2User.getEmail(), LocalDate.parse(startDate)));
+//                    profitService.showMonthlyProfit(testEmail, LocalDate.parse(startDate)));
+                    profitByPeriodDto);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -97,9 +116,14 @@ public class ApiController {
     @GetMapping("/api/profit/year/{startDate}") // 연 광고 수익 정산금 조회
     public ResponseEntity<ProfitByPeriodDto> showYearlyProfit(@AuthenticationPrincipal GoogleOAuth2UserInfo.CustomOAuth2User customOAuth2User,
                                                                  @PathVariable String startDate) {
+        long start = System.currentTimeMillis();
+        ProfitByPeriodDto profitByPeriodDto = profitService.showYearlyProfit(customOAuth2User.getEmail(), LocalDate.parse(startDate));
+        long executionTime = System.currentTimeMillis() - start;
+        log.info("ExecutionTime: " + executionTime + "ms");
         try {
             return ResponseEntity.status(HttpStatus.OK).body(
-                    profitService.showYearlyProfit(customOAuth2User.getEmail(), LocalDate.parse(startDate)));
+//                    profitService.showYearlyProfit(customOAuth2User.getEmail(), LocalDate.parse(startDate)));
+            profitByPeriodDto);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }

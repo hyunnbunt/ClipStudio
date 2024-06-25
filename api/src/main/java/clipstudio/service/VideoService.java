@@ -19,6 +19,9 @@ import clipstudio.entity.Video;
 import clipstudio.dto.video.VideoDto;
 import clipstudio.repository.VideoRepository;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -27,6 +30,13 @@ public class VideoService {
     private final UserRepository userRepository;
     private final AdvertisementRepository advertisementRepository;
     private final WatchHistoryRepository watchHistoryRepository;
+
+    public List<VideoDto> showVideos(String email) {
+        log.info("Finding videos of user with this email: " + email);
+        User user = userRepository.findByEmail(email).orElseThrow();
+        List<Video> videos = videoRepository.findByUploader(user).orElseThrow();
+        return videos.stream().map(VideoDto::fromEntity).collect(Collectors.toList());
+    }
 
     @Transactional
     public WatchHistoryDto playVideo(@PathVariable Long videoNumber,
@@ -90,6 +100,8 @@ public class VideoService {
             currOrder += 1;
         }
     }
+
+
     //    public VideoDto increaseViews(@PathVariable Long videoNumber) {
 //        Video target = videoRepository.getReferenceById(videoNumber); //getId() is deprecated
 //        target.setTotalViews(target.getTotalViews()+1);

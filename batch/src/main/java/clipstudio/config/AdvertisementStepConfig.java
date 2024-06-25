@@ -45,7 +45,8 @@ public class AdvertisementStepConfig {
     @JobScope
     public Step advertisementProfitStep(JobRepository jobRepository, PlatformTransactionManager transactionManager,
                                         @Value("#{jobParameters['batchDate']}") String batchDate) throws ParseException {
-        log.info(String.valueOf(new SimpleDateFormat("yyyy-MM-dd").parse(batchDate)));
+        log.info(batchDate);
+//        log.info(String.valueOf("job parameter:" + new SimpleDateFormat("yyyy-MM-dd").parse(batchDate)));
         return new StepBuilder("advertisementProfitStep", jobRepository)
                 .<AdvertisementDto, AdvertisementDto>chunk(100, transactionManager)
                 .reader(syncAdvertisementReader())
@@ -101,7 +102,8 @@ public class AdvertisementStepConfig {
     @StepScope
     public JdbcBatchItemWriter<AdvertisementDto> updateAdvertisementDailyProfitWriter() {
         return new JdbcBatchItemWriterBuilder<AdvertisementDto>()
-                .sql("INSERT INTO advertisement_profit(advertisement_number, date, daily_views, daily_profit) VALUES(:number, :calculatedDate, :dailyViews, :dailyProfit)")
+                .sql("INSERT INTO advertisement_profit(advertisement_number, date, views, profit) " +
+                        "VALUES(:number, :date, :todayViews, :profit)")
                 .dataSource(dataSource)
                 .beanMapped()
                 .build();

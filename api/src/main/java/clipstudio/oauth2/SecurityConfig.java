@@ -25,7 +25,7 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests((authorize) -> authorize.anyRequest().authenticated());
         http.oauth2Login(oAuth2LoginConfigurer -> oAuth2LoginConfigurer
-                .defaultSuccessUrl("/index", true));
+                .defaultSuccessUrl("/api/videos", true));
         return http.build();
     }
 }

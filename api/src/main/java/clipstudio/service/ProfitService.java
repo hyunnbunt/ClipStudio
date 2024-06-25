@@ -28,19 +28,22 @@ public class ProfitService {
     private final VideoRepository videoRepository;
     private final TotalProfitRepository totalProfitRepository;
 
-    public ProfitDto showProfit(String userEmail, LocalDate date) {
+    public ProfitByPeriodDto showProfit(String userEmail, LocalDate date) {
         User user = userRepository.findByEmail(userEmail).orElseThrow();
-        List<Video> videos = videoRepository.findByUploader(user).orElseThrow();
-        ProfitDto profitDto = new ProfitDto(date);
-        for (Video video : videos) {
-            TotalProfit profit = totalProfitRepository.findById(new TotalProfitKey(video.getNumber(), date)).orElseThrow();
-            profitDto.addProfit(ProfitDetail.fromEntity(profit));
-        }
-        return profitDto;
+//        List<Video> videos = videoRepository.findByUploader(user).orElseThrow();
+//        ProfitDto profitDto = new ProfitDto(date);
+//        for (Video video : videos) {
+//            TotalProfit profit = totalProfitRepository.findById(new TotalProfitKey(video.getNumber(), date)).orElseThrow();
+//            profitDto.addProfit(ProfitDetail.fromEntity(profit));
+//        }
+//        return profitDto;
+        return showProfitByPeriod(user, date, date);
     }
 
     public ProfitByPeriodDto showProfitByPeriod(User user, LocalDate start, LocalDate end) {
-        List<TotalProfit> weeklyProfitList = totalProfitRepository.findAllByUploaderNumberAndDateBetween(user.getNumber(), start, end);
+//        List<TotalProfit> weeklyProfitList = totalProfitRepository.findAllByUploaderNumberAndDateBetween(user.getNumber(), start, end);
+
+        List<TotalProfit> weeklyProfitList = totalProfitRepository.findAllByDateBetween(start, end);
         ProfitByPeriodDto profitByPeriodDto = new ProfitByPeriodDto(start, end);
         for (TotalProfit videoProfit : weeklyProfitList) {
             profitByPeriodDto.add(videoProfit);
@@ -75,9 +78,10 @@ public class ProfitService {
     }
 
     public Top5Views showTop5Views(String userEmail, LocalDate date) {
+        String userEmail2 = "yzt@fmdms.com";
         User user = userRepository.findByEmail(userEmail).orElseThrow();
         List<TotalProfit> histories  = totalProfitRepository.findAllByUploaderNumberAndDateBetween(user.getNumber(), date, date);
-        PriorityQueue<TotalProfit> pq = new PriorityQueue<>((o1, o2) -> (int) (o2.getDailyViews() - o1.getDailyViews()));
+        PriorityQueue<TotalProfit> pq = new PriorityQueue<>((o1, o2) -> (int) (o2.getViews() - o1.getViews()));
         pq.addAll(histories);
         Top5Views top5Views = new Top5Views(date);
         for (int i = 0; i < Math.min(5, histories.size()); i ++) {
@@ -86,12 +90,16 @@ public class ProfitService {
         return top5Views;
     }
 
+
     public Top5ViewsByPeriod showTop5ViewsByPeriod(User user, LocalDate start, LocalDate end) {
         Map<Long, Long> views = new HashMap<>();
+        long startTest = System.currentTimeMillis();
         List<TotalProfit> histories  = totalProfitRepository.findAllByUploaderNumberAndDateBetween(user.getNumber(), start, end);
+        long executionTime = System.currentTimeMillis() - startTest;
+        log.info(executionTime+"");
         for (TotalProfit history : histories) {
             Long videoNumber = history.getVideoNumber();
-            views.put(history.getVideoNumber(), views.getOrDefault(videoNumber, 0L) + history.getDailyViews());
+            views.put(history.getVideoNumber(), views.getOrDefault(videoNumber, 0L) + history.getViews());
         }
         Map<Long, Long> sortedByViews = sortByValue(views);
         Top5ViewsByPeriod top5ViewsByPeriod = new Top5ViewsByPeriod(start, end);

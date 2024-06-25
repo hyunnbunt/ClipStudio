@@ -16,7 +16,7 @@ public class ProfitCalculator {
     public Long start;
     public Long end;
     public Float price;
-    public static List<Map<String, Object>> getPriceTable(Long[] views, Float[] won) {
+    public static List<Map<String, Object>> getPriceTable(long[] views, float[] won) {
         List<Map<String, Object>> list = new LinkedList<>();
         for (int i = 0; i < views.length-1; i ++) {
             Map<String, Object> temp = new HashMap<>();
