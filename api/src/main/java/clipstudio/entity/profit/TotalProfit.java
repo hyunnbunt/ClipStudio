@@ -14,15 +14,12 @@ import java.time.LocalDate;
 @Table(name="total_profit", indexes = {
         @Index(name = "idx_total_profit", columnList = "date")
 })
-@IdClass(TotalProfitKey.class)
 public class TotalProfit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long number;
-//    @Id
     @Column(name = "video_number", nullable = false)
     long videoNumber;
-//    @Id
     @Column(name = "date", nullable = false)
     LocalDate date;
     @Column(nullable = false)
