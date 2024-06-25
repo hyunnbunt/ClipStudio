@@ -12,9 +12,9 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Entity
 //@Table(name="total_profit")
-@Table(name="total_profit", indexes = {
-        @Index(name = "idx_total_profit", columnList = "date")
-})
+//@Table(name="total_profit", indexes = {
+//        @Index(name = "idx_total_profit", columnList = "date")
+//})
 @IdClass(TotalProfit.class)
 public class TotalProfit {
     @Id
