@@ -1,10 +1,6 @@
 package clipstudio.service;
 
-import clipstudio.entity.Video;
 import clipstudio.entity.profit.TotalProfit;
-import clipstudio.entity.profit.TotalProfitKey;
-import clipstudio.dto.profit.ProfitDto;
-import clipstudio.dto.profit.ProfitDetail;
 import clipstudio.dto.profit.ProfitByPeriodDto;
 import clipstudio.dto.stastistics.Top5ViewsByPeriod;
 import clipstudio.dto.stastistics.Top5Views;
@@ -30,13 +26,6 @@ public class ProfitService {
 
     public ProfitByPeriodDto showProfit(String userEmail, LocalDate date) {
         User user = userRepository.findByEmail(userEmail).orElseThrow();
-//        List<Video> videos = videoRepository.findByUploader(user).orElseThrow();
-//        ProfitDto profitDto = new ProfitDto(date);
-//        for (Video video : videos) {
-//            TotalProfit profit = totalProfitRepository.findById(new TotalProfitKey(video.getNumber(), date)).orElseThrow();
-//            profitDto.addProfit(ProfitDetail.fromEntity(profit));
-//        }
-//        return profitDto;
         return showProfitByPeriod(user, date, date);
     }
 
