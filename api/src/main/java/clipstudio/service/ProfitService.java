@@ -30,9 +30,11 @@ public class ProfitService {
     }
 
     public ProfitByPeriodDto showProfitByPeriod(User user, LocalDate start, LocalDate end) {
-//        List<TotalProfit> weeklyProfitList = totalProfitRepository.findAllByUploaderNumberAndDateBetween(user.getNumber(), start, end);
-
-        List<TotalProfit> weeklyProfitList = totalProfitRepository.findAllByDateBetween(start, end);
+        long startTime = System.currentTimeMillis();
+        List<TotalProfit> weeklyProfitList = totalProfitRepository.findAllByUploaderNumberAndDateBetween(user.getNumber(), start, end);
+        long executionTime = System.currentTimeMillis() - startTime;
+        log.info("ExecutionTime: " + executionTime + "ms");
+//        List<TotalProfit> weeklyProfitList = totalProfitRepository.findAllByDateBetween(start, end);
         ProfitByPeriodDto profitByPeriodDto = new ProfitByPeriodDto(start, end);
         for (TotalProfit videoProfit : weeklyProfitList) {
             profitByPeriodDto.add(videoProfit);

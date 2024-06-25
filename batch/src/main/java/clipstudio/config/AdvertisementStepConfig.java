@@ -48,7 +48,7 @@ public class AdvertisementStepConfig {
         log.info(batchDate);
 //        log.info(String.valueOf("job parameter:" + new SimpleDateFormat("yyyy-MM-dd").parse(batchDate)));
         return new StepBuilder("advertisementProfitStep", jobRepository)
-                .<AdvertisementDto, AdvertisementDto>chunk(100, transactionManager)
+                .<AdvertisementDto, AdvertisementDto>chunk(2000, transactionManager)
                 .reader(syncAdvertisementReader())
                 .processor(advertisementProfitProcessor)
                 .writer(advertisementCompositeWriter())

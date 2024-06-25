@@ -116,10 +116,10 @@ public class ApiController {
     @GetMapping("/api/profit/year/{startDate}") // 연 광고 수익 정산금 조회
     public ResponseEntity<ProfitByPeriodDto> showYearlyProfit(@AuthenticationPrincipal GoogleOAuth2UserInfo.CustomOAuth2User customOAuth2User,
                                                                  @PathVariable String startDate) {
-        long start = System.currentTimeMillis();
-        ProfitByPeriodDto profitByPeriodDto = profitService.showYearlyProfit(customOAuth2User.getEmail(), LocalDate.parse(startDate));
-        long executionTime = System.currentTimeMillis() - start;
-        log.info("ExecutionTime: " + executionTime + "ms");
+        String email = "hsz@wjvlcnaza.com";
+
+        ProfitByPeriodDto profitByPeriodDto = profitService.showYearlyProfit(email, LocalDate.parse(startDate));
+
         try {
             return ResponseEntity.status(HttpStatus.OK).body(
 //                    profitService.showYearlyProfit(customOAuth2User.getEmail(), LocalDate.parse(startDate)));
