@@ -1,7 +1,7 @@
 package clipstudio.dto.history;
 
 import lombok.*;
-import clipstudio.Entity.WatchHistory;
+import clipstudio.entity.WatchHistory;
 
 @NoArgsConstructor
 @AllArgsConstructor

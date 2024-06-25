@@ -16,7 +16,7 @@ public class ProfitCalculator {
     public Long start;
     public Long end;
     public Float price;
-    public static List<Map<String, Object>> getPriceTable(Long[] views, Float[] won) {
+    public static List<Map<String, Object>> getPriceTable(long[] views, float[] won) {
         List<Map<String, Object>> list = new LinkedList<>();
         for (int i = 0; i < views.length-1; i ++) {
             Map<String, Object> temp = new HashMap<>();
@@ -35,7 +35,7 @@ public class ProfitCalculator {
         } else if(type.equals("advertisement")) {
             priceTable = AdvertisementDto.priceTable;
         } else {
-            throw new Exception("The type of profit calculation should be video or advertisement.");
+            throw new Exception("Profit calculation type should be video or advertisement.");
         }
         Integer[] range = getDailyViewsPriceRange(prevTotal, daily, priceTable);
         long total = prevTotal + daily;

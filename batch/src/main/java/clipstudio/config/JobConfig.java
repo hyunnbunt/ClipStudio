@@ -1,9 +1,9 @@
 package clipstudio.config;
 
-import clipstudio.mapper.AdvertisementMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
@@ -11,6 +11,9 @@ import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.support.JdbcTransactionManager;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import javax.sql.DataSource;
 
@@ -25,22 +28,23 @@ public class JobConfig {
      */
 
     // Video step
-    private final Step videoDailyProfitStep;
+    private final Step videoProfitStep;
     // Advertisement step
-    private final Step advertisementDailyProfitStep;
+    private final Step advertisementProfitStep;
     private final DataSource dataSource;
 
     @Bean
     public JdbcTransactionManager transactionManager() {
         return new JdbcTransactionManager(dataSource);
     }
+
     @Bean
 //    @Scheduled(cron = "0 58 22 * * *")
     public Job profitCalculationJob(JobRepository jobRepository) {
-        return new JobBuilder("dailyProfitJob", jobRepository)
+        return new JobBuilder("profitCalculationJob", jobRepository)
                 .incrementer(new RunIdIncrementer()) // test environment, 중복 실행 허용
-                .start(advertisementDailyProfitStep) // test 상황에서 임시로 코멘트 처리
-                .next(videoDailyProfitStep)
+                .start(advertisementProfitStep) // test 상황에서 임시로 코멘트 처리
+                .next(videoProfitStep)
                 .build();
     }
 

@@ -1,7 +1,11 @@
 package clipstudio.processor;
 
+<<<<<<< HEAD
 import clipstudio.service.CacheService;
 import clipstudio.singleton.AdvertisementsProfitCache;
+=======
+import clipstudio.cache.AdvertisementsProfitCache;
+>>>>>>> concurrentHashMap
 import clipstudio.util.ProfitCalculator;
 import clipstudio.dto.VideoDto;
 import lombok.RequiredArgsConstructor;
@@ -24,17 +28,21 @@ public class VideoProfitProcessor implements ItemProcessor<VideoDto, VideoDto> {
     private String batchDate;
     @Override
     public VideoDto process(VideoDto videoDto) throws Exception {
+<<<<<<< HEAD
         log.info("Inside profit processor: " + Thread.currentThread());
         log.info("Video number:" + videoDto.getNumber());
+=======
+//        log.info("Inside advertisement step: " + Thread.currentThread());
+>>>>>>> concurrentHashMap
 //        log.info("Is thread virtual: " + Thread.currentThread().isVirtual());
         final Long prevTotal = videoDto.getTotalViews();
         final Long todayViews = videoDto.getTodayViews();
         double profit = ProfitCalculator.getDailyProfit(prevTotal, todayViews, "video");
         videoDto.setTotalViews(prevTotal + todayViews);
-        videoDto.setDailyViews(todayViews);
-        videoDto.setTodayViews(todayViews); // multi, single thread 환경에서 동일 데이터 2번 돌리기 위해 초기화하지 않고 진행
-        videoDto.setDailyProfitOfVideo(profit);
+        videoDto.setTodayViews(todayViews); // 테스트시 동일 데이터 2번 돌리기 위해 초기화하지 않고 진행
+        videoDto.setVideoProfit(profit);
 //        Thread.sleep(500);
+<<<<<<< HEAD
         videoDto.setCalculatedDate(LocalDate.parse(batchDate));
         log.info("before getFromCache");
         synchronized (cacheService) {
@@ -46,6 +54,11 @@ public class VideoProfitProcessor implements ItemProcessor<VideoDto, VideoDto> {
         }
         log.info("after getFromCache");
 //                .getAdProfitInVideo(videoDto.getNumber()));
+=======
+        videoDto.setDate(LocalDate.parse(batchDate));
+        videoDto.setAdvertisementsProfit(advertisementsProfitCache
+                .getAdvertisementsProfit(videoDto.getNumber()));
+>>>>>>> concurrentHashMap
         return videoDto;
     }
 }

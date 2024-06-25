@@ -3,14 +3,25 @@ package clipstudio.dto.profit;
 import lombok.*;
 
 import java.time.LocalDate;
-@Builder
+import java.util.ArrayList;
+import java.util.List;
+
+
 @Setter
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProfitDto {
-    long videoNumber;
-    double profitOfVideo;
-    double profitOfAdvertisements;
-    double profitTotal;
+    LocalDate date;
+    List<ProfitDetail> dailyProfit;
+    public ProfitDto(LocalDate date) {
+        this.date = date;
+        this.dailyProfit = new ArrayList<>();
+    }
+
+    public ProfitDto addProfit(ProfitDetail profitDetail) {
+        this.getDailyProfit().add(profitDetail);
+        return this;
+    }
 }

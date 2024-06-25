@@ -1,16 +1,15 @@
-package clipstudio.Entity;
+package clipstudio.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import clipstudio.oauth2.User.User;
 
 @Entity
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
-@ToString
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 @Table(name="watch_histories")
 public class WatchHistory {
     @Id

@@ -1,11 +1,11 @@
 package clipstudio.config;
 
-import clipstudio.ReadListener;
 import clipstudio.dto.VideoDto;
 import clipstudio.mapper.VideoMapper;
 import clipstudio.processor.VideoProfitProcessor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.batch.core.ItemReadListener;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepScope;
@@ -43,16 +43,17 @@ public class VideoStepConfig {
     private final Executor virtualThreadExecutor;
     @Bean
     @JobScope // 빈의 생성 시점을 지정된 Scope가 실행되는 시점으로 지연 (late binding), 동일한 컴포넌트를 병렬 처리할 때 유리
-    public Step videoDailyProfitStep(JobRepository jobRepository, PlatformTransactionManager transactionManager,
-                                     @Value("#{jobParameters[batchDate]}") String batchDate) throws ParseException {
+    public Step videoProfitStep(JobRepository jobRepository, PlatformTransactionManager transactionManager,
+                                @Value("#{jobParameters[batchDate]}") String batchDate) throws ParseException {
         log.info(String.valueOf(new SimpleDateFormat("yyyy-MM-dd").parse(batchDate)));
-        return new StepBuilder("videoDailyProfitStep", jobRepository)
-                .<VideoDto, VideoDto>chunk(100, transactionManager) // test if the result changes by chunk size. TransactionManager: Spring’s PlatformTransactionManager that begins and commits transactions during processing.
+        return new StepBuilder("videoProfitStep", jobRepository)
+                .<VideoDto, VideoDto>chunk(2000, transactionManager) // test if the result changes by chunk size. TransactionManager: Spring’s PlatformTransactionManager that begins and commits transactions during processing.
                 .reader(syncVideoReader())
-                .listener(new ReadListener()) // (1)
-//                .allowStartIfComplete(true) // test environment, 중복 실행 허용
+                .listener(new ReadListener()) // reader 동작 테스트
+                // .allowStartIfComplete(true) // test environment, 중복 실행 허용
                 .processor(videoProfitProcessor)
-                .writer(videoCompositeWriter())
+//                .writer(videoCompositeWriter())
+                .writer(updateVideoDailyProfitWriter()) // test environment, 같은 데이터 활용을 위해 초기화하지 않음.
                 .taskExecutor(
                         new ConcurrentTaskExecutor(
                                 virtualThreadExecutor //가상 스레드
@@ -102,7 +103,8 @@ public class VideoStepConfig {
     @StepScope
     public JdbcBatchItemWriter<VideoDto> updateVideoDailyProfitWriter() {
         return new JdbcBatchItemWriterBuilder<VideoDto>()
-                .sql("INSERT INTO video_daily_profit(video_number, calculated_date, daily_views, daily_played_sec, daily_profit_of_video, daily_total_profit_of_advertisements) VALUES(:number, :calculatedDate, :dailyViews, :dailyPlayedSec, :dailyProfitOfVideo, :dailyTotalProfitOfAdvertisements)")
+                .sql("INSERT INTO total_profit(uploader_number, video_number, date, views, played_sec, video_profit, advertisements_profit) " +
+                        "VALUES(:uploaderNumber, :number, :date, :todayViews, :todayPlayedSec, :videoProfit, :advertisementsProfit)")
                 .dataSource(dataSource)
                 .beanMapped() // ?? https://jojoldu.tistory.com/339
                 .build();
@@ -114,5 +116,12 @@ public class VideoStepConfig {
         List<JdbcBatchItemWriter> writers = List.of(initializeVideoTempDailyViewsWriter(), updateVideoDailyProfitWriter());
         return new CompositeItemWriterBuilder()
                 .delegates(writers).build();
+    }
+
+    public static class ReadListener implements ItemReadListener<VideoDto> {
+        @Override
+        public void afterRead(VideoDto videoDto) {
+            System.out.println("Reading item number = " + videoDto.getNumber());
+        }
     }
 }

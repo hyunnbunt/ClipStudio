@@ -1,7 +1,11 @@
 package clipstudio.processor;
 
+<<<<<<< HEAD
 import clipstudio.service.CacheService;
 import clipstudio.singleton.AdvertisementsProfitCache;
+=======
+import clipstudio.cache.AdvertisementsProfitCache;
+>>>>>>> concurrentHashMap
 import clipstudio.util.ProfitCalculator;
 import clipstudio.dto.AdvertisementDto;
 import lombok.RequiredArgsConstructor;
@@ -24,25 +28,28 @@ public class AdvertisementProfitProcessor implements ItemProcessor<Advertisement
     private String batchDate;
     @Override
     public AdvertisementDto process(AdvertisementDto advertisementDto) throws Exception {
-        log.info("Inside advertisementDto step: " + Thread.currentThread());
-        log.info("Advertisement number:" + advertisementDto.getNumber());
-        advertisementDto.setCalculatedDate(LocalDate.parse(batchDate));
-        final Long prevTotal = advertisementDto.getTotalViews();
+//        log.info("Inside advertisementDto step: " + Thread.currentThread());
+//        log.info("Advertisement number:" + advertisementDto.getNumber());
+        advertisementDto.setDate(LocalDate.parse(batchDate));
+        final Long prevTotalViews = advertisementDto.getTotalViews();
         final Long todayViews = advertisementDto.getTodayViews();
-        double profit = ProfitCalculator.getDailyProfit(prevTotal, todayViews, "advertisement");
-        advertisementDto.setTotalViews(prevTotal + todayViews);
-        advertisementDto.setDailyViews(todayViews);
+        double profit = ProfitCalculator.getDailyProfit(prevTotalViews, todayViews, "advertisement");
+        advertisementDto.setTotalViews(prevTotalViews + todayViews);
         advertisementDto.setTodayViews(todayViews); // multi, single thread 환경에서 동일 데이터 2번 돌리기 위해 초기화하지 않고 진행
-        advertisementDto.setDailyProfit(profit);
+        advertisementDto.setProfit(profit);
 //        advertisementDto.setCalculatedDate(LocalDate.now());
 //        Thread.sleep(10);
-        advertisementDto.setCalculatedDate(LocalDate.parse(batchDate));
+        advertisementDto.setDate(LocalDate.parse(batchDate));
         long videoNumber = advertisementDto.getVideoNumber();
+<<<<<<< HEAD
 //        advertisementsProfitCache.addAdProfitInVideo(videoNumber, profit);
         synchronized (cacheService) {
             cacheService.addAdvertisementProfitToCache(videoNumber, profit);
         }
 //        cacheService.putToCache(videoNumber, profit);
+=======
+        advertisementsProfitCache.addAdProfitInVideo(videoNumber, advertisementDto.getNumber(), profit);
+>>>>>>> concurrentHashMap
          return advertisementDto;
     }
 }

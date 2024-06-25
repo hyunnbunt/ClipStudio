@@ -14,14 +14,15 @@ public class VideoMapper implements RowMapper<VideoDto> {
     @Override
     public VideoDto mapRow(ResultSet rs, int rowNum) throws SQLException {
         VideoDto video = VideoDto.builder()
+                .uploaderNumber(rs.getLong("uploader_number"))
                 .title(rs.getString("title"))
                 .number(rs.getLong("number"))
                 .durationSec(rs.getInt("duration_sec"))
-                .dailyPlayedSec(rs.getLong("today_played_sec"))
+                .todayPlayedSec(rs.getLong("today_played_sec"))
                 .todayViews(rs.getLong("today_views"))
                 .totalViews(rs.getLong("total_views"))
                 .build();
-        log.info(String.valueOf(video.getTodayViews()));
+//        log.info(String.valueOf(video.getTodayViews()));
         return video;
     }
 
