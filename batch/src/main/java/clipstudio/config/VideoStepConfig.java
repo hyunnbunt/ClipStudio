@@ -49,7 +49,7 @@ public class VideoStepConfig {
         return new StepBuilder("videoProfitStep", jobRepository)
                 .<VideoDto, VideoDto>chunk(2000, transactionManager) // test if the result changes by chunk size. TransactionManager: Spring’s PlatformTransactionManager that begins and commits transactions during processing.
                 .reader(syncVideoReader())
-                .listener(new ReadListener()) // reader 동작 테스트
+//                .listener(new ReadListener()) // reader 동작 테스트
                 // .allowStartIfComplete(true) // test environment, 중복 실행 허용
                 .processor(videoProfitProcessor)
 //                .writer(videoCompositeWriter())

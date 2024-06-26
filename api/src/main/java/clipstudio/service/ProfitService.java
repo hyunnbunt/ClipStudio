@@ -1,5 +1,6 @@
 package clipstudio.service;
 
+import clipstudio.entity.Video;
 import clipstudio.entity.profit.TotalProfit;
 import clipstudio.dto.profit.ProfitByPeriodDto;
 import clipstudio.dto.stastistics.Top5ViewsByPeriod;

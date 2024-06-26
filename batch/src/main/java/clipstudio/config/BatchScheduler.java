@@ -30,7 +30,7 @@ public class BatchScheduler {
         taskScheduler = new ThreadPoolTaskScheduler();
         taskScheduler.initialize();
     }
-    @Scheduled(fixedRate = 100)  // 5000, 5초마다 실행
+    @Scheduled(fixedRate = 200)  // 5000, 5초마다 실행
     public void runJob() throws Exception {
 
         JobExecution jobExecution = jobLauncher.run(profitCalculationJob, new JobParametersBuilder()

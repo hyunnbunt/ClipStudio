@@ -15,6 +15,6 @@ import java.time.LocalDate;
 public class TotalProfitKey implements Serializable {
     @Column(name = "date", nullable = false)
     LocalDate date;
-    @Column(name = "uploader_number", nullable = false)
-    Long uploaderNumber;
+    @Column(name = "video_number", nullable = false)
+    Long videoNumber;
 }
