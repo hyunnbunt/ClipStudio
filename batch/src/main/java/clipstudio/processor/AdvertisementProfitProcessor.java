@@ -1,11 +1,6 @@
 package clipstudio.processor;
 
-<<<<<<< HEAD
-import clipstudio.service.CacheService;
-import clipstudio.singleton.AdvertisementsProfitCache;
-=======
 import clipstudio.cache.AdvertisementsProfitCache;
->>>>>>> concurrentHashMap
 import clipstudio.util.ProfitCalculator;
 import clipstudio.dto.AdvertisementDto;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +17,7 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 @StepScope
 public class AdvertisementProfitProcessor implements ItemProcessor<AdvertisementDto, AdvertisementDto> {
-//    public final AdvertisementsProfitCache advertisementsProfitCache;
-    private final CacheService cacheService;
+    public final AdvertisementsProfitCache advertisementsProfitCache;
     @Value("#{jobParameters['batchDate']}")
     private String batchDate;
     @Override
@@ -41,15 +35,7 @@ public class AdvertisementProfitProcessor implements ItemProcessor<Advertisement
 //        Thread.sleep(10);
         advertisementDto.setDate(LocalDate.parse(batchDate));
         long videoNumber = advertisementDto.getVideoNumber();
-<<<<<<< HEAD
-//        advertisementsProfitCache.addAdProfitInVideo(videoNumber, profit);
-        synchronized (cacheService) {
-            cacheService.addAdvertisementProfitToCache(videoNumber, profit);
-        }
-//        cacheService.putToCache(videoNumber, profit);
-=======
         advertisementsProfitCache.addAdProfitInVideo(videoNumber, advertisementDto.getNumber(), profit);
->>>>>>> concurrentHashMap
          return advertisementDto;
     }
 }
