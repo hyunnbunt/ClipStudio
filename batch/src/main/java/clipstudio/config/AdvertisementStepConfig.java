@@ -46,7 +46,6 @@ public class AdvertisementStepConfig {
     public Step advertisementProfitStep(JobRepository jobRepository, PlatformTransactionManager transactionManager,
                                         @Value("#{jobParameters['batchDate']}") String batchDate) throws ParseException {
         log.info(batchDate);
-//        log.info(String.valueOf("job parameter:" + new SimpleDateFormat("yyyy-MM-dd").parse(batchDate)));
         return new StepBuilder("advertisementProfitStep", jobRepository)
                 .<AdvertisementDto, AdvertisementDto>chunk(2000, transactionManager)
                 .reader(syncAdvertisementReader())

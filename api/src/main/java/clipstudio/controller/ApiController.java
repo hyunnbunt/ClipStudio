@@ -3,7 +3,6 @@ package clipstudio.controller;
 import java.time.LocalDate;
 import java.util.List;
 
-import clipstudio.dto.profit.ProfitDto;
 import clipstudio.dto.profit.ProfitByPeriodDto;
 import clipstudio.dto.stastistics.Top5ViewsByPeriod;
 import clipstudio.dto.stastistics.Top5Views;
@@ -116,14 +115,9 @@ public class ApiController {
     @GetMapping("/api/profit/year/{startDate}") // 연 광고 수익 정산금 조회
     public ResponseEntity<ProfitByPeriodDto> showYearlyProfit(@AuthenticationPrincipal GoogleOAuth2UserInfo.CustomOAuth2User customOAuth2User,
                                                                  @PathVariable String startDate) {
-        String email = "hsz@wjvlcnaza.com";
-
-        ProfitByPeriodDto profitByPeriodDto = profitService.showYearlyProfit(email, LocalDate.parse(startDate));
-
         try {
             return ResponseEntity.status(HttpStatus.OK).body(
-//                    profitService.showYearlyProfit(customOAuth2User.getEmail(), LocalDate.parse(startDate)));
-            profitByPeriodDto);
+                    profitService.showYearlyProfit(customOAuth2User.getEmail(), LocalDate.parse(startDate)));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }

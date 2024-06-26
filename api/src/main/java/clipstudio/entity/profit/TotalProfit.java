@@ -11,11 +11,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-//@Table(name="total_profit")
-@Table(name="total_profit", indexes = {
-        @Index(name = "idx_total_profit", columnList = "date, uploader_number")
-})
-//@IdClass(TotalProfitKey.class)
 public class TotalProfit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

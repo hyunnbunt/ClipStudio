@@ -62,7 +62,7 @@ public class VideoStepConfig {
                 .build();
     }
 
-
+    /** 싱글 스레드 환경에서 사용 */
     @Bean
     @StepScope
     public JdbcCursorItemReader<VideoDto> videoReader() { // 싱글 스레드 상황에서 사용
@@ -75,9 +75,10 @@ public class VideoStepConfig {
         return reader;
     }
 
+    /** 멀티 스레드 환경에서 사용 */
     @Bean
     @StepScope
-    public SynchronizedItemStreamReader<VideoDto> syncVideoReader() { // multi-thread 상황에서 사용
+    public SynchronizedItemStreamReader<VideoDto> syncVideoReader() {
         JdbcCursorItemReader<VideoDto> reader = new JdbcCursorItemReaderBuilder<VideoDto>()
                 .name("videoReader")
                 .dataSource(dataSource)
@@ -95,7 +96,7 @@ public class VideoStepConfig {
         return new JdbcBatchItemWriterBuilder<VideoDto>()
                 .sql("UPDATE videos SET today_views=:todayViews, today_played_sec=0, total_views=:totalViews where number=:number")
                 .dataSource(dataSource)
-                .beanMapped() // ?? https://jojoldu.tistory.com/339
+                .beanMapped()
                 .build();
     }
 
@@ -106,9 +107,9 @@ public class VideoStepConfig {
                 .sql("INSERT INTO total_profit(uploader_number, video_number, date, views, played_sec, video_profit, advertisements_profit) " +
                         "VALUES(:uploaderNumber, :number, :date, :todayViews, :todayPlayedSec, :videoProfit, :advertisementsProfit)")
                 .dataSource(dataSource)
-                .beanMapped() // ?? https://jojoldu.tistory.com/339
+                .beanMapped()
                 .build();
-    } // JpaItemWriter?
+    }
 
     @Bean
     @StepScope
