@@ -17,7 +17,7 @@ public class GoogleOAuth2UserInfo extends OAuth2UserInfo {
 //        "sub": "식별값",
 //            "name": "name",
 //            "given_name": "given_name",
-//            "picture": "https//lh3.googleusercontent.com/~~",
+//            "picture": "https://~~",
 //            "email": "email",
 //            "email_verified": true,
 //            "locale": "ko"
@@ -73,7 +73,7 @@ public class GoogleOAuth2UserInfo extends OAuth2UserInfo {
 
     /**
      * 각 소셜에서 받아오는 데이터가 다르므로
-     * 소셜별로 데이터를 받는 데이터를 분기 처리하는 DTO 클래스 => 지금은 google 밖에 없으므로, 받아온 데이터를
+     * 소셜별로 데이터를 받는 데이터를 분기 처리하는 DTO 클래스. 지금은 google 밖에 없음
      */
     @Getter
     @Slf4j

@@ -11,19 +11,15 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-//@Table(name="total_profit")
-@Table(name="total_profit", indexes = {
-        @Index(name = "idx_total_profit", columnList = "date")
-})
-@IdClass(TotalProfit.class)
 public class TotalProfit {
     @Id
-    @Column(name = "date", nullable = false)
-    LocalDate date;
-    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long number;
     @Column(nullable = false)
-    Long uploaderNumber;
-    @Column(name = "video_number", nullable = false)
+    LocalDate date;
+    @Column(nullable = false)
+    long uploaderNumber;
+    @Column(nullable = false)
     long videoNumber;
     @Column(nullable = false)
     long views;

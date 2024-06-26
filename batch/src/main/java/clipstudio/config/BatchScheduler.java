@@ -22,7 +22,6 @@ import java.time.LocalDate;
 public class BatchScheduler {
     private final JobLauncher jobLauncher;
     private final Job profitCalculationJob;
-    private static String testDate = "2013-01-01";
     private ThreadPoolTaskScheduler taskScheduler;
 
     @PostConstruct
@@ -30,21 +29,11 @@ public class BatchScheduler {
         taskScheduler = new ThreadPoolTaskScheduler();
         taskScheduler.initialize();
     }
-    @Scheduled(fixedRate = 100)  // 5000, 5초마다 실행
-    public void runJob() throws Exception {
 
+    @Scheduled(cron = "0 58 22 * * *")
+    public void runJob() throws Exception {
         JobExecution jobExecution = jobLauncher.run(profitCalculationJob, new JobParametersBuilder()
-                .addString("batchDate", testDate, true)
+                .addString("batchDate", LocalDate.now().toString(), true)
                 .toJobParameters());
-        log.info(jobExecution.getJobParameters().toString());
-        LocalDate curr = LocalDate.parse(testDate).plusDays(1);
-        if (curr.equals(LocalDate.parse("2013-12-31"))) {
-            for (int i = 0; i < 100; i ++) {
-                log.info("end");
-            }
-            taskScheduler.initiateShutdown();
-        } else {
-            testDate = curr.toString();
-        }
     }
 }
