@@ -39,10 +39,20 @@ public class VideoService {
     }
 
     @Transactional
+    public List<User> getUserDataForTest() {
+        List<User> users = userRepository.findAll();
+        return users;
+    }
+    @Transactional
+    public List<VideoDto> getVideoDataForTest() {
+        List<Video> videos = videoRepository.findAll();
+        return videos.stream().map(VideoDto::fromEntity).collect(Collectors.toList());
+    }
+
+    @Transactional
     public WatchHistoryDto playVideo(@PathVariable Long videoNumber,
                                      @RequestBody VideoPlayDto videoPlayDto,
                                      String userEmail) {
-        log.info("inside watch history service, playVideo");
         User user = userRepository.findByEmail(userEmail).orElseThrow();
         Video video = videoRepository.findByNumber(videoNumber).orElseThrow();
         int videoStoppedTime = videoPlayDto.getVideoStoppedTime(); // 어디까지 재생했는지 확인
@@ -76,6 +86,7 @@ public class VideoService {
         Video video = Video.generateVideo(videoUploadDto, uploader);
         video.setTodayViews(500000L); // 테스트 위한 가상 조회수 데이터
         Video created = videoRepository.save(video);
+        System.out.println(created);
         return VideoDto.fromEntity(created);
     }
 

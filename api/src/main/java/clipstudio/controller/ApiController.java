@@ -8,6 +8,7 @@ import clipstudio.dto.stastistics.Top5ViewsByPeriod;
 import clipstudio.dto.stastistics.Top5Views;
 import clipstudio.dto.video.VideoUploadDto;
 import clipstudio.dto.video.VideoDto;
+import clipstudio.entity.User;
 import clipstudio.oauth2.User.userinfo.GoogleOAuth2UserInfo;
 import clipstudio.service.ProfitService;
 import clipstudio.service.VideoService;
@@ -60,6 +61,8 @@ public class ApiController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
+
+
 
     @GetMapping("/api/profit/day/{date}") // 일일 수익 조회
     public ResponseEntity<ProfitByPeriodDto> showDailyProfit(@AuthenticationPrincipal GoogleOAuth2UserInfo.CustomOAuth2User customOAuth2User,
@@ -162,6 +165,41 @@ public class ApiController {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(
                     profitService.showYearlyTop5Views(customOAuth2User.getEmail(), LocalDate.parse(date)));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    /**
+     * API controllers for load test below.
+     * */
+
+    @GetMapping("/test/users")
+    public ResponseEntity<List<User>> testGetAllUsers() {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    videoService.getUserDataForTest());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+    @GetMapping("/test/videos")
+    public ResponseEntity<List<VideoDto>> testGetAllVideos() {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    videoService.getVideoDataForTest());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    @PostMapping("/test/player/{videoNumber}/{email}")
+    public ResponseEntity<WatchHistoryDto> testPlayVideo(@PathVariable Long videoNumber, @PathVariable String email,
+                                                         @RequestBody VideoPlayDto videoPlayDto)
+    {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    videoService.playVideo(videoNumber, videoPlayDto, email));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }

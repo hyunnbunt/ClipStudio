@@ -23,7 +23,8 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.cors(AbstractHttpConfigurer::disable);
         http.csrf(AbstractHttpConfigurer::disable);
-        http.authorizeHttpRequests((authorize) -> authorize.anyRequest().authenticated());
+//        http.authorizeHttpRequests((authorize) -> authorize.anyRequest().authenticated());
+        http.authorizeHttpRequests((authorize) -> authorize.anyRequest().permitAll());
         http.oauth2Login(oAuth2LoginConfigurer -> oAuth2LoginConfigurer
                 .defaultSuccessUrl("/api/videos", true));
         return http.build();
